@@ -10,7 +10,7 @@ _Bruno Ferreira_ (up202207863@fe.up.pt)
 
 _Rodrigo Almeida_ (up202206733@fe.up.pt)
 
-_José Mota_ (up?????????@fe.up.pt)
+_José Mota_ (up201905451@fe.up.pt)
 
 # Initial Mockups
 
