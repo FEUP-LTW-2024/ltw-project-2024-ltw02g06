@@ -18,6 +18,8 @@ $db = getDatabaseConnection();
 $item = Item::getItem($db, intval($_GET['id']));
 
 drawHeader($session);
+drawSearchBar();
+drawBreadcrumbNav();
 drawItem($item, $session);
 drawFooter();
 ?>
