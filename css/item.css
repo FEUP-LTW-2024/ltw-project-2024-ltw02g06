@@ -232,6 +232,7 @@
 
 #see-all-items-btn span:first-of-type {
   border-bottom: 1px solid gray;
+  font-size: 0.8rem;
 }
 
 #item-location {
