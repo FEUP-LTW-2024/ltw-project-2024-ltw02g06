@@ -140,7 +140,7 @@
   cursor: pointer;
 }
 
-#item-price {
+#item-info {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -151,12 +151,12 @@
   background-color: white;
 }
 
-#item-price h2 {
+#item-price {
   padding: 0;
   padding-bottom: 1rem;
 }
 
-#item-price div {
+#item-info div {
   display: flex;
   flex-direction: row;
   align-items: center;
