@@ -1,0 +1,39 @@
+#breadcrumb-nav {
+  display: flex;
+  flex-direction: row;
+  align-self: self-start;
+}
+
+#breadcrumb-nav > button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background-color: transparent;
+
+  cursor: pointer;
+}
+
+#breadcrumb-nav > ol {
+  display: flex;
+  flex-direction: row;
+
+  padding-left: 1rem;
+
+  list-style: none;
+}
+
+#breadcrumb-nav > ol > li:not(:first-child):before {
+  color: gray;
+  content: '\00a0/\00a0';
+}
+
+#breadcrumb-nav > ol a {
+  border-bottom: 1px solid gray;
+
+  color: gray;
+  text-decoration: none;
+}
