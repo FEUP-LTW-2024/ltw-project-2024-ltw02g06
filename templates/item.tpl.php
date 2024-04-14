@@ -179,3 +179,57 @@ require_once (__DIR__ . '/../utils/session.php');
 { ?>
 
 <?php } ?>
+
+<?php function drawItems(Session $session)
+{ ?>
+  <!-- This is currently static - TODO make dinamic:
+    -> Get items depending on the filters from db; -->
+  <section id="items">
+
+    <header>
+      <h2>Encontramos mais de 1000 anúncios</h2>
+      <div>
+        <p>Ordenar por:</p>
+        <select name="items-order" id="items-order">
+          <option value="1" selected>Anúncios recomendados</option>
+          <option value="2">Mais barato</option>
+          <option value="3">Mais caro</option>
+          <option value="4">Mais recente</option>
+          <option value="5">Mais antigo</option>
+        </select>
+      </div>
+    </header>
+    <ol id="items-container">
+      <li>
+        <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
+        <div>
+          <div>
+            <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
+            <div>
+              <h3>15.990 €</h3>
+              <p>Negociável</p>
+            </div>
+          </div>
+          <div>
+            <div>
+              <h4>Custóias, Leça Do Balio E Guifões,</h4>
+              <p>Porto</p>
+            </div>
+            <button><ion-icon name="heart-outline"></ion-icon></button>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <nav>
+      <button><ion-icon name="chevron-back"></ion-icon></button>
+      <button>2</button>
+      <button class="selected-page">3</button>
+      <button>4</button>
+      <p>...</p>
+      <button>25</button>
+      <button><ion-icon name="chevron-forward"></ion-icon></button>
+    </nav>
+
+  </section>
+<?php } ?>
