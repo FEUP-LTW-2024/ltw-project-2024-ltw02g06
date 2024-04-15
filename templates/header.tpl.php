@@ -30,6 +30,7 @@ require_once (__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/item.css">
     <link rel="stylesheet" href="../css/items.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/inbox.css">
   </head>
 
   <body>
