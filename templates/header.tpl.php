@@ -26,6 +26,7 @@ require_once (__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/header.css">
     <link rel="stylesheet" href="../css/search-bar.css">
     <link rel="stylesheet" href="../css/breadcrumb-nav.css">
+    <link rel="stylesheet" href="../css/filters.css">
     <link rel="stylesheet" href="../css/item.css">
     <link rel="stylesheet" href="../css/items.css">
   </head>
