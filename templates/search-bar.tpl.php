@@ -16,3 +16,17 @@
 
   </div>
 <?php } ?>
+
+<?php function drawSmallSearchBar()
+{ ?>
+  <div id="small-search-bar-container">
+
+    <div id="small-search-bar">
+      <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="O que procuras?">
+    </div>
+
+    <button>Pesquisar</button>
+
+  </div>
+<?php } ?>
