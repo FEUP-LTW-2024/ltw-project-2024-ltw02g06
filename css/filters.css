@@ -1,0 +1,53 @@
+#filters ol {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0;
+
+  list-style: none;
+}
+
+.search-filter p {
+  margin: 0;
+  padding-bottom: 0.4rem;
+}
+
+.search-filter select, input {
+  width: 12rem;
+
+  padding: 1rem 1.2rem 1rem 1.2rem;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+
+  font-size: 1rem;
+}
+
+.range-filter {
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+}
+
+.range-filter input {
+  width: 6rem;
+}
+
+@media all and (max-width: 992px) {
+  #filters {
+    width: 100%;
+  }
+
+  #filters ol {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-filter select, input {
+    width: 100%;
+  }
+  .range-filter input {
+    width: 100%;
+  }
+}
