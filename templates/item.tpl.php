@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 require_once (__DIR__ . '/../database/item.class.php');
 require_once (__DIR__ . '/../utils/session.php');
+
+require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 ?>
 
 <?php function drawItem(?Item $item, Session $session)
@@ -241,16 +243,7 @@ require_once (__DIR__ . '/../utils/session.php');
   <section id="items">
 
     <header>
-      <div id="small-search-bar-container">
-
-        <div id="small-search-bar">
-          <ion-icon name="search-outline"></ion-icon>
-          <input type="text" placeholder="O que procuras?">
-        </div>
-
-        <button>Pesquisar</button>
-
-      </div>
+      <?php drawSmallSearchBar() ?>
       <div>
         <p>Ordenar por:</p>
         <select name="items-order" id="items-order">

@@ -1,0 +1,154 @@
+#inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+  width: 100%;
+
+  border-top: 1px solid gray;
+}
+
+#inbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0;
+}
+
+#inbox-container li {
+  display: flex;
+  flex-direction: row;
+
+  height: 8rem;
+
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+.inbox-chat-item {
+  display: flex;
+  flex-direction: row;
+}
+
+.inbox-chat-item img {
+  height: 100%;
+  width: 14rem;
+
+  object-fit: cover;
+
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.inbox-chat-item > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 0.8rem;
+}
+
+.inbox-chat-item > div > div {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.inbox-chat-item > div > div:first-of-type > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: end;
+  flex-shrink: 0;
+
+  width: max-content;
+}
+
+#inbox-container li h2, h3, h4, p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.inbox-chat-item > div > div:last-of-type > div h3 {
+  font-weight: bold;
+}
+
+.inbox-chat-item > div > div:last-of-type > div p {
+  color: gray;
+}
+
+#inbox-container li button {
+  background-color: transparent;
+  border: none;
+  align-self: self-start;
+}
+
+.inbox-chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  padding: 1rem;
+
+  border-left: 3px solid var(--background);
+}
+
+.inbox-chat-msg > div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inbox-chat-msg div {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+}
+
+.inbox-chat-msg span {
+  color: gray;
+}
+
+@media all and (max-width: 992px) {
+  #inbox-container li {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .inbox-chat-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  
+    padding: 1rem;
+  
+    border: none;
+    border-radius: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+
+    border-top: 3px solid var(--background);
+  }
+
+  .inbox-chat-item img {
+    height: 8rem;
+  }
+
+  .inbox-chat-item img {
+    border-radius: 0;
+    border-top-left-radius: 6px;
+  }
+  
+  .inbox-chat-msg > div:first-of-type {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .inbox-chat-msg div {
+    width: 100%;
+  }
+}
