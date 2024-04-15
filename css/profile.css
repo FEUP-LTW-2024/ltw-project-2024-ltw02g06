@@ -1,0 +1,117 @@
+#profile {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+}
+
+#profile-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+
+  width: 100%;
+
+  padding: 2rem;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#profile-info h2 {
+  margin: 0;
+}
+
+#profile-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#profile-img {
+  flex-shrink: 0;
+
+  width: 10rem;
+  height: 10rem;
+
+  border-radius: 100%;
+  
+  object-fit: cover;
+}
+
+#profile-info h3 {
+  margin: 0;
+}
+
+#profile-info h4, h5 {
+  margin: 0;
+}
+
+#reviews {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  padding: 2rem;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#reviews > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+
+  width: 100%;
+}
+
+#previous-review-btn, #next-review-btn {
+  background-color: transparent;
+  border: none;
+
+  cursor: pointer;
+}
+
+#previous-review-btn ion-icon, #next-review-btn ion-icon {
+  font-size: 1.2rem;
+}
+
+#reviews ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#reviews li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+
+  border-top: 1px solid gray;
+}
+
+#reviews li > div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media all and (max-width: 992px) {
+  #profile {
+    flex-direction: column;
+  }  
+}
