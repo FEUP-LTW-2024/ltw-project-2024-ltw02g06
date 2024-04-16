@@ -5,7 +5,11 @@
   
   width: 100%;
 
-  border-top: 1px solid gray;
+  padding-top: 2rem;
+}
+
+#items h2 {
+  margin: 0;
 }
 
 #items header {
@@ -14,6 +18,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
+
+  border-top: 1px solid gray;
 }
 
 #items header div:last-of-type {
@@ -34,6 +40,10 @@
 }
 
 #items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
   padding: 0;
 }
 
