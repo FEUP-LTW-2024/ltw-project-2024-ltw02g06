@@ -369,3 +369,112 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
     </div>
   </li>
 <?php } ?>
+
+<?php function drawSellerDashboardActiveItem(Session $session)
+{ ?>
+  <li>
+    <div>
+      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
+        Nacional - Bastantes Extras - 345cv</h3>
+      <h3>15.990 €</h3>
+    </div>
+    <div>
+      <button title="Promover anúncio"><ion-icon name="star-outline"></ion-icon></button>
+      <button title="Editar anúncio"><ion-icon name="create-outline"></ion-icon></button>
+    </div>
+  </li>
+<?php } ?>
+
+<?php function drawSellerDashboardToSendItem(Session $session)
+{ ?>
+  <li>
+    <div>
+      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
+        Nacional - Bastantes Extras - 345cv</h3>
+      <h3>15.990 €</h3>
+    </div>
+    <div>
+      <button title="Enviar"><ion-icon name="send-outline"></ion-icon></button>
+    </div>
+  </li>
+<?php } ?>
+
+<?php function drawSellerDashboardSoldItem(Session $session)
+{ ?>
+  <li>
+    <div>
+      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
+        Nacional - Bastantes Extras - 345cv</h3>
+      <h3>15.990 €</h3>
+    </div>
+    <div>
+      <button title="Apagar"><ion-icon name="trash-outline"></ion-icon></button>
+    </div>
+  </li>
+<?php } ?>
+
+<?php function drawSellerDashboardItems(Session $session)
+{ ?>
+  <section id="seller-dashboard-items-section">
+    <h2>Os meus anúncios:</h2>
+    <header>
+      <?php
+      drawSmallSearchBar();
+      ?>
+      <div>
+        <p>Ordenar por:</p>
+        <select name="items-order" id="items-order">
+          <option value="1" selected>Mais recente</option>
+          <option value="2">Mais antigo</option>
+          <option value="4">Mais barato</option>
+          <option value="5">Mais caro</option>
+          <option value="3">Anúncios promovidos</option>
+        </select>
+      </div>
+    </header>
+
+    <div id="seller-dashboard-items">
+      <div>
+        <h3>Por vender:</h3>
+        <ol class="seller-dashboard-items-container">
+          <?php
+          drawSellerDashboardActiveItem($session);
+          drawSellerDashboardActiveItem($session);
+          drawSellerDashboardActiveItem($session);
+          drawSellerDashboardActiveItem($session);
+          drawSellerDashboardActiveItem($session);
+          drawSellerDashboardActiveItem($session);
+          ?>
+        </ol>
+      </div>
+
+      <div>
+        <h3>Por enviar:</h3>
+        <ol class="seller-dashboard-items-container">
+          <?php
+          drawSellerDashboardToSendItem($session);
+          drawSellerDashboardToSendItem($session);
+          drawSellerDashboardToSendItem($session);
+          drawSellerDashboardToSendItem($session);
+          drawSellerDashboardToSendItem($session);
+          drawSellerDashboardToSendItem($session);
+          ?>
+        </ol>
+      </div>
+
+      <div>
+        <h3>Vendidos:</h3>
+        <ol class="seller-dashboard-items-container">
+          <?php
+          drawSellerDashboardSoldItem($session);
+          drawSellerDashboardSoldItem($session);
+          drawSellerDashboardSoldItem($session);
+          drawSellerDashboardSoldItem($session);
+          drawSellerDashboardSoldItem($session);
+          drawSellerDashboardSoldItem($session);
+          ?>
+        </ol>
+      </div>
+    </div>
+  </section>
+<?php } ?>
