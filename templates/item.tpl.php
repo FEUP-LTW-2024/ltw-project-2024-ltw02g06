@@ -478,3 +478,39 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
     </div>
   </section>
 <?php } ?>
+
+
+<?php function drawAdminReportedItems()
+{ ?>
+  <ul id="reported-items-container">
+    <?php
+    drawAdminReportedItem();
+    drawAdminReportedItem();
+    drawAdminReportedItem();
+    drawAdminReportedItem();
+    ?>
+  </ul>
+<?php } ?>
+
+<?php function drawAdminReportedItem()
+{ ?>
+  <li>
+    <div class="reported-item">
+      <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
+      <div>
+        <button title="Manter anúncio"><ion-icon name="checkmark-circle-outline"></ion-icon></button>
+        <button title="Apagar anúncio"><ion-icon name="trash-outline"></ion-icon></button>
+      </div>
+    </div>
+
+    <div class="report-item-msg">
+      <div>
+        <h4>Luís Figo</h4>
+        <span>há 3 min</span>
+      </div>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa doloribus vel quis adipisci non vitae eius
+        saepe.</p>
+    </div>
+
+  </li>
+<?php } ?>
