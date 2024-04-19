@@ -52,6 +52,7 @@
 .inbox-chat-item > div > div {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   gap: 1rem;
 }
 

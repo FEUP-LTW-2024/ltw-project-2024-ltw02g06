@@ -1,0 +1,239 @@
+#admin-categories-section,
+#admin-reported-items-section,
+#admin-users-section,
+#admin-changes-history-section {
+  width: 100%;
+}
+
+#admin-categories-section > ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  padding: 0;
+
+  list-style: none;
+}
+
+#admin-categories-section li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0.2rem 0.4rem 0.2rem 0.8rem;
+
+  border: 1px solid rgb(207, 207, 207);
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#admin-categories-section li p {
+  margin: 0;
+  padding-right: 0.8rem;
+
+  font-weight: 500;
+}
+
+#admin-categories-section li button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#admin-categories-section li button ion-icon {
+  font-size: 1.4rem;
+}
+
+
+
+#reported-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  max-height: 24rem;
+
+  overflow: scroll;
+
+  padding: 0;
+}
+
+#reported-items-container button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#reported-items-container li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  max-height: 10rem;  
+
+  padding: 1rem;
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+.reported-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding-bottom: 0;
+}
+
+.reported-item h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.report-item-msg > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.report-item-msg span {
+  color: gray;
+}
+
+.reported-item > div:first-of-type {
+  display: flex;
+  flex-direction: row;
+}
+
+.reported-item > div:first-of-type > div {
+  display: flex;
+  flex-direction: row;
+}
+
+.report-item-msg {
+  overflow: scroll;
+}
+
+
+
+#admin-users-section > div:last-of-type {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+#admin-users-section > div:last-of-type > div {
+  width: 100%;
+}
+
+#admin-users-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  padding: 0;
+  margin: 0;
+
+  max-height: 14.5rem;
+
+  overflow: scroll;
+
+  list-style: none;
+}
+
+#admin-users-section li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 1rem;
+  border-radius: 6px;
+
+  height: 4rem;
+  box-sizing: border-box;
+
+  background-color: white;
+}
+
+#admin-users-section li button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#admin-users-section p {
+  color: gray;
+}
+
+#admin-changes-history-section > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#admin-changes-history-section button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#admin-changes-history-section button ion-icon {
+  font-size: 2rem;
+}
+
+#admin-changes-history-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  width: 100%;
+  max-height: 16.5rem;
+  overflow: scroll;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+#admin-changes-history-section ul li {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 5fr;
+  gap: 0.5rem;
+  align-items: center;
+
+  height: 4rem;
+
+  padding: 1rem;
+  border-radius: 6px;
+
+  box-sizing: border-box;
+
+  background-color: white;
+}
+
+@media all and (max-width: 768px) {
+  #admin-users-section {
+    flex-direction: column;
+  }
+
+  #admin-changes-history-section ul {
+    max-height: 22rem;
+  }
+
+  #admin-changes-history-section ul li {
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    height: 6rem;
+  }
+}

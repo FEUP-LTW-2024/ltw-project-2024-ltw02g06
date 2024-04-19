@@ -32,8 +32,8 @@ require_once (__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="../css/inbox.css">
     <link rel="stylesheet" href="../css/cart.css">
-    <link rel="stylesheet" href="../css/wishlist.css">
     <link rel="stylesheet" href="../css/seller.css">
+    <link rel="stylesheet" href="../css/admin.css">
   </head>
 
   <body>
