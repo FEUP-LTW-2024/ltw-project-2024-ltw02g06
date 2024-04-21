@@ -9,24 +9,32 @@ CREATE TABLE user (
   state TEXT,
   country TEXT,
   postal_code TEXT,
+  admin INTEGER DEFAULT 0,
   registration_date DATE
 );
 
 INSERT INTO user (first_name, last_name, email, password, address, city, state, country, postal_code, registration_date) 
 VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345', '2024-04-20');
+-- password is '1'; '356a192b7913b04c54574d18c28d46e6395428ab' is the hash code of '1'
 
 CREATE TABLE category (
   id INTEGER PRIMARY KEY,
   name TEXT
 );
 
+INSERT INTO category (name)
+VALUES ('Category Name');
+
 CREATE TABLE attribute (
   id INTEGER PRIMARY KEY,
   name TEXT,
-  type TEXT,
+  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'enum')),
   parent INTEGER,
   FOREIGN KEY (parent) REFERENCES attribute(id)
 );
+
+INSERT INTO attribute (name)
+VALUES ('Attribute Name');
 
 CREATE TABLE attribute_values (
   id INTEGER PRIMARY KEY,
@@ -45,6 +53,9 @@ CREATE TABLE category_attributes (
   FOREIGN KEY (attribute) REFERENCES attribute(id)
 );
 
+INSERT INTO category_attributes (category, attribute)
+VALUES (1, 1);
+
 CREATE TABLE item (
   id INTEGER PRIMARY KEY,
   name TEXT,
@@ -59,6 +70,22 @@ CREATE TABLE item (
   FOREIGN KEY (seller) REFERENCES user(id)
 );
 
+CREATE TABLE image (
+  id INTEGER PRIMARY KEY,
+  path TEXT
+);
+
+CREATE TABLE item_image (
+  item INTEGER,
+  image INTEGER,
+  PRIMARY KEY (item, image)
+  FOREIGN KEY (item) REFERENCES item(id),
+  FOREIGN KEY (image) REFERENCES image(id)
+);
+
+INSERT INTO item (name, description, price, seller, category, creation_date)
+VALUES ('Example Item', 'This is a sample item description.', 99.99, 1, 1, DATE('now'));
+
 CREATE TABLE item_attributes (
   item INTEGER,
   attribute INTEGER,
@@ -66,4 +93,25 @@ CREATE TABLE item_attributes (
   PRIMARY KEY (item, attribute),
   FOREIGN KEY (item) REFERENCES item(id),
   FOREIGN KEY (attribute) REFERENCES attribute(id)
+);
+
+INSERT INTO item_attributes (item, attribute, value)
+VALUES (1, 1, "Attribute Value");
+
+CREATE TABLE user_wishlist (
+  item INTEGER,
+  user INTEGER,
+  PRIMARY KEY (item, user),
+  FOREIGN KEY (item) REFERENCES item(id),
+  FOREIGN KEY (user) REFERENCES user(id)
+);
+
+CREATE TABLE user_cart (
+  item INTEGER,
+  user INTEGER,
+  price INTEGER,
+  shipping INTEGER,
+  PRIMARY KEY (item, user),
+  FOREIGN KEY (item) REFERENCES item(id),
+  FOREIGN KEY (user) REFERENCES user(id)
 );
