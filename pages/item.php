@@ -21,7 +21,7 @@ $item = Item::getItem($db, intval($_GET['id']));
 
 drawHeader($session);
 drawSearchBar();
-drawBreadcrumbNav();
+// drawBreadcrumbNav();
 
 if (!$item): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
@@ -33,5 +33,6 @@ if (!$item): ?>
   drawItem($item, $seller, $seller_reviews, $is_item_in_wishlist, $session);
 endif;
 
+echo '<script src="./../javascript/item.js"></script>';
 drawFooter();
 ?>

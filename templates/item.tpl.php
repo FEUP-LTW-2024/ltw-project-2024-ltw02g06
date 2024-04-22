@@ -9,9 +9,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 
 <?php function drawItem(Item $item, User $seller, array $seller_reviews, bool $is_item_in_wishlist, Session $session)
 { ?>
-  <!-- This is currently static - TODO make dinamic:
-    -> Get item id & then get info from db;
-    -> If seller ID == session.id: Show and allow user to edit item info; -->
+
   <?php
   $is_seller = $session->getId() == $seller->id;
   ?>
