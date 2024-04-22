@@ -13,7 +13,9 @@ $db = getDatabaseConnection();
 
 drawHeader($session);
 ?>
-<form action="../actions/action_login.php" method="post" class="login">
+<form
+  action="../actions/action_login.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '' ?>"
+  method="post" class="login">
   <input type="email" name="email" placeholder="email">
   <input type="password" name="password" placeholder="password">
   <a href="../pages/register.php">Register</a>

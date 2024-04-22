@@ -15,9 +15,13 @@ if ($user) {
   $session->setId($user->id);
   $session->setName($user->name());
   $session->addMessage('success', 'Login successful!');
+  if (isset($_GET['redirect'])) {
+    header('Location: ' . $_GET['redirect']);
+  } else {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+  }
 } else {
   $session->addMessage('error', 'Wrong credentials!');
 }
 
-header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?>

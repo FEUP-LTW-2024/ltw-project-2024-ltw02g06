@@ -45,9 +45,9 @@ const handleWishlistBtn = (sessionId, itemId) => {
     // Check if the user is authenticated
     if (sessionId == null) {
       // Redirect the user to the login page
-      const currentPageUrl = window.location.href;
+      const currentPageUrl = window.location.pathname + window.location.search;
       window.location.href =
-        "/login.php?redirect=" + encodeURIComponent(currentPageUrl);
+        "/pages/login.php?redirect=" + encodeURIComponent(currentPageUrl);
       return;
     }
 
@@ -108,9 +108,9 @@ const handleCartBtn = (sessionId, itemId) => {
     // Check if the user is authenticated
     if (sessionId == null) {
       // Redirect the user to the login page
-      const currentPageUrl = window.location.href;
+      const currentPageUrl = window.location.pathname + window.location.search;
       window.location.href =
-        "/login.php?redirect=" + encodeURIComponent(currentPageUrl);
+        "/pages/login.php?redirect=" + encodeURIComponent(currentPageUrl);
       return;
     }
 
