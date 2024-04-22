@@ -8,14 +8,27 @@ CREATE TABLE user (
   city TEXT,
   state TEXT,
   country TEXT,
-  postal_code TEXT,
+  zipcode TEXT,
+  image INTEGER DEFAULT 1,
   admin INTEGER DEFAULT 0,
-  registration_date DATE
+  registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (image) REFERENCES image(id)
 );
 
-INSERT INTO user (first_name, last_name, email, password, address, city, state, country, postal_code, registration_date) 
-VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345', '2024-04-20');
+INSERT INTO user (first_name, last_name, email, password, address, city, state, country, zipcode) 
+VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345');
 -- password is '1'; '356a192b7913b04c54574d18c28d46e6395428ab' is the hash code of '1'
+
+CREATE TABLE review (
+  id INTEGER PRIMARY KEY,
+  reviewed_user INTEGER,
+  reviewer_user INTEGER,
+  rating INTEGER,
+  comment TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (reviewed_user) REFERENCES user(id),
+  FOREIGN KEY (reviewer_user) REFERENCES user(id)
+);
 
 CREATE TABLE category (
   id INTEGER PRIMARY KEY,
@@ -67,13 +80,21 @@ CREATE TABLE item (
   sold_price REAL,
   creation_date DATE,
   clicks INTEGER DEFAULT 0,
-  FOREIGN KEY (seller) REFERENCES user(id)
+  FOREIGN KEY (seller) REFERENCES user(id),
+  FOREIGN KEY (category) REFERENCES category(id)
 );
+
+INSERT INTO item (name, description, price, seller, category, creation_date)
+VALUES ('Example Item', 'This is a sample item description.', 99.99, 1, 1, DATE('now'));
 
 CREATE TABLE image (
   id INTEGER PRIMARY KEY,
   path TEXT
 );
+
+-- Change this later:
+INSERT INTO image (path)
+VALUES ('database/files/default_profile_picture.svg'); 
 
 CREATE TABLE item_image (
   item INTEGER,
@@ -82,9 +103,6 @@ CREATE TABLE item_image (
   FOREIGN KEY (item) REFERENCES item(id),
   FOREIGN KEY (image) REFERENCES image(id)
 );
-
-INSERT INTO item (name, description, price, seller, category, creation_date)
-VALUES ('Example Item', 'This is a sample item description.', 99.99, 1, 1, DATE('now'));
 
 CREATE TABLE item_attributes (
   item INTEGER,

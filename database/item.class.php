@@ -11,7 +11,7 @@ class Item
   public int $category;
   public string $status;
   public ?float $sold_price;
-  public string $creation_date;
+  public DateTime $creation_date;
   public int $clicks;
   public array $attributes = [];
   public array $images = [];
@@ -25,7 +25,7 @@ class Item
     int $category,
     string $status,
     ?float $sold_price,
-    string $creation_date,
+    DateTime $creation_date,
     int $clicks,
     array $attributes,
     array $images
@@ -60,23 +60,31 @@ class Item
 
     $stmt = $db->prepare('
         SELECT attribute as id, attribute.name, value
-        FROM item_attributes, attribute
-        WHERE item_attributes.attribute = attribute.id
-        AND item = ?
+        FROM item_attributes
+        LEFT JOIN attribute ON item_attributes.attribute = attribute.id
+        WHERE item = ?
       ');
     $stmt->execute(array($id));
 
-    $attributes = $stmt->fetch();
+    $attributes = [];
+
+    while ($row = $stmt->fetch()) {
+      $attributes[] = $row;
+    }
 
     $stmt = $db->prepare('
-        SELECT item_image.image as id, path
-        FROM item_image, image
-        WHERE item_image.image = image.id
-        AND item_image.item = ?
+        SELECT item_image.image as id, image.path
+        FROM item_image
+        LEFT JOIN image ON item_image.image = image.id
+        WHERE item_image.item = ?
       ');
     $stmt->execute(array($id));
 
-    $images = $stmt->fetch();
+    $images = [];
+
+    while ($row = $stmt->fetch()) {
+      $images[] = $row;
+    }
 
     return new Item(
       $item['id'],
@@ -87,10 +95,10 @@ class Item
       $item['category'],
       $item['status'],
       $item['sold_price'],
-      $item['creation_date'],
+      new DateTime($item['creation_date']),
       $item['clicks'],
-      $attributes ? $attributes : [],
-      $images ? $images : [],
+      $attributes,
+      $images,
     );
   }
 
