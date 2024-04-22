@@ -7,7 +7,7 @@ require_once (__DIR__ . '/../utils/session.php');
 require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 ?>
 
-<?php function drawItem(Item $item, User $seller, array $seller_reviews, bool $is_item_in_wishlist, Session $session)
+<?php function drawItem(Item $item, User $seller, array $seller_reviews, bool $is_item_in_wishlist, bool $is_item_in_cart, Session $session)
 { ?>
 
   <?php
@@ -72,7 +72,9 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h3 id="item-name"><?= $item->name ?></h3>
       <h2 id="item-price"><?= $item->price ?> €</h2>
       <?php if (!$is_seller): ?>
-        <button id="add-to-cart-btn">Adicionar ao carrinho</button>
+        <button id="add-to-cart-btn" data-is-item-in-cart=<?= $is_item_in_cart ? "1" : "0" ?>>
+          <?= $is_item_in_cart ? "Remover do carrinho" : "Adicionar ao carrinho" ?>
+        </button>
         <button id="negotiate-btn">Propor outro preço</button>
         <button id="send-message-btn">Enviar mensagem</button>
       <?php else: ?>

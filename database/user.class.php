@@ -182,5 +182,47 @@ class User
       throw $e; // Re-throwing the exception to be caught in the calling code
     }
   }
+
+  static function isItemInCart(PDO $db, int $id, int $item_id): bool
+  {
+    $stmt = $db->prepare('
+            SELECT COUNT(*) AS count
+            FROM user_cart
+            WHERE user = ? AND item = ?
+        ');
+    $stmt->execute([$id, $item_id]);
+
+    $result = $stmt->fetch();
+
+    return $result['count'] > 0;
+  }
+
+  static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price)
+  {
+    $shipping = 0; // Create function to calculate the shipping cost;
+    try {
+      $stmt = $db->prepare('
+          INSERT INTO user_cart (item, user, price, shipping)
+          VALUES (?, ?, ?, ?)
+      ');
+
+      $stmt->execute([$item_id, $id, $price, $shipping]);
+    } catch (PDOException $e) {
+      throw $e;
+    }
+  }
+
+  static function removeItemFromCart(PDO $db, int $user_id, int $item_id)
+  {
+    try {
+      $stmt = $db->prepare('
+            DELETE FROM user_cart
+            WHERE item = ? AND user = ?
+        ');
+      $stmt->execute([$item_id, $user_id]);
+    } catch (PDOException $e) {
+      throw $e; // Re-throwing the exception to be caught in the calling code
+    }
+  }
 }
 ?>

@@ -30,7 +30,8 @@ if (!$item): ?>
   $seller = User::getUser($db, $item->seller);
   $seller_reviews = User::getUserReviews($db, $item->seller);
   $is_item_in_wishlist = $id ? User::isItemInWishlist($db, $id, $item->id) : false;
-  drawItem($item, $seller, $seller_reviews, $is_item_in_wishlist, $session);
+  $is_item_in_cart = $id ? User::isItemInCart($db, $id, $item->id) : false;
+  drawItem($item, $seller, $seller_reviews, $is_item_in_wishlist, $is_item_in_cart, $session);
 endif;
 
 drawFooter();

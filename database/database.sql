@@ -107,8 +107,8 @@ CREATE TABLE user_wishlist (
 CREATE TABLE user_cart (
   item INTEGER,
   user INTEGER,
-  price INTEGER,
-  shipping INTEGER,
+  price REAL,
+  shipping REAL,
   PRIMARY KEY (item, user),
   FOREIGN KEY (item) REFERENCES item(id),
   FOREIGN KEY (user) REFERENCES user(id)

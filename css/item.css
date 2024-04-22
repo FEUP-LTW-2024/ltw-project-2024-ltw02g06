@@ -200,6 +200,10 @@
   cursor: pointer;
 }
 
+#add-to-cart-btn[data-is-item-in-cart="1"] {
+  background-color: var(--oxford-blue);
+}
+
 #edit-btn, #delete-btn {
   display: flex;
   flex-direction: row;
