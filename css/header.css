@@ -59,3 +59,20 @@
   background-color: var(--penn-blue);
   color: white;
 }
+
+.category-box ul {
+  display: flex;
+  flex-direction: row;
+}
+
+.category-box li {
+  color: white;
+  background-color: var(--penn-blue);
+  text-align: center;
+  list-style-type:none;
+  margin: 1em 1em;
+  padding: 0em 1em;
+  border-radius: 6px;
+  display: block;
+  flex: 1;
+}

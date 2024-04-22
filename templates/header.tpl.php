@@ -4,6 +4,37 @@ declare(strict_types=1);
 require_once (__DIR__ . '/../utils/session.php');
 ?>
 
+<?php function drawCategories(Session $session)
+{
+  ?>
+    <div class="category-box">
+      <ul class="category-list">
+        <li>Carros, Motos e Barcos</li>
+        <li>Imóveis</li>
+        <li>Bebé e Criança</li>
+        <li>Lazer</li>
+        <li>Telemóveis e Tablets</li>
+        <li>Agricultura</li>
+        <li>Animais</li>
+        <li>Desporto</li>
+        <li>Moda</li>
+      </ul>
+      <ul class="category-list">
+        <li>Móveis, Casa e Jardim</li>
+        <li>Tecnologia</li>
+        <li>Emprego</li>
+        <li>Serviços</li>
+        <li>Equipamentos e Ferramentas</li>
+        <li>Outras Vendas</li>
+        <li>Apartamentos até 150.000€</li>
+        <li>Bicicletas</li>
+        <li>Jardim e Bricolage</li>
+        
+      </ul>
+    </div>
+  <?php
+} ?>
+
 <?php function drawHeader(Session $session)
 { ?>
   <!DOCTYPE html>
@@ -51,4 +82,6 @@ require_once (__DIR__ . '/../utils/session.php');
     </header>
 
     <main>
-    <?php } ?>
+    <?php 
+} 
+?>
