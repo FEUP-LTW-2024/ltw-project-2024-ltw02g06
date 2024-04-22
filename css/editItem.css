@@ -1,0 +1,231 @@
+#edit-item {
+  display: grid;
+  grid-template-columns: 35% auto;
+  grid-template-areas: "cancel-btn submit-btn"
+                       "item-info item-image"
+                       "seller-info item-image"
+                       "item-location item-description"
+                       "none item-description";
+  gap: 1rem;
+
+  width: 100%;
+}
+
+#edit-item-image-container {
+  grid-area: item-image;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: min-content;
+  gap: 1rem;
+  padding: 2rem;
+
+  width: 100%;
+
+  overflow: scroll;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#edit-item-image-container > div {
+  align-items: center;
+  position: relative;
+
+  aspect-ratio: 1/1;
+
+  width: 100%;
+}
+
+#new-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  width: 100%;
+
+  border-radius: 6px;
+}
+
+#preview-new-image {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(210, 210, 210);
+  border-radius: 6px;
+}
+
+#preview-new-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+
+  object-fit: cover;
+}
+
+#edit-item-image-container div:last-of-type:hover #preview-new-image {
+  opacity: 0.5;
+}
+
+#new-image-container label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  cursor: pointer;
+}
+
+#new-image-container label ion-icon {
+  font-size: 2rem;
+}
+
+#new-image-container > div:last-of-type {
+  padding: 1rem;
+  
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+#close-preview-image-btn, #accept-preview-image-btn {
+  height: 2.5rem;
+  width: 2.5rem;
+  
+  border: none;
+  border-radius: 0.2rem;
+
+  background-color: white;
+
+  cursor: pointer;
+}
+
+#close-preview-image-btn {
+  color: red;
+}
+
+#accept-preview-image-btn {
+  color: green;
+}
+
+#edit-item-image-container > div > img {
+  width: 100%;
+  height: 100%;
+
+  border-radius: 6px;
+  
+  object-fit: cover;
+}
+
+#edit-item-image-container > div > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  position: absolute;
+  right: 1rem;
+  top: 2rem;
+  transform: translateY(-50%);
+
+  padding: 0.4rem;
+  
+  border: none;
+  border-radius: 0.2rem;
+
+  background-color: white;
+
+  cursor: pointer;
+}
+
+#new-image-input {
+  display: none;
+}
+
+
+#edit-item-info {
+  grid-area: item-info;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  border-radius: 6px;
+  padding: 2rem;
+
+  background-color: white;
+}
+
+#add-to-cart-btn.deactivated-btn,
+#negotiate-btn.deactivated-btn,
+#send-message-btn.deactivated-btn {
+  background-color: rgb(210, 210, 210);
+  color: gray;
+  cursor: auto;
+  border: none;
+}
+
+#add-to-cart-btn.deactivated-btn:active,
+#negotiate-btn.deactivated-btn:active,
+#send-message-btn.deactivated-btn:active {
+  transform: none;
+}
+
+#edit-item-description-container {
+  grid-area: item-description;
+
+  display: flex;
+  flex-direction: column;
+  
+  padding: 2rem;
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#edit-item-description-container h2 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+#edit-item-category-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  padding: 0;
+  padding-top: 2rem;
+
+  list-style: none;
+}
+
+#edit-item-category-list li {
+  border: 1px solid gray;
+  border-radius: 6px;
+}
+
+#edit-item-category-list li p {
+  margin: 0;
+  padding: 0.4rem 0.6rem 0.4rem 0.6rem;
+
+  font-size: 0.9rem;
+}
+
+#edit-item-description-container div:last-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+  border-top: 1px solid gray;
+  
+  color: gray;
+  font-size: 0.7rem;
+}
