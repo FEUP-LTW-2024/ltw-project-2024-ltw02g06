@@ -12,9 +12,14 @@ const handleImagesNavBtns = () => {
   const images = document.querySelectorAll("#item-image-container img");
   let currentIndex = 0;
 
+  if (images.length == 0) {
+    previousBtn.style.display = "none";
+    nextBtn.style.display = "none";
+    return;
+  }
+
   // Event listener for previous button
   previousBtn.addEventListener("click", function () {
-    if (images.length == 0) return;
     images[currentIndex].style.display = "none";
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     images[currentIndex].style.display = "block";
@@ -22,7 +27,6 @@ const handleImagesNavBtns = () => {
 
   // Event listener for next button
   nextBtn.addEventListener("click", function () {
-    if (images.length == 0) return;
     images[currentIndex].style.display = "none";
     currentIndex = (currentIndex + 1) % images.length;
     images[currentIndex].style.display = "block";
