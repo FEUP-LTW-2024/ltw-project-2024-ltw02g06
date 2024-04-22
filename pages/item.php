@@ -26,6 +26,7 @@ drawBreadcrumbNav();
 if (!$item): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
 <?php else:
+  $item->increaseNumberOfClicks($db);
   $seller = User::getUser($db, $item->seller);
   $seller_reviews = User::getUserReviews($db, $item->seller);
   $is_item_in_wishlist = $id ? User::isItemInWishlist($db, $id, $item->id) : false;

@@ -156,5 +156,16 @@ class Item
 
     return self::getItem($db, (int) $id);
   }
+
+  public function increaseNumberOfClicks(PDO $db): void
+  {
+    $stmt = $db->prepare('
+            UPDATE item
+            SET clicks = clicks + 1
+            WHERE id = ?');
+    $stmt->execute([$this->id]);
+
+    $this->clicks++;
+  }
 }
 ?>
