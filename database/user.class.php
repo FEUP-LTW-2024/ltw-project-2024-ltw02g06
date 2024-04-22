@@ -156,5 +156,31 @@ class User
 
     return $result['count'] > 0;
   }
+
+  static function addItemToWishlist(PDO $db, int $id, int $item_id)
+  {
+    try {
+      $stmt = $db->prepare('
+          INSERT INTO user_wishlist (item, user)
+          VALUES (?, ?)
+      ');
+      $stmt->execute([$item_id, $id]);
+    } catch (PDOException $e) {
+      throw $e;
+    }
+  }
+
+  static function removeItemFromWishlist(PDO $db, int $user_id, int $item_id)
+  {
+    try {
+      $stmt = $db->prepare('
+            DELETE FROM user_wishlist
+            WHERE item = ? AND user = ?
+        ');
+      $stmt->execute([$item_id, $user_id]);
+    } catch (PDOException $e) {
+      throw $e; // Re-throwing the exception to be caught in the calling code
+    }
+  }
 }
 ?>

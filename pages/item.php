@@ -33,6 +33,13 @@ if (!$item): ?>
   drawItem($item, $seller, $seller_reviews, $is_item_in_wishlist, $session);
 endif;
 
-echo '<script src="./../javascript/item.js"></script>';
 drawFooter();
 ?>
+<?php if ($item): ?>
+  <script src="./../javascript/item.js"></script>
+  <script>
+    var sessionId = <?php echo json_encode($session->getId()); ?>;
+    var itemId = <?php echo json_encode($item->id); ?>;
+    initialize(sessionId, itemId);
+  </script>
+<?php endif; ?>

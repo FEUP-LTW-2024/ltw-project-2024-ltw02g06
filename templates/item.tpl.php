@@ -65,7 +65,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <?= $item->creation_date->format('d/m/Y'); ?>
         </p>
         <?php if (!$is_seller): ?>
-          <button id="whishlist-btn" disabled><ion-icon name=<?= $is_item_in_wishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
+          <button id="whishlist-btn" data-is-item-in-wishlist=<?= $is_item_in_wishlist ? "1" : "0" ?>><ion-icon
+              name=<?= $is_item_in_wishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
         <?php endif; ?>
       </div>
       <h3 id="item-name"><?= $item->name ?></h3>
