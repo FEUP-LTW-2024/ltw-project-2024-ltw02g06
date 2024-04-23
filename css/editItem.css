@@ -163,6 +163,33 @@
   background-color: white;
 }
 
+#edit-item-name {
+  width: auto;
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+
+#edit-item-price {
+  box-sizing: border-box;
+
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+#edit-item-info span {
+  width: auto;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 #add-to-cart-btn.deactivated-btn,
 #negotiate-btn.deactivated-btn,
 #send-message-btn.deactivated-btn {
@@ -228,4 +255,14 @@
   
   color: gray;
   font-size: 0.7rem;
+}
+
+#edit-item-description {
+  resize: vertical;
+  max-height: 40rem;
+
+  padding: 0.5rem;
+
+  border: none;
+  border-radius: 6px;
 }
