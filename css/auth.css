@@ -1,0 +1,76 @@
+html {
+    padding: 7em;
+    background-color: #001242;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #F2F4F5;
+    max-width: 400px;
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 0 15px 0;
+}
+
+body header {
+    padding: 15px 0;
+}
+
+body header a {
+    color: #001242;
+    text-decoration: none;
+    padding: 15px 70px;
+}
+
+#unselected {
+    background-color: white;
+}
+
+#unselected:hover {
+    background-color: #005E7C;
+    color: white;
+}
+
+
+form {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    padding: 0 50px;
+}
+
+form a {
+    color: #001242;
+    text-decoration: none;
+    padding: 15px 0 5px;
+    width: 100%;
+}
+
+form a:nth-child(5) {
+    padding: 10px 0 50px;
+}
+
+form input {
+    border: none;
+    padding: 5px 0;
+    width: 100%;
+}
+
+form button {
+    color: white;
+    background-color: #001242;
+    border: none;
+    padding: 10px 0;
+    width: 100%;
+}
+
+form button:hover {
+    background-color: #005E7C;
+}
+
+

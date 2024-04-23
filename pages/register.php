@@ -12,14 +12,5 @@ require_once (__DIR__ . '/../templates/auth.tpl.php');
 
 $db = getDatabaseConnection();
 
-drawUserLoginForm();
-?>
-<section id="messages">
-  <?php foreach ($session->getMessages() as $messsage) { ?>
-    <article class="<?= $messsage['type'] ?>">
-      <?= $messsage['text'] ?>
-    </article>
-  <?php } ?>
-</section>
-<?php
+drawUserRegisterForm();
 ?>
