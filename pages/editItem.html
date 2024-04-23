@@ -50,10 +50,10 @@
 
     <main>
       <forms id="edit-item">
-        <nav>
-          <button>Cancelar<ion-icon name="close"></ion-icon></button>
-          <button>Confirmar<ion-icon name="checkmark"></ion-icon></button>
-        </nav>
+        <div id="edit-item-buttons">
+          <button id="edit-item-cancel-btn">Cancelar<ion-icon name="close"></ion-icon></button>
+          <button id="edit-item-submit-btn">Confirmar<ion-icon name="checkmark"></ion-icon></button>
+        </div>
         <div id="edit-item-image-container">
           <div>
             <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image 1">
@@ -82,96 +82,77 @@
           <h2>
             Descrição
           </h2>
-          <!-- <p>
-            Vendo Lexus GS450 Hybrid de Junho de 2007, Nacional.
-            <br>
-            <br>
-            Viatura em excelente estado de conservação.<br>
-            <br>
-            Versão com bastantes extras dos quais se destacam:<br>
-            - Bancos elétricos, aquecidos e arrefecidos com memória<br>
-            - Jantes 18” originais<br>
-            - Volante em Alcântara com regulação elétrica e memória <br>
-            - Suspensão adaptativa<br>
-            - Modos de condução<br>
-            - Bi Xenon com faróis direcionais<br>
-            - Vidros traseiros escurecidos<br>
-            - Cortina traseira elétrica<br>
-            - Espelhos retrovisores elétricos<br>
-            - Keyless<br>
-            - Ecrã central totalmente funcional com AC digital e todos os controlos sincronizados com a viatura <br>
-            - AC automático bizona <br>
-            - Câmara de marcha atrás <br>
-            - Cruise Control adaptativo <br>
-            - Interior em pele bege<br>
-            - Entre muitos outros<br>
-            <br>
-            Viatura em excelente estado de mecânica. Motor 3.5cc V6 a gasolina com fiabilidade Toyota aliado a um motor
-            elétrico o que perfaz uma potência combinada de 345cv e permite mesmo assim consumos baixos para a sua cilindrada
-            e potência. Em condução mista é um carro capaz de fazer 8L/100km <br>
-            Interior bastante conservado sem sinais de desgaste, entregue devidamente limpo e higienizado.<br>
-            Pintura muito bem conservada tal como demonstram as fotos. <br>
-            <br>
-            Duas chaves e manuais originais com registos de manutenções na marca até aos 140000 km. Foi realizado no passado
-            ano check up na marca onde o carro não apresentou qualquer anomalia e comprovou o excelente estado da bateria.<br>
-            <br>
-            Viatura extremamente confortável, espaçosa, fiável, com performances surpreendentes e com uma enorme presença.
-            Look bastante atual, assim como toda a sua tecnologia.<br>
-            <br>
-            Pode trazer mecânico ou realizar check up na marca.<br>
-            <br>
-            Sendo de Junho de 2007, ainda está abrangido pelo IUC mais baixo.<br>
-            <br>
-            Garantia de 18 meses incluída no valor anunciado.<br>
-            Possibilidade de financiamento.<br>
-            <br>
-            Qualquer assunto contactar.
-          </p> -->
           <textarea id="edit-item-description" rows="10"></textarea>
-          <ul id="edit-item-category-list">
-            <li>
-              <p>Profissional</p>
-            </li>
-            <li>
-              <p>Segmento: Sedan</p>
-            </li>
-            <li>
-              <p>Modelo: GS 450h</p>
-            </li>
-            <li>
-              <p>Mês de Registo: Junho</p>
-            </li>
-            <li>
-              <p>Ano: 2007</p>
-            </li>
-            <li>
-              <p>Cilindrada: 3.500</p>
-            </li>
-            <li>
-              <p>Combustível: Híbrido</p>
-            </li>
-            <li>
-              <p>Potência: 345</p>
-            </li>
-            <li>
-              <p>Quilómetros: 245.000 km</p>
-            </li>
-            <li>
-              <p>Tipo de Caixa: Automática</p>
-            </li>
-            <li>
-              <p>Condição: Usado</p>
-            </li>
-            <li>
-              <p>Portas: 4-5</p>
-            </li>
-            <li>
-              <p>Lugares: 5</p>
-            </li>
-            <li>
-              <p>Origem: Nacional</p>
-            </li>
-          </ul>
+            <ol id="edit-item-category-list">
+              <li>
+                <p>Categoria</p>
+                <select name="category" id="category">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="cars">Carros</option>
+                  <option value="technology">Tecnologia</option>
+                  <option value="fashion">Roupa</option>
+                </select>
+              </li>
+              <li>
+                <p>Preço</p>
+                <div class="range-filter">
+                  <input type="number" name="price-range-from" id="price-range-from" placeholder="De">
+                  <input type="number" name="price-range-to" id="price-range-to" placeholder="Até">
+                </div>
+              </li>
+              <li>
+                <p>Marca</p>
+                <select name="brand" id="brand">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="Abarth">Abarth</option>
+                  <option value="Audi">Audi</option>
+                  <option value="Volkswagen">Volkswagen</option>
+                </select>
+              </li>
+              <li>
+                <p>Segmento</p>
+                <select name="segment" id="segment">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="Cabrio">Cabrio</option>
+                  <option value="Carrinha">Carrinha</option>
+                  <option value="Citadinho">Citadinho</option>
+                </select>
+              </li>
+              <li>
+                <p>Modelo</p>
+                <select name="model" id="model">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </li>
+              <li>
+                <p>Mês de registo</p>
+                <select name="register-month" id="register-month">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="1">Janeiro</option>
+                  <option value="2">Fevereiro</option>
+                  <option value="3">Março</option>
+                </select>
+              </li>
+              <li>
+                <p>Ano</p>
+                <div class="range-filter">
+                  <input type="number" name="year-range-from" id="year-range-from" placeholder="De">
+                  <input type="number" name="year-range-to" id="year-range-to" placeholder="Até">
+                </div>
+              </li>
+              <li>
+                <p>Condição</p>
+                <select name="condition" id="condition">
+                  <option value="any" selected>Mostrar tudo</option>
+                  <option value="1">Usado</option>
+                  <option value="2">Novo</option>
+                  <option value="3">Março</option>
+                </select>
+              </li>
+            </ol>
         </div>
     
         <div id="edit-item-info">

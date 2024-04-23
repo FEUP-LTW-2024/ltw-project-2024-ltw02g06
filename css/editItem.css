@@ -1,7 +1,7 @@
 #edit-item {
   display: grid;
   grid-template-columns: 35% auto;
-  grid-template-areas: "cancel-btn submit-btn"
+  grid-template-areas: "form-btns form-btns"
                        "item-info item-image"
                        "seller-info item-image"
                        "item-location item-description"
@@ -9,6 +9,36 @@
   gap: 1rem;
 
   width: 100%;
+}
+
+#edit-item-buttons {
+  grid-area: form-btns;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+}
+
+#edit-item-cancel-btn, #edit-item-submit-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.4rem 0.8rem 0.4rem 0.8rem;
+
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+#edit-item-cancel-btn ion-icon {
+  color: red;
+}
+
+#edit-item-submit-btn ion-icon {
+  color: green;
 }
 
 #edit-item-image-container {
@@ -246,7 +276,7 @@
   font-size: 0.9rem;
 }
 
-#edit-item-description-container div:last-of-type {
+#edit-item-description-container > div:last-of-type {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -265,4 +295,34 @@
 
   border: none;
   border-radius: 6px;
+}
+
+#edit-item-category-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0;
+
+  list-style: none;
+}
+
+#edit-item-category-list li {
+  border: none;
+}
+
+#edit-item-category-list p {
+  margin: 0;
+  padding-bottom: 0.4rem;
+}
+
+#edit-item-category-list li select, #edit-item-category-list li input {
+  width: 12rem;
+
+  padding: 0.8rem 1rem 0.8rem 1rem;
+  background-color: white;
+  border: 1px solid gray;
+  border-radius: 6px;
+
+  font-size: 1rem;
 }
