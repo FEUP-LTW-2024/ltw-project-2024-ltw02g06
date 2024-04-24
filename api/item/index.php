@@ -30,19 +30,55 @@ switch ($request_method) {
     break;
   case 'POST':
     // POST request handling
+    // Create a item
     $postData = json_decode(file_get_contents('php://input'), true);
-    $item = Item::createItem($db, $postData);
-    if ($item) {
-      http_response_code(201); // Created
-      echo json_encode($item);
-    } else {
-      http_response_code(400); // Bad Request
-      echo json_encode(array("message" => "Unable to create item."));
+    $user_id = $session->getId();
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    try {
+      $item = Item::createItem($db, $postData);
+      if ($item) {
+        http_response_code(201); // Created
+        echo json_encode($item);
+      } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(array("message" => "Unable to create item."));
+      }
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
     }
     break;
   case 'PATCH':
     // PATCH request handling
-    // TODO create code to update a given item
+    // Update a given item.
+    $postData = json_decode(file_get_contents('php://input'), true);
+    $user_id = $session->getId();
+
+    if (!$user_id || $user_id != $item->seller) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    try {
+      $item = Item::updateItem($db, $postData);
+      if ($item) {
+        http_response_code(200); // OK
+        echo json_encode($item);
+      } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(array("message" => "Unable to update item."));
+      }
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
     break;
   case 'DELETE':
     // DELETE request handling
