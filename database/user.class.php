@@ -179,7 +179,7 @@ class User
         ');
       $stmt->execute([$item_id, $user_id]);
     } catch (PDOException $e) {
-      throw $e; // Re-throwing the exception to be caught in the calling code
+      throw $e;
     }
   }
 
@@ -199,7 +199,7 @@ class User
 
   static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price)
   {
-    $shipping = 0; // Create function to calculate the shipping cost;
+    $shipping = 0; // TODO Create function to calculate the shipping cost;
     try {
       $stmt = $db->prepare('
           INSERT INTO user_cart (item, user, price, shipping)

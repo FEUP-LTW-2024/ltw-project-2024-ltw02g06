@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 CREATE TABLE user (
   id INTEGER PRIMARY KEY,
   first_name TEXT,
@@ -34,40 +36,36 @@ CREATE TABLE category (
 CREATE TABLE attribute (
   id INTEGER PRIMARY KEY,
   name TEXT,
-  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'enum')),
-  parent INTEGER,
-  FOREIGN KEY (parent) REFERENCES attribute(id)
+  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'enum', 'real')) NOT NULL
 );
 
 CREATE TABLE attribute_values (
   id INTEGER PRIMARY KEY,
-  value TEXT,
   attribute INTEGER,
-  parent INTEGER,
-  FOREIGN KEY (attribute) REFERENCES attribute(id),
-  FOREIGN KEY (parent) REFERENCES attribute_values(id)
+  value TEXT,
+  FOREIGN KEY (attribute) REFERENCES attribute(id) ON DELETE CASCADE
 );
 
 CREATE TABLE category_attributes (
   category INTEGER,
   attribute INTEGER,
   PRIMARY KEY (category, attribute),
-  FOREIGN KEY (category) REFERENCES category(id),
-  FOREIGN KEY (attribute) REFERENCES attribute(id)
+  FOREIGN KEY (category) REFERENCES category(id) ON DELETE CASCADE,
+  FOREIGN KEY (attribute) REFERENCES attribute(id) ON DELETE CASCADE
 );
 
 CREATE TABLE item (
   id INTEGER PRIMARY KEY,
   name TEXT,
   description TEXT,
-  price REAL,
+  price REAL DEFAULT 0,
   seller INTEGER,
   category INTEGER,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'to send', 'sold')),
   sold_price REAL,
   creation_date DATE,
   clicks INTEGER DEFAULT 0,
-  FOREIGN KEY (seller) REFERENCES user(id),
+  FOREIGN KEY (seller) REFERENCES user(id) ON DELETE CASCADE,
   FOREIGN KEY (category) REFERENCES category(id)
 );
 
@@ -82,9 +80,9 @@ VALUES ('database/files/default_profile_picture.svg');
 CREATE TABLE item_image (
   item INTEGER,
   image INTEGER,
-  PRIMARY KEY (item, image)
-  FOREIGN KEY (item) REFERENCES item(id),
-  FOREIGN KEY (image) REFERENCES image(id)
+  PRIMARY KEY (item, image),
+  FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
+  FOREIGN KEY (image) REFERENCES image(id) ON DELETE CASCADE
 );
 
 CREATE TABLE item_attributes (
@@ -92,16 +90,16 @@ CREATE TABLE item_attributes (
   attribute INTEGER,
   value TEXT,
   PRIMARY KEY (item, attribute),
-  FOREIGN KEY (item) REFERENCES item(id),
-  FOREIGN KEY (attribute) REFERENCES attribute(id)
+  FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
+  FOREIGN KEY (attribute) REFERENCES attribute(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_wishlist (
   item INTEGER,
   user INTEGER,
   PRIMARY KEY (item, user),
-  FOREIGN KEY (item) REFERENCES item(id),
-  FOREIGN KEY (user) REFERENCES user(id)
+  FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
+  FOREIGN KEY (user) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_cart (
@@ -110,6 +108,6 @@ CREATE TABLE user_cart (
   price REAL,
   shipping REAL,
   PRIMARY KEY (item, user),
-  FOREIGN KEY (item) REFERENCES item(id),
-  FOREIGN KEY (user) REFERENCES user(id)
+  FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
+  FOREIGN KEY (user) REFERENCES user(id) ON DELETE CASCADE
 );

@@ -1,7 +1,9 @@
 const initialize = (sessionId, itemId) => {
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", () => {
     handleWishlistBtn(sessionId, itemId);
     handleCartBtn(sessionId, itemId);
+    handleEditBtn(itemId);
+    handleDeleteBtn(itemId);
     handleImagesNavBtns();
   });
 };
@@ -19,14 +21,14 @@ const handleImagesNavBtns = () => {
   }
 
   // Event listener for previous button
-  previousBtn.addEventListener("click", function () {
+  previousBtn.addEventListener("click", () => {
     images[currentIndex].style.display = "none";
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     images[currentIndex].style.display = "block";
   });
 
   // Event listener for next button
-  nextBtn.addEventListener("click", function () {
+  nextBtn.addEventListener("click", () => {
     images[currentIndex].style.display = "none";
     currentIndex = (currentIndex + 1) % images.length;
     images[currentIndex].style.display = "block";
@@ -40,7 +42,7 @@ const handleWishlistBtn = (sessionId, itemId) => {
 
   const heartIcon = addToWishlistBtn.querySelector("ion-icon");
 
-  addToWishlistBtn.addEventListener("click", function () {
+  addToWishlistBtn.addEventListener("click", () => {
     const isItemInWishlist = addToWishlistBtn.dataset.isItemInWishlist == "1";
     // Check if the user is authenticated
     if (sessionId == null) {
@@ -64,7 +66,7 @@ const handleWishlistBtn = (sessionId, itemId) => {
   });
 };
 
-function removeFromWishlist(itemId) {
+const removeFromWishlist = (itemId) => {
   fetch(`./../api/user/wishlist.php?item_id=${itemId}`, {
     method: "DELETE",
   })
@@ -77,9 +79,9 @@ function removeFromWishlist(itemId) {
     .catch((error) => {
       console.error("Error removing item from wishlist:", error);
     });
-}
+};
 
-function addToWishlist(itemId) {
+const addToWishlist = (itemId) => {
   fetch(`./../api/user/wishlist.php`, {
     method: "POST",
     headers: {
@@ -96,14 +98,14 @@ function addToWishlist(itemId) {
     .catch((error) => {
       console.error("Error adding item to wishlist:", error);
     });
-}
+};
 
 const handleCartBtn = (sessionId, itemId) => {
   const addToCartBtn = document.getElementById("add-to-cart-btn");
 
   if (!addToCartBtn) return;
 
-  addToCartBtn.addEventListener("click", function () {
+  addToCartBtn.addEventListener("click", () => {
     const isItemInCart = addToCartBtn.dataset.isItemInCart == "1";
     // Check if the user is authenticated
     if (sessionId == null) {
@@ -127,7 +129,7 @@ const handleCartBtn = (sessionId, itemId) => {
   });
 };
 
-function removeFromCart(itemId) {
+const removeFromCart = (itemId) => {
   fetch(`./../api/user/cart.php?item_id=${itemId}`, {
     method: "DELETE",
   })
@@ -140,9 +142,9 @@ function removeFromCart(itemId) {
     .catch((error) => {
       console.error("Error removing item from cart:", error);
     });
-}
+};
 
-function addToCart(itemId) {
+const addToCart = (itemId) => {
   fetch(`./../api/user/cart.php`, {
     method: "POST",
     headers: {
@@ -159,4 +161,48 @@ function addToCart(itemId) {
     .catch((error) => {
       console.error("Error adding item to cart:", error);
     });
-}
+};
+
+const handleEditBtn = (itemId) => {
+  const editBtn = document.getElementById("edit-btn");
+
+  if (!editBtn) return;
+
+  editBtn.addEventListener("click", () => {
+    // Redirect the user to edit item page
+    const currentPageUrl = window.location.pathname + window.location.search;
+    window.location.href = `/pages/item.edit.php?id=${itemId}&redirect= ${encodeURIComponent(
+      currentPageUrl
+    )}`;
+    return;
+  });
+};
+
+const handleDeleteBtn = (itemId) => {
+  const deleteBtn = document.getElementById("delete-btn");
+
+  if (!deleteBtn) return;
+
+  deleteBtn.addEventListener("click", () => {
+    deleteItem(itemId, () => {
+      // Redirect the user to seller page
+      window.location.href = "/pages/seller.php";
+    });
+  });
+};
+
+const deleteItem = (itemId, callback) => {
+  fetch(`./../api/item/index.php?id=${itemId}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      console.log("Item deleted.");
+      callback();
+    })
+    .catch((error) => {
+      console.error("Error deleting item:", error);
+    });
+};
