@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once (__DIR__ . '/../database/item.class.php');
+require_once (__DIR__ . '/../database/category.class.php');
 require_once (__DIR__ . '/../utils/session.php');
 
 require_once (__DIR__ . '/../templates/search-bar.tpl.php');
@@ -40,7 +41,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <?php if (trim($item->description) === ""): ?>
         <p>Sem descrição.</p>
       <?php else: ?>
-        <p><?= $item->description ?></p>
+        <p><?= nl2br(trim($item->description)) ?></p>
       <?php endif; ?>
 
       <ul id="item-category-list">
@@ -83,7 +84,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <?php endif; ?>
     </div>
 
-    <div id="item-location">
+    <div id="item-location" class="edit-item-location">
       <h3>Localização</h3>
       <div>
         <div>
@@ -97,7 +98,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       </div>
     </div>
 
-    <div id="seller-info">
+    <div id="seller-info" class="edit-seller-info">
       <h3>Utilizador</h3>
       <a href="/pages/profile.php?id=<?php echo $seller->id; ?>">
         <img id="seller-img" src="<?= '/../' . $seller->image ?>" alt="User Profile Picture">
@@ -124,7 +125,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           $average_rating = count($seller_reviews) > 0 ? $total_rating / count($seller_reviews) : 0;
           ?>
           <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
-          <p class="small-font-size">17 classificações</p>
+          <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
         <?php endif; ?>
       </div>
       <a id="see-all-items-btn" href="/pages/profile.php?id=<?php echo $seller->id; ?>">
@@ -136,10 +137,131 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </article>
 <?php } ?>
 
-<!-- TODO -->
-<?php function drawEditItem()
+<?php function drawEditItem(Item $item, User $user, array $user_reviews, array $categories, Session $session)
 { ?>
+  <form id="edit-item"
+    action="../actions/action_edit_item.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '?redired=' . urlencode('/pages/item.php?id=' . $item->id) ?>"
+    method="post">
+    <input type="hidden" name="item_id" value=<?= $item->id ?>>
+    <div id="edit-item-buttons">
+      <button id="edit-item-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>
+      <button id="edit-item-submit-btn" type="submit">Confirmar<ion-icon name="checkmark" submit></ion-icon></button>
+    </div>
+    <div id="edit-item-image-container">
+      <?php foreach ($item->images as $image): ?>
+        <div>
+          <img src="<?= '/../' . $image['path'] ?>" alt="Item Image">
+          <button onclick="removeImage(this)" type="button"><ion-icon name="trash-outline"></ion-icon></button>
+          <input type="hidden" name="images[<?= $image['id'] ?>]" value="<?= $image['path'] ?>">
+        </div>
+      <?php endforeach; ?>
+      <div id="new-image-container">
+        <div id="preview-new-image"></div>
+        <input onchange="previewImage(event)" type="file" name="new-image-input" id="new-image-input" accept="image/*">
+        <label for="new-image-input"><ion-icon name="add"></ion-icon></label>
+        <div style="display: none;">
+          <button onclick="closePreview()" id="close-preview-image-btn" type="button"><ion-icon
+              name="close"></ion-icon></button>
+          <button onclick="acceptPreview()" id="accept-preview-image-btn" type="button"><ion-icon
+              name="checkmark"></ion-icon></button>
+        </div>
+      </div>
+    </div>
 
+    <div id="edit-item-description-container">
+      <h2>
+        Descrição
+      </h2>
+      <textarea id="edit-item-description" name="item_description" rows="10"
+        placeholder="Descrição do anúncio"><?= $item->description ?></textarea>
+      <ol id="edit-item-category-list">
+        <li>
+          <label for="category">Categoria</label>
+          <select name="category" id="category">
+            <?php foreach ($categories as $category): ?>
+              <option value=<?= $category->id ?>     <?= $category->id == $item->category ? "selected" : "" ?>><?= $category->name ?></option>
+            <?php endforeach; ?>
+          </select>
+        </li>
+        <?php foreach ($categories[$item->category]->attributes as $attribute): ?>
+          <li>
+            <label for="<?= $attribute["name"] ?>"><?= $attribute["name"] ?></label>
+
+            <?php if ($attribute["type"] == "real"): // TODO Change this input later ?>
+              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+
+            <?php elseif ($attribute["type"] == "default"): ?>
+              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+
+            <?php elseif ($attribute["type"] == "enum"): ?>
+              <select name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+                <?php foreach ($attribute["values"] as $value): ?>
+                  <option value=<?= $value["value"] ?>         <?= $item->attributes[$attribute['id']]['value'] == $value["value"] ? "selected" : "" ?>>
+                    <?= $value["value"] ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            <?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      </ol>
+    </div>
+
+    <div id="edit-item-info">
+      <p class="small-font-size">Publicado
+        <?= $item->creation_date->format('d/m/Y'); ?>
+      </p>
+      <input type="text" name="item_name" id="edit-item-name" value=<?= $item->name ?> placeholder="Nome do anúncio">
+      <span><input type="text" name="item_price" id="edit-item-price" value=<?= $item->price ?>> €</span>
+      <button id="add-to-cart-btn" class="deactivated-btn" type="button">Adicionar ao carrinho</button>
+      <button id="negotiate-btn" class="deactivated-btn" type="button">Propor outro preço</button>
+      <button id="send-message-btn" class="deactivated-btn" type="button">Enviar mensagem</button>
+    </div>
+
+    <div id="item-location" class="edit-item-deactivated">
+      <h3>Localização</h3>
+      <div>
+        <div>
+          <h4><?= $user->city ?></h4>
+          <p><?= $user->state . ', ' . $user->country ?></p>
+        </div>
+        <img src="https://www.olx.pt/app/static/media/staticmap.65e20ad98.svg" alt="Location Map">
+      </div>
+    </div>
+
+    <div id="seller-info">
+      <h3>Utilizador</h3>
+      <div>
+        <img id="seller-img" src="<?= '/../' . $user->image ?>" alt="User Profile Picture">
+        <div>
+          <h4 id="seller-name"><?= $user->name() ?></h4>
+          <p class="small-font-size">
+            No eKo desde
+            <?= $user->registration_date->format('d/m/Y'); ?>
+          </p>
+          <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
+        </div>
+      </div>
+      <div>
+        <?php if (empty($seller_reviews)): ?>
+          <h6>Rating: </h6>
+          <p>Sem classificações</p>
+        <?php else: ?>
+          <?php
+          $total_rating = 0;
+          foreach ($seller_reviews as $review) {
+            $total_rating += $review['rating'];
+          }
+
+          $average_rating = count($seller_reviews) > 0 ? $total_rating / count($seller_reviews) : 0;
+          ?>
+          <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
+          <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
+        <?php endif; ?>
+      </div>
+    </div>
+
+  </form>
 <?php } ?>
 
 <?php function drawItems(Session $session)

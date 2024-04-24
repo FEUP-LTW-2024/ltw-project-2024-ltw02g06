@@ -53,7 +53,7 @@ h6 {
   font-size: 0.9rem;
 }
 
-p, span, button, a, div::before, div::after, textarea {
+p, span, button, a, div::before, div::after, textarea, label {
   font-family: "Karla", sans-serif;
   font-size: 1rem;
 }

@@ -31,6 +31,8 @@
   background-color: white;
   border: none;
   border-radius: 6px;
+
+  cursor: pointer;
 }
 
 #edit-item-cancel-btn ion-icon {
@@ -185,12 +187,17 @@
   grid-area: item-info;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 0.6rem;
 
   border-radius: 6px;
   padding: 2rem;
 
   background-color: white;
+}
+
+#edit-item-name, #edit-item-price {
+  border: 1px solid gray;
 }
 
 #edit-item-name {
@@ -208,6 +215,9 @@
 
   font-family: "Montserrat", sans-serif;
   font-size: 1.6rem;
+  margin: 0;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  margin-right: 0.5rem;
   font-weight: 700;
 }
 
@@ -252,48 +262,13 @@
   margin-bottom: 0.5rem;
 }
 
-#edit-item-category-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-
-  padding: 0;
-  padding-top: 2rem;
-
-  list-style: none;
-}
-
-#edit-item-category-list li {
-  border: 1px solid gray;
-  border-radius: 6px;
-}
-
-#edit-item-category-list li p {
-  margin: 0;
-  padding: 0.4rem 0.6rem 0.4rem 0.6rem;
-
-  font-size: 0.9rem;
-}
-
-#edit-item-description-container > div:last-of-type {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  
-  border-top: 1px solid gray;
-  
-  color: gray;
-  font-size: 0.7rem;
-}
-
 #edit-item-description {
   resize: vertical;
   max-height: 40rem;
 
   padding: 0.5rem;
 
-  border: none;
+  border: 1px solid gray;
   border-radius: 6px;
 }
 
@@ -301,10 +276,28 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.6rem;
+
+  margin: 0;
   padding: 0;
+  padding-top: 1rem;
 
   list-style: none;
+}
+
+#edit-item-category-list li {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid gray;
+  border-radius: 6px;
+}
+
+#edit-item-category-list li label {
+  margin: 0;
+  padding: 0.4rem 0.6rem 0.4rem 0rem;
+
+  font-size: 0.9rem;
 }
 
 #edit-item-category-list li {
@@ -325,4 +318,9 @@
   border-radius: 6px;
 
   font-size: 1rem;
+}
+
+#item-location.edit-item-deactivated, #seller-info.edit-item-deactivated {
+  filter: grayscale(100%);
+  user-select: none;
 }
