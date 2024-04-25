@@ -117,38 +117,42 @@ class Item
     $stmt = $db->prepare('
           INSERT INTO item (name, description, price, seller, category) 
           VALUES (?, ?, ?, ?, ?)');
-    $stmt->execute([$name, $description, $price, $seller, $category]);
+    $stmt->execute([$name, $description, (float) $price, (int) $seller, $category]);
 
     if ($stmt->rowCount() < 1)
       return null;
 
     $id = $db->lastInsertId();
 
-    foreach ($attributes as $attribute) {
+    foreach ($attributes as $index => $attribute) {
       $stmt = $db->prepare('
               INSERT INTO item_attributes (item, attribute, value) 
               VALUES (?, ?, ?)');
-      $stmt->execute([$id, $attribute['id'], $attribute['value']]);
+      $stmt->execute([$id, $index, $attribute]);
     }
 
     foreach ($images as $image) {
+
       $db->beginTransaction();
-
       try {
-        // Insert the image into the 'image' table
-        $stmt = $db->prepare('
+        list(, $base64_data) = explode(';', $image);
+        list(, $base64_data) = explode(',', $base64_data);
+        $image_data = base64_decode($base64_data);
+        $filename = generateUniqueFilename('.png');
+
+        file_put_contents('./../database/files/' . $filename, $image_data);
+
+        $stmt = $db->prepare("
                 INSERT INTO image (path)
-                VALUES (?)');
-        $stmt->execute([$image['path']]);
+                VALUES (?)");
+        $stmt->execute(["database/files/" . $filename]);
 
-        // Get the last inserted image ID
-        $imageId = $db->lastInsertId();
+        $image_id = $db->lastInsertId();
 
-        // Insert the association into the 'item_image' table
-        $stmt = $db->prepare('
+        $stmt = $db->prepare("
                 INSERT INTO item_image (item, image)
-                VALUES (?, ?)');
-        $stmt->execute([$id, $imageId]);
+                VALUES (?, ?)");
+        $stmt->execute([$id, $image_id]);
 
         $db->commit();
       } catch (PDOException $e) {
@@ -295,7 +299,7 @@ class Item
                   WHERE id = ?');
         $stmt->execute([$existing_image['id']]);
 
-        $image_path = './../' . $existing_image['path'];
+        $image_path = dirname(__FILE__) . '/../' . $image['path'];
         if (file_exists($image_path))
           unlink($image_path);
       }
@@ -313,7 +317,7 @@ class Item
         $image_data = base64_decode($base64_data);
         $filename = generateUniqueFilename('.png');
 
-        file_put_contents('./../database/files/' . $filename, $image_data);
+        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $image_data);
 
         $stmt = $db->prepare("
                 INSERT INTO image (path)
@@ -338,6 +342,27 @@ class Item
 
   static function deleteItem(PDO $db, int $id): void
   {
+    // Fetch images associated with the item
+    $stmt = $db->prepare('
+    SELECT id, path 
+    FROM item_image
+    LEFT JOIN image ON item_image.image = image.id
+    WHERE item_image.item = ?');
+    $stmt->execute([$id]);
+    $images = $stmt->fetchAll();
+
+    foreach ($images as $image) {
+      $stmt = $db->prepare('
+        DELETE FROM image 
+        WHERE id = ?');
+      $stmt->execute([$image['id']]);
+
+      // correct path changes depending on the function call this function
+      $image_path = dirname(__FILE__) . '/../' . $image['path'];
+      if (file_exists($image_path))
+        unlink($image_path);
+    }
+
     try {
       $stmt = $db->prepare('
             DELETE FROM item
@@ -356,7 +381,7 @@ function generateUniqueFilename(string $extension)
   $new_filename = uniqid() . $extension;
 
   // Check if the filename already exists, if so, generate a new one until it's unique
-  while (file_exists("/../database/files/$new_filename")) {
+  while (file_exists(dirname(__FILE__) . "/../database/files/$new_filename")) {
     $new_filename = uniqid() . $extension;
   }
 
