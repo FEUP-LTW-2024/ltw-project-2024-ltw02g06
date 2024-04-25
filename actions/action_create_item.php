@@ -6,7 +6,7 @@ $session = new Session();
 $id = $session->getId();
 
 if (!$id) {
-  $redirectUrl = urlencode("/pages/items.php");
+  $redirectUrl = urlencode("/pages/item.create.php");
   header("Location: login.php?redirect=$redirectUrl");
   exit();
 }
@@ -18,22 +18,17 @@ $db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $item_data = [
-    'id' => $_POST['item_id'] ?? null,
     'name' => $_POST['item_name'] ?? '',
-    'price' => $_POST['item_price'] ?? '',
     'description' => $_POST['item_description'] ?? '',
+    'seller' => $id,
+    'price' => $_POST['item_price'] ?? 0,
     'category' => $_POST['category'] ?? '',
     'images' => $_POST['images'] ?? [],
     'attributes' => $_POST['attributes'] ?? []
   ];
 
-  Item::updateItem($db, $item_data);
-}
-
-if (isset($_GET['redirect'])) {
-  header('Location: ' . $_GET['redirect']);
-} else {
-  header('Location: ' . $_SERVER['HTTP_REFERER']);
+  $item = Item::createItem($db, $item_data);
+  header('Location: /pages/item.php?id=' . $item->id);
 }
 
 ?>
