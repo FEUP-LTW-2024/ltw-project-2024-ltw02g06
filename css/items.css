@@ -142,6 +142,11 @@
   border-color: var(--penn-blue);
 }
 
-#items nav button:not(:first-of-type, :last-of-type):hover {
+#items nav p {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#items nav button:not(#previous-page, #next-page):hover {
   border: 3px solid var(--penn-blue);
 }

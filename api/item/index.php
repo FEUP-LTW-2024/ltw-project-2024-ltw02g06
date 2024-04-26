@@ -24,8 +24,24 @@ switch ($request_method) {
         echo json_encode(array("message" => "Item not found."));
       }
     } else {
-      http_response_code(400); // Bad Request
-      echo json_encode(array("message" => "Item ID is required for GET request."));
+      // Extract parameters from the URL
+      $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+      $items_per_page = isset($_GET['itemsPerPage']) ? intval($_GET['itemsPerPage']) : 10;
+      $search = isset($_GET['search']) ? $_GET['search'] : [];
+
+      try {
+        $items = Item::getAllItems($db, $page, $items_per_page, $search);
+        if ($items) {
+          http_response_code(200); // OK
+          echo json_encode($items);
+        } else {
+          http_response_code(404); // Not Found
+          echo json_encode(array("message" => "No items found."));
+        }
+      } catch (PDOException $e) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(array("message" => $e->getMessage()));
+      }
     }
     break;
   case 'POST':

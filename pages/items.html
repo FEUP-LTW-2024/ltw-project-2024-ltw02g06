@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+  <html lang="pt">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eKo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/search-bar.css">
+    <link rel="stylesheet" href="../css/breadcrumb-nav.css">
+    <link rel="stylesheet" href="../css/filters.css">
+    <link rel="stylesheet" href="../css/item.css">
+    <link rel="stylesheet" href="../css/items.css">
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/inbox.css">
+    <link rel="stylesheet" href="../css/cart.css">
+    <link rel="stylesheet" href="../css/seller.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/editItem.css">
+  </head>
+
+  <body>
+
+    <header id="header">
+      <div>
+        <h1>eKo</h1>
+        <nav>
+          <ul>
+            <li><a href="#"><ion-icon name="chatbox-outline"></ion-icon></a></li>
+            <li><a href="#"><ion-icon name="heart-outline"></ion-icon></a></li>
+            <li><a href="#"><ion-icon name="cart-outline"></ion-icon></a></li>
+            <li><a href="#"><ion-icon name="person-outline"></ion-icon></a></li>
+            <li><a href="#">Anunciar e Vender</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div id="search-bar-container">
+
+        <div id="search-bar">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" placeholder="O que procuras?">
+        </div>
+    
+        <div id="search-location">
+          <ion-icon name="location-outline"></ion-icon>
+          <input type="text" placeholder="Todo o país">
+        </div>
+    
+        <button>Pesquisar</button>
+    
+      </div>
+      <div id="filters">
+
+        <h2>Filtros</h2>
+        <ol>
+          <li class="search-filter">
+            <p>Categoria</p>
+            <select name="category" id="category">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="cars">Carros</option>
+              <option value="technology">Tecnologia</option>
+              <option value="fashion">Roupa</option>
+            </select>
+          </li>
+          <li class="search-filter">
+            <p>Preço</p>
+            <div class="range-filter">
+              <input type="number" name="price-range-from" id="price-range-from" placeholder="De">
+              <input type="number" name="price-range-to" id="price-range-to" placeholder="Até">
+            </div>
+          </li>
+          <li class="search-filter">
+            <p>Marca</p>
+            <select name="brand" id="brand">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="Abarth">Abarth</option>
+              <option value="Audi">Audi</option>
+              <option value="Volkswagen">Volkswagen</option>
+            </select>
+          </li>
+          <li class="search-filter">
+            <p>Segmento</p>
+            <select name="segment" id="segment">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="Cabrio">Cabrio</option>
+              <option value="Carrinha">Carrinha</option>
+              <option value="Citadinho">Citadinho</option>
+            </select>
+          </li>
+          <li class="search-filter">
+            <p>Modelo</p>
+            <select name="model" id="model">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </li>
+          <li class="search-filter">
+            <p>Mês de registo</p>
+            <select name="register-month" id="register-month">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="1">Janeiro</option>
+              <option value="2">Fevereiro</option>
+              <option value="3">Março</option>
+            </select>
+          </li>
+          <li class="search-filter">
+            <p>Ano</p>
+            <div class="range-filter">
+              <input type="number" name="year-range-from" id="year-range-from" placeholder="De">
+              <input type="number" name="year-range-to" id="year-range-to" placeholder="Até">
+            </div>
+          </li>
+          <li class="search-filter">
+            <p>Condição</p>
+            <select name="condition" id="condition">
+              <option value="any" selected>Mostrar tudo</option>
+              <option value="1">Usado</option>
+              <option value="2">Novo</option>
+              <option value="3">Março</option>
+            </select>
+          </li>
+        </ol>
+    
+      </div>
+    <section id="items">
+
+      <header>
+        <h2>Encontramos mais de 1000 anúncios</h2>
+        <div>
+          <p>Ordenar por:</p>
+          <select name="items-order" id="items-order">
+            <option value="relevance:desc" selected>Anúncios recomendados</option>
+            <option value="price:asc">Mais barato</option>
+            <option value="price:desc">Mais caro</option>
+            <option value="created_at:desc">Mais recente</option>
+            <option value="created_at:asc">Mais antigo</option>
+          </select>
+        </div>
+      </header>
+      <ol id="items-container">
+        <?php
+        drawSearchPageItem($session);
+        drawSearchPageItem($session);
+        ?>
+      </ol>
+  
+      <nav>
+        <button id="previous-page"><ion-icon name="chevron-back"></ion-icon></button>
+        <button>2</button>
+        <button class="selected-page">3</button>
+        <button>4</button>
+        <p>...</p>
+        <button>25</button>
+        <button id="next-page"><ion-icon name="chevron-forward"></ion-icon></button>
+      </nav>
+  
+    </section>
+  </main>
+    </body>
+  
+    </html>

@@ -382,11 +382,11 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <div>
         <p>Ordenar por:</p>
         <select name="items-order" id="items-order">
-          <option value="1" selected>Anúncios recomendados</option>
-          <option value="2">Mais barato</option>
-          <option value="3">Mais caro</option>
-          <option value="4">Mais recente</option>
-          <option value="5">Mais antigo</option>
+          <option value="relevance:desc" selected>Anúncios recomendados</option>
+          <option value="price:asc">Mais barato</option>
+          <option value="price:desc">Mais caro</option>
+          <option value="created_at:desc">Mais recente</option>
+          <option value="created_at:asc">Mais antigo</option>
         </select>
       </div>
     </header>

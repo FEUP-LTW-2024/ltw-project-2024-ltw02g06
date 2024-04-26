@@ -24,3 +24,4 @@ drawFilters();
 drawItems($session);
 drawFooter();
 ?>
+<script src="./../javascript/searchItem.js"></script>
