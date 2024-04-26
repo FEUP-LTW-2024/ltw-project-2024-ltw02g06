@@ -473,6 +473,81 @@ class Item
 
     return $items;
   }
+
+  static function getItemsTotal(PDO $db, array $search): int
+  {
+    $name_search = isset($search['search']) ? $search['search'] : null;
+    $location_search = isset($search['location']) ? $search['location'] : null;
+    $price_from = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
+    $price_to = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
+    $category = isset($search['category']) ? intval($search['category']) : 1;
+    $attributes = isset($search['attributes']) ? $search['attributes'] : [];
+
+    $query = '
+    SELECT COUNT(item.id) AS total
+    FROM item
+    LEFT JOIN user ON item.seller = user.id
+    WHERE item.category = :category';
+
+    if ($name_search !== null)
+      $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search)';
+
+    if ($location_search !== null)
+      $query .= ' AND ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
+                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search))';
+
+    if ($price_from !== null)
+      $query .= ' AND item.price >= :price_from';
+
+    if ($price_to !== null)
+      $query .= ' AND item.price <= :price_to';
+
+    foreach ($attributes as $attributeId => $attributeValue) {
+      $paramId = ':attributeId' . $attributeId;
+      $paramValue = ':attributeValue' . $attributeId;
+
+      $query .= " AND item.id IN (
+                SELECT item_attributes.item
+                FROM item_attributes
+                WHERE item_attributes.attribute = $paramId
+                AND item_attributes.`value` = $paramValue
+            )";
+    }
+
+    $stmt = $db->prepare($query);
+
+    $stmt->bindParam(':category', $category, PDO::PARAM_INT);
+
+    if ($name_search !== null) {
+      $name_search_value = '%' . $name_search . '%';
+      $stmt->bindParam(':name_search', $name_search_value, PDO::PARAM_STR);
+    }
+
+    if ($location_search !== null) {
+      $location_search_value = '%' . $location_search . '%';
+      $stmt->bindParam(':location_search', $location_search_value, PDO::PARAM_STR);
+    }
+
+    if ($price_from !== null)
+      $stmt->bindParam(':price_from', $price_from, PDO::PARAM_STR);
+
+    if ($price_to !== null)
+      $stmt->bindParam(':price_to', $price_to, PDO::PARAM_STR);
+
+    foreach ($attributes as $attributeId => $attributeValue) {
+      $paramId = ':attributeId' . $attributeId;
+      $paramValue = ':attributeValue' . $attributeId;
+
+      $stmt->bindParam($paramId, $attributeId, PDO::PARAM_INT);
+      $stmt->bindParam($paramValue, $attributeValue, PDO::PARAM_STR);
+    }
+
+    $stmt->execute();
+
+    $total = $stmt->fetchColumn();
+
+    return $total;
+  }
 }
 
 // Auxiliar function

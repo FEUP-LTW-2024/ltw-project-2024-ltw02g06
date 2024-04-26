@@ -15,6 +15,7 @@ switch ($request_method) {
   case 'GET':
     // GET request handling
     $id = isset($_GET['id']) ? intval($_GET['id']) : null;
+    $getTotal = isset($_GET['total']) ? boolval($_GET['total']) : 0;
     if ($id !== null) {
       $item = Item::getItem($db, $id);
       if ($item) {
@@ -22,6 +23,22 @@ switch ($request_method) {
       } else {
         http_response_code(404); // Not Found
         echo json_encode(array("message" => "Item not found."));
+      }
+    } else if ($getTotal) {
+      $search = isset($_GET['search']) ? $_GET['search'] : [];
+
+      try {
+        $total = Item::getItemsTotal($db, $search);
+        if ($total != null) {
+          http_response_code(200); // OK
+          echo json_encode($total);
+        } else {
+          http_response_code(404); // Not Found
+          echo json_encode(array("message" => "No items found."));
+        }
+      } catch (PDOException $e) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(array("message" => $e->getMessage()));
       }
     } else {
       // Extract parameters from the URL
