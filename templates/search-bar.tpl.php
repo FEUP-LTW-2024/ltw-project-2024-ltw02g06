@@ -9,7 +9,7 @@
 
     <div id="search-location">
       <ion-icon name="location-outline"></ion-icon>
-      <input type="text" placeholder="Todo o país">
+      <input type="text" placeholder="Qualquer lugar">
     </div>
 
     <button>Pesquisar</button>

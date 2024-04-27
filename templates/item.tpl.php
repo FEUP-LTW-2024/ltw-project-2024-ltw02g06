@@ -371,40 +371,27 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </form>
 <?php } ?>
 
-<?php function drawItems(Session $session)
+<?php function drawItems(Session $session, $order)
 { ?>
-  <!-- This is currently static - TODO make dinamic:
-    -> Get items depending on the filters from db; -->
   <section id="items">
 
     <header>
-      <h2>Encontramos mais de 1000 anúncios</h2>
+      <h2></h2>
       <div>
         <p>Ordenar por:</p>
         <select name="items-order" id="items-order">
-          <option value="1" selected>Anúncios recomendados</option>
-          <option value="2">Mais barato</option>
-          <option value="3">Mais caro</option>
-          <option value="4">Mais recente</option>
-          <option value="5">Mais antigo</option>
+          <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
+          <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
+          <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
+          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
         </select>
       </div>
     </header>
     <ol id="items-container">
-      <?php
-      drawSearchPageItem($session);
-      drawSearchPageItem($session);
-      ?>
     </ol>
 
     <nav>
-      <button><ion-icon name="chevron-back"></ion-icon></button>
-      <button>2</button>
-      <button class="selected-page">3</button>
-      <button>4</button>
-      <p>...</p>
-      <button>25</button>
-      <button><ion-icon name="chevron-forward"></ion-icon></button>
     </nav>
 
   </section>

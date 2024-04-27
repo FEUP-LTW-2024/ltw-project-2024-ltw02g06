@@ -19,6 +19,8 @@
   justify-content: space-between;
   gap: 2rem;
 
+  padding-top: 1rem;
+
   border-top: 1px solid gray;
 }
 
@@ -62,31 +64,46 @@
 
 #items-container li img {
   height: 100%;
-  width: 20rem;
+  width: 100%;
 
   object-fit: cover;
 
   border-radius: 6px;
 }
 
-#items-container li > div {
+#items-container li > div:first-of-type {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 0.3;
+
+  min-width: 6rem;
+  
+  width: 100%;
+}
+
+#items-container li > div:last-of-type {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex: 1;
 
   width: 100%;
 
   padding: 0.5rem;
 }
 
-#items-container li > div > div {
+#items-container li > div:last-of-type > div {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   gap: 4rem;
+
+  width: 100%;
 }
 
-#items-container li > div > div:first-of-type > div {
+#items-container li > div:last-of-type > div:first-of-type > div {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -100,11 +117,11 @@
   margin: 0;
 }
 
-#items-container li > div > div:first-of-type > div h3 {
+#items-container li > div:last-of-type > div:first-of-type > div h3 {
   font-weight: bold;
 }
 
-#items-container li > div > div:first-of-type > div p {
+#items-container li > div:last-of-type > div:first-of-type > div p {
   color: gray;
 }
 
@@ -142,6 +159,11 @@
   border-color: var(--penn-blue);
 }
 
-#items nav button:not(:first-of-type, :last-of-type):hover {
+#items nav p {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#items nav button:not(#previous-page, #next-page):hover {
   border: 3px solid var(--penn-blue);
 }

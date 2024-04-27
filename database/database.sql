@@ -36,7 +36,7 @@ CREATE TABLE category (
 CREATE TABLE attribute (
   id INTEGER PRIMARY KEY,
   name TEXT,
-  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'enum', 'real')) NOT NULL
+  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'enum', 'real', 'int')) NOT NULL
 );
 
 CREATE TABLE attribute_values (
