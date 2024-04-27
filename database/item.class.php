@@ -444,10 +444,10 @@ class Item
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
-                    AND item_attributes.`value` = $paramValue
+                    AND item_attributes.`value` LIKE $paramValue
                 ) ";
       $whereConditions[$paramId] = $attributeId;
-      $whereConditions[$paramValue] = $attributeValue;
+      $whereConditions[$paramValue] = "%" . $attributeValue . "%";
     }
 
     $query .= ' ORDER BY ';
@@ -565,10 +565,10 @@ class Item
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
-                    AND item_attributes.`value` = $paramValue
+                    AND item_attributes.`value` LIKE $paramValue
                 ) ";
       $whereConditions[$paramId] = $attributeId;
-      $whereConditions[$paramValue] = $attributeValue;
+      $whereConditions[$paramValue] = "%" . $attributeValue . "%";
     }
 
     $stmt = $db->prepare($query);

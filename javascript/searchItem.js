@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   currentPage = params.get("page");
   if (!currentPage || isNaN(parseInt(currentPage))) currentPage = 1;
 
+  handleSearchBar();
   handleOrderSelector();
   handleFiltersList();
   searchItems();
@@ -18,6 +19,42 @@ document.addEventListener("DOMContentLoaded", () => {
 const searchItems = async () => {
   itemsTotal = await getItemsTotal();
   handlePagination();
+};
+
+const handleSearchBar = () => {
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+
+  let currentSearchName = params.get("search[search]");
+  if (!currentSearchName || isNaN(currentSearchName)) {
+    currentSearchName = null;
+    deleteParam("search[search]");
+  }
+
+  let currentSearchLocation = params.get("search[location]");
+  if (!currentSearchLocation || isNaN(currentSearchLocation)) {
+    currentSearchLocation = null;
+    deleteParam("search[location]");
+  }
+
+  const searchNameInput = document.querySelector("#search-bar > input");
+  const searchLocationInput = document.querySelector(
+    "#search-location > input"
+  );
+
+  searchNameInput.value = currentSearchName;
+  searchNameInput.addEventListener("input", () => {
+    if (searchNameInput.value == "") deleteParam(`search[search]`);
+    else updateParam(`search[search]`, searchNameInput.value);
+    searchItems();
+  });
+
+  searchLocationInput.value = currentSearchLocation;
+  searchLocationInput.addEventListener("input", () => {
+    if (searchLocationInput.value == "") deleteParam(`search[location]`);
+    else updateParam(`search[location]`, searchLocationInput.value);
+    searchItems();
+  });
 };
 
 const handleOrderSelector = () => {
@@ -140,7 +177,7 @@ const handleFiltersList = () => {
         inputElement.value = attributes[attributeId]
           ? attributes[attributeId]
           : "";
-        inputElement.addEventListener("change", () => {
+        inputElement.addEventListener("input", () => {
           if (inputElement.value == "")
             deleteParam(`search[attributes][${attributeId}]`);
           else
