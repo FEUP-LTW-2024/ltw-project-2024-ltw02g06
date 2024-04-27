@@ -15,7 +15,9 @@ switch ($request_method) {
   case 'GET':
     // GET request handling
     $id = isset($_GET['id']) ? intval($_GET['id']) : null;
+    $user_id = $session->getId();
     $getTotal = isset($_GET['total']) ? boolval($_GET['total']) : 0;
+
     if ($id !== null) {
       $item = Item::getItem($db, $id);
       if ($item) {
@@ -47,7 +49,7 @@ switch ($request_method) {
       $search = isset($_GET['search']) ? $_GET['search'] : [];
 
       try {
-        $items = Item::getAllItems($db, $page, $items_per_page, $search);
+        $items = Item::getAllItems($db, $user_id, $page, $items_per_page, $search);
         if ($items) {
           http_response_code(200); // OK
           echo json_encode($items);

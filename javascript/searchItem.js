@@ -1,92 +1,201 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const queryString = window.location.search;
+let itemsTotal;
+let currentPage;
+const itemsPerPage = 10;
 
-  // Creating a URLSearchParams object with the query string
+document.addEventListener("DOMContentLoaded", async () => {
+  const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
 
-  const page = params.get("page");
-  const search = params.get("search[search]");
-  const location = params.get("search[location]");
-  const order = params.get("search[order]");
-  const priceFrom = params.get("search[price:from]");
-  const priceTo = params.get("search[price:to]");
-  const category = params.get("search[category]");
-  const attributes = {};
-  params.forEach((value, key) => {
-    if (key.startsWith("search[attributes]")) {
-      const match = key.match(/\[(\d+)\]/);
-      if (match) {
-        const attributeNumber = match[1];
-        attributes[attributeNumber] = value;
-      }
-    }
-  });
+  currentPage = params.get("page");
+  if (!currentPage || isNaN(parseInt(currentPage))) currentPage = 1;
 
-  console.log("page:", page);
-  console.log("search:", search);
-  console.log("location:", location);
-  console.log("order:", order);
-  console.log("price:", { from: priceFrom, to: priceTo });
-  console.log("category:", category);
-  console.log("attributes:", attributes);
-
-  // Initial call to handle pagination
-  // totalItems = getTotalItems();
-  handlePagination(page);
+  handleOrderSelector();
+  searchItems();
 });
 
-const handlePagination = (page) => {
-  const itemsPerPage = 10; // Number of items to display per page
+const searchItems = async () => {
+  itemsTotal = await getItemsTotal();
+  handlePagination();
+};
 
-  // Simulated data for demonstration
-  const totalItems = 100; // Total number of items
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+const handleOrderSelector = () => {
+  const selectElement = document.getElementById("items-order");
 
-  var currentPage = parseInt(page) || 1;
+  selectElement.addEventListener("change", (event) => {
+    const selectedValue = event.target.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set("search[order]", selectedValue);
+    history.pushState({}, "", url.toString());
+    searchItems();
+  });
+};
+
+const getItemsTotal = async () => {
+  return fetch(`./../api/item/index.php?total=1${window.location.search}`, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (response.status == 404) {
+        return 0;
+      } else if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("There was an unexpected error:", error);
+    });
+};
+
+const getItems = async () => {
+  return fetch(
+    `./../api/item/index.php?page=${currentPage}&itemsPerPage=${itemsPerPage}${window.location.search}`,
+    {
+      method: "GET",
+    }
+  )
+    .then((response) => {
+      if (response.status == 404) {
+        return [];
+      } else if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("There was an unexpected error:", error);
+    });
+};
+
+const handlePagination = async () => {
+  const totalPages = Math.ceil(itemsTotal / itemsPerPage);
+
+  currentPage = parseInt(currentPage) || 1;
   if (currentPage > totalPages) currentPage = totalPages;
   if (currentPage < 1) currentPage = 1;
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const items = await getItems();
 
-  // Simulated items for demonstration
-  const items = Array.from({ length: totalItems }, (_, i) => `Item ${i + 1}`);
-  /*
-  const itemsPerPage = 10;
-  const offset = (currentPage - 1) * itemsPerPage;
-  const items = getItems(itemsPerPage, offset);
-  */
+  renderItemsTotal();
+  renderItems(items);
+  renderNavButtons(totalPages);
+};
 
-  // Display items for the current page
-  const itemsContainer = document.getElementById("items-container");
-  itemsContainer.innerHTML = ""; // Clear previous items
-  for (let i = startIndex; i < Math.min(endIndex, totalItems); i++) {
-    const listItem = document.createElement("li");
-    listItem.textContent = items[i];
-    itemsContainer.appendChild(listItem);
-  }
+const renderItemsTotal = () => {
+  const h2ItemsTotal = document.querySelector("#items > header > h2");
+  if (itemsTotal > 1000)
+    h2ItemsTotal.textContent = `Encontrámos mais de ${1000} anúncios`;
+  else h2ItemsTotal.textContent = `Encontrámos ${itemsTotal} anúncios`;
+};
 
-  // Display pagination buttons
+const renderNavButtons = (totalPages) => {
   const paginationNav = document.querySelector("#items > nav");
-  paginationNav.innerHTML = ""; // Clear previous pagination
+  paginationNav.innerHTML = "";
 
-  // Add back button if not on the first page
-  if (currentPage > 1) createPreviousPageButton(currentPage, paginationNav);
+  if (totalPages <= 1) return;
+
+  if (currentPage > 1) createPreviousPageButton(paginationNav);
 
   if (currentPage > 1) {
-    createPageButton(1, currentPage, paginationNav);
+    createPageButton(1, paginationNav);
     if (currentPage - 1 > 1) createPageEllipsis(paginationNav);
   }
 
-  createPageButton(currentPage, currentPage, paginationNav);
+  createPageButton(currentPage, paginationNav);
 
   if (currentPage < totalPages) {
     if (totalPages - currentPage > 1) createPageEllipsis(paginationNav);
-    createPageButton(totalPages, currentPage, paginationNav);
+    createPageButton(totalPages, paginationNav);
   }
 
-  if (currentPage < totalPages)
-    createNextPageButton(currentPage, paginationNav);
+  if (currentPage < totalPages) createNextPageButton(paginationNav);
+};
+
+const renderItems = (items) => {
+  const itemsContainer = document.getElementById("items-container");
+  itemsContainer.innerHTML = "";
+
+  if (itemsTotal == 0) {
+    const li = document.createElement("li");
+    const h2 = document.createElement("h2");
+    h2.textContent = "Não encontramos resultados!";
+    h2.style.textAlign = "center";
+    h2.style.marginTop = "10rem";
+    h2.style.marginBottom = "10rem";
+    li.appendChild(h2);
+    li.style.justifyContent = "center";
+    li.style.alignItems = "center";
+    li.style.height = "auto";
+    itemsContainer.appendChild(li);
+    return;
+  }
+
+  for (const key in items) {
+    if (items.hasOwnProperty(key)) {
+      const itemData = items[key];
+      const image =
+        itemData.item.images && itemData.item.images[0]
+          ? itemData.item.images[0].path
+          : null;
+
+      const li = document.createElement("li");
+      let img;
+      if (image) img = document.createElement("img");
+      else img = document.createElement("h3");
+      const imgDiv = document.createElement("div");
+      const div1 = document.createElement("div");
+      const div2 = document.createElement("div");
+      const div3 = document.createElement("div");
+      const div4 = document.createElement("div");
+      const div5 = document.createElement("div");
+      const div6 = document.createElement("div");
+      const h3Name = document.createElement("h3");
+      const h3Price = document.createElement("h3");
+      const h4City = document.createElement("h4");
+      const pStateCountry = document.createElement("p");
+      const p = document.createElement("p");
+      const buttonCart = document.createElement("button");
+      const buttonWishlist = document.createElement("button");
+      const iconCart = document.createElement("ion-icon");
+      const iconWishlist = document.createElement("ion-icon");
+
+      if (image) {
+        img.src = `${window.location.protocol}//${window.location.host}/${image}`;
+        img.alt = "Item Image";
+      } else {
+        img.textContent = "Este anúncio não possui imagens.";
+        img.style.fontWeight = "600";
+        img.style.alignSelf = "center";
+        img.style.textAlign = "center";
+      }
+
+      h3Name.textContent = itemData.item.name;
+      h3Price.textContent = `${itemData.item.price} €`;
+      p.textContent = "Negociável";
+      h4City.textContent = `${itemData.seller.city}`;
+      pStateCountry.textContent = `${itemData.seller.state}, ${itemData.seller.country}`;
+      iconCart.name = itemData.in_cart ? "cart" : "cart-outline";
+      iconWishlist.name = itemData.in_wishlist ? "heart" : "heart-outline";
+      imgDiv.appendChild(img);
+      li.appendChild(imgDiv);
+      div1.appendChild(div2);
+      div2.appendChild(h3Name);
+      div2.appendChild(div3);
+      div3.appendChild(h3Price);
+      div3.appendChild(p);
+      div1.appendChild(div4);
+      div4.appendChild(div5);
+      div4.appendChild(div6);
+      div5.appendChild(h4City);
+      div5.appendChild(pStateCountry);
+      div6.appendChild(buttonCart);
+      div6.appendChild(buttonWishlist);
+      buttonCart.appendChild(iconCart);
+      buttonWishlist.appendChild(iconWishlist);
+      li.appendChild(div1);
+      itemsContainer.appendChild(li);
+    }
+  }
 };
 
 const createButton = (text) => {
@@ -106,11 +215,16 @@ const createIconButton = (iconName) => {
 const navigateToPage = (page) => {
   const url = new URL(window.location.href);
   url.searchParams.set("page", page);
+  currentPage = page;
   history.pushState({}, "", url.toString());
-  handlePagination(page);
+  handlePagination();
+  const itemsElement = document.getElementById("items");
+  if (itemsElement) {
+    itemsElement.scrollIntoView();
+  }
 };
 
-const createPreviousPageButton = (currentPage, paginationNav) => {
+const createPreviousPageButton = (paginationNav) => {
   const backButton = createIconButton("chevron-back");
   backButton.setAttribute("id", "previous-page");
   backButton.addEventListener("click", () => {
@@ -119,7 +233,7 @@ const createPreviousPageButton = (currentPage, paginationNav) => {
   paginationNav.appendChild(backButton);
 };
 
-const createNextPageButton = (currentPage, paginationNav) => {
+const createNextPageButton = (paginationNav) => {
   const forwardButton = createIconButton("chevron-forward");
   forwardButton.setAttribute("id", "next-page");
   forwardButton.addEventListener("click", () => {
@@ -128,7 +242,7 @@ const createNextPageButton = (currentPage, paginationNav) => {
   paginationNav.appendChild(forwardButton);
 };
 
-const createPageButton = (pageNumber, currentPage, paginationNav) => {
+const createPageButton = (pageNumber, paginationNav) => {
   const pageButton = createButton(pageNumber.toString());
   if (pageNumber === currentPage) {
     pageButton.classList.add("selected-page");

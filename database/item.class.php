@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once (__DIR__ . '/../database/category.class.php');
+require_once (__DIR__ . '/../database/user.class.php');
 
 class Item
 {
@@ -375,7 +376,7 @@ class Item
     }
   }
 
-  static function getAllItems(PDO $db, int $page, int $items_per_page, array $search): array
+  static function getAllItems(PDO $db, ?int $user_id, int $page, int $items_per_page, array $search): array
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
     $location_search = isset($search['location']) ? $search['location'] : null;
@@ -426,8 +427,10 @@ class Item
       $query .= 'item.price DESC';
     elseif ($order === 'created_at:asc')
       $query .= 'item.creation_date ASC';
-    else
+    elseif ($order === 'created_at:desc')
       $query .= 'item.creation_date DESC';
+    else
+      $query .= 'item.clicks DESC';
 
     $query .= ' LIMIT :limit OFFSET :offset';
 
@@ -467,8 +470,17 @@ class Item
     $items_id = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     $items = [];
-    foreach ($items_id as $id) {
-      $items[$id] = Item::getItem($db, $id);
+    foreach ($items_id as $item_id) {
+      $item = Item::getItem($db, $item_id);
+      $in_cart = $user_id ? User::isItemInCart($db, $user_id, $item_id) : false;
+      $in_wishlist = $user_id ? User::isItemInWishlist($db, $user_id, $item_id) : false;
+      $seller = User::getUser($db, $item->seller);
+      $items[] = [
+        'item' => $item,
+        'in_cart' => $in_cart,
+        'in_wishlist' => $in_wishlist,
+        'seller' => $seller
+      ];
     }
 
     return $items;
