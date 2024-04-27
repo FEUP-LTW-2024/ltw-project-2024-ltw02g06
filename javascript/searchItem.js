@@ -63,6 +63,11 @@ const handleSearchBar = () => {
 
 const handleOrderSelector = () => {
   const selectElement = document.getElementById("items-order");
+  const queryString = window.location.search;
+  const params = new URLSearchParams(queryString);
+  let currentOrder = params.get("search[order]");
+
+  selectElement.value = currentOrder;
 
   selectElement.addEventListener("change", (event) => {
     const selectedValue = event.target.value;
@@ -256,7 +261,13 @@ const handleFiltersList = () => {
           : "all";
 
         inputElement.addEventListener("change", () => {
-          updateParam(`search[attributes][${attributeId}]`, inputElement.value);
+          if (inputElement.value == "all" || inputElement.value == "")
+            deleteParam(`search[attributes][${attributeId}]`);
+          else
+            updateParam(
+              `search[attributes][${attributeId}]`,
+              inputElement.value
+            );
           searchItems();
         });
       }
@@ -437,7 +448,7 @@ const getItemsTotal = async () => {
 
 const getItems = async () => {
   return fetch(
-    `./../api/item/index.php?page=${currentPage}&itemsPerPage=${itemsPerPage}${window.location.search}`,
+    `./../api/item/index.php?${window.location.search}&page=${currentPage}&itemsPerPage=${itemsPerPage}`,
     {
       method: "GET",
     }

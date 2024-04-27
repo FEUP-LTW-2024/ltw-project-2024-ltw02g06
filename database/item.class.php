@@ -405,6 +405,9 @@ class Item
     }
 
     if ($name_search !== null) {
+      if ($category !== null) {
+        $query .= ' AND ';
+      }
       $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
       $whereConditions[':name_search'] = '%' . $name_search . '%';
     }
@@ -467,15 +470,6 @@ class Item
 
     $stmt = $db->prepare($query);
 
-    foreach ($whereConditions as $param => $value) {
-      $stmt->bindParam($param, $value);
-      if (is_int($value)) {
-        $stmt->bindParam($param, $value, PDO::PARAM_INT);
-      } else {
-        $stmt->bindParam($param, $value, PDO::PARAM_STR);
-      }
-    }
-
     $whereConditions[':limit'] = $items_per_page;
     $whereConditions[':offset'] = $offset;
 
@@ -526,6 +520,9 @@ class Item
     }
 
     if ($name_search !== null) {
+      if ($category !== null) {
+        $query .= ' AND ';
+      }
       $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
       $whereConditions[':name_search'] = '%' . $name_search . '%';
     }
