@@ -21,6 +21,7 @@ const searchItems = async () => {
   handlePagination();
 };
 
+// TODO clean up this code:
 const handleSearchBar = () => {
   const queryString = window.location.search;
   const params = new URLSearchParams(queryString);
@@ -55,6 +56,9 @@ const handleSearchBar = () => {
     else updateParam(`search[location]`, searchLocationInput.value);
     searchItems();
   });
+
+  const searchBtn = document.querySelector("#search-bar-container > button");
+  searchBtn.addEventListener("click", searchItems);
 };
 
 const handleOrderSelector = () => {
