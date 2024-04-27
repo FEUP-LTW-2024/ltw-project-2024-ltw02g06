@@ -509,6 +509,10 @@ const renderItem = (itemData) => {
       : null;
 
   const li = document.createElement("li");
+  li.style.cursor = "pointer";
+  li.addEventListener("click", () => {
+    window.location.href = `/pages/item.php?id=${itemData.item.id}`;
+  });
   let img;
   if (image) img = document.createElement("img");
   else img = document.createElement("h3");
