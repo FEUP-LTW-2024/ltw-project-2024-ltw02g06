@@ -15,13 +15,20 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
 
 $db = getDatabaseConnection();
 
-// $items = Item::getItem($db, intval($_GET['id']));
-// create function to get all items depending on the filters
+$search = isset($_GET['search']) ? $_GET['search'] : null;
+$order = isset($search['order']) ? $search['order'] : 'relevance:desc';
+$selectedCategory = isset($search['category']) ? (int) $search['category'] : null;
+$selectedCategory = $selectedCategory >= 1 ? $selectedCategory : null;
+$attributes = isset($search['attributes']) ? $search['attributes'] : [];
+$categories = Category::getAllCategories($db);
 
 drawHeader($session);
 drawSearchBar();
-drawFilters();
-drawItems($session);
+drawFilters($categories, $selectedCategory, $attributes);
+drawItems($session, $order);
 drawFooter();
 ?>
 <script src="./../javascript/searchItem.js"></script>
+<script>
+  categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
+</script>

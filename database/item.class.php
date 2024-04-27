@@ -383,7 +383,7 @@ class Item
     $order = isset($search['order']) ? $search['order'] : null;
     $price_from = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
     $price_to = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
-    $category = isset($search['category']) ? intval($search['category']) : 1;
+    $category = isset($search['category']) ? intval($search['category']) : null;
     $attributes = isset($search['attributes']) ? $search['attributes'] : [];
 
     $offset = ($page - 1) * $items_per_page;
@@ -391,81 +391,95 @@ class Item
     $query = '
     SELECT item.id
     FROM item
-    LEFT JOIN user ON item.seller = user.id
-    WHERE item.category = :category';
+    LEFT JOIN user ON item.seller = user.id ';
 
-    if ($name_search !== null)
-      $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search)';
+    $whereConditions = [];
 
-    if ($location_search !== null)
-      $query .= ' AND ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
-                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search))';
+    if ($category !== null) {
+      $query .= ' WHERE item.category = :category ';
+      $whereConditions[':category'] = $category;
+    }
 
-    if ($price_from !== null)
-      $query .= ' AND item.price >= :price_from';
+    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($attributes)) {
+      $query .= !empty($whereConditions) ? ' ' : ' WHERE ';
+    }
 
-    if ($price_to !== null)
-      $query .= ' AND item.price <= :price_to';
+    if ($name_search !== null) {
+      $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
+      $whereConditions[':name_search'] = '%' . $name_search . '%';
+    }
+
+    if ($location_search !== null) {
+      if ($category !== null || $name_search !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
+                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search)) ';
+      $whereConditions[':location_search'] = '%' . $location_search . '%';
+    }
+
+    if ($price_from !== null) {
+      if ($category !== null || $name_search !== null || $location_search !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.price >= :price_from ';
+      $whereConditions[':price_from'] = $price_from;
+    }
+
+    if ($price_to !== null) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.price <= :price_to ';
+      $whereConditions[':price_to'] = $price_to;
+    }
 
     foreach ($attributes as $attributeId => $attributeValue) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
+        $query .= ' AND ';
+      }
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
-
-      $query .= " AND item.id IN (
-                SELECT item_attributes.item
-                FROM item_attributes
-                WHERE item_attributes.attribute = $paramId
-                AND item_attributes.`value` = $paramValue
-            )";
+      $query .= " item.id IN (
+                    SELECT item_attributes.item
+                    FROM item_attributes
+                    WHERE item_attributes.attribute = $paramId
+                    AND item_attributes.`value` = $paramValue
+                ) ";
+      $whereConditions[$paramId] = $attributeId;
+      $whereConditions[$paramValue] = $attributeValue;
     }
 
     $query .= ' ORDER BY ';
 
     if ($order === 'price:asc')
-      $query .= 'item.price ASC';
+      $query .= ' item.price ASC ';
     elseif ($order === 'price:desc')
-      $query .= 'item.price DESC';
+      $query .= ' item.price DESC ';
     elseif ($order === 'created_at:asc')
-      $query .= 'item.creation_date ASC';
+      $query .= ' item.creation_date ASC ';
     elseif ($order === 'created_at:desc')
-      $query .= 'item.creation_date DESC';
+      $query .= ' item.creation_date DESC ';
     else
       $query .= 'item.clicks DESC';
 
-    $query .= ' LIMIT :limit OFFSET :offset';
+    $query .= ' LIMIT :limit OFFSET :offset ';
 
     $stmt = $db->prepare($query);
 
-    $stmt->bindParam(':category', $category, PDO::PARAM_INT);
-
-    if ($name_search !== null) {
-      $name_search_value = '%' . $name_search . '%';
-      $stmt->bindParam(':name_search', $name_search_value, PDO::PARAM_STR);
+    foreach ($whereConditions as $param => $value) {
+      $stmt->bindParam($param, $value);
+      if (is_int($value)) {
+        $stmt->bindParam($param, $value, PDO::PARAM_INT);
+      } else {
+        $stmt->bindParam($param, $value, PDO::PARAM_STR);
+      }
     }
 
-    if ($location_search !== null) {
-      $location_search_value = '%' . $location_search . '%';
-      $stmt->bindParam(':location_search', $location_search_value, PDO::PARAM_STR);
-    }
+    $whereConditions[':limit'] = $items_per_page;
+    $whereConditions[':offset'] = $offset;
 
-    if ($price_from !== null)
-      $stmt->bindParam(':price_from', $price_from, PDO::PARAM_STR);
-
-    if ($price_to !== null)
-      $stmt->bindParam(':price_to', $price_to, PDO::PARAM_STR);
-
-    foreach ($attributes as $attributeId => $attributeValue) {
-      $paramId = ':attributeId' . $attributeId;
-      $paramValue = ':attributeValue' . $attributeId;
-
-      $stmt->bindParam($paramId, $attributeId, PDO::PARAM_INT);
-      $stmt->bindParam($paramValue, $attributeValue, PDO::PARAM_STR);
-    }
-
-    $stmt->bindParam(':limit', $items_per_page, PDO::PARAM_INT);
-    $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-
-    $stmt->execute();
+    $stmt->execute($whereConditions);
 
     $items_id = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -492,69 +506,74 @@ class Item
     $location_search = isset($search['location']) ? $search['location'] : null;
     $price_from = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
     $price_to = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
-    $category = isset($search['category']) ? intval($search['category']) : 1;
+    $category = isset($search['category']) ? intval($search['category']) : null;
     $attributes = isset($search['attributes']) ? $search['attributes'] : [];
 
     $query = '
     SELECT COUNT(item.id) AS total
     FROM item
-    LEFT JOIN user ON item.seller = user.id
-    WHERE item.category = :category';
+    LEFT JOIN user ON item.seller = user.id ';
 
-    if ($name_search !== null)
-      $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search)';
+    $whereConditions = [];
 
-    if ($location_search !== null)
-      $query .= ' AND ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
-                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search))';
+    if ($category !== null) {
+      $query .= ' WHERE item.category = :category ';
+      $whereConditions[':category'] = $category;
+    }
 
-    if ($price_from !== null)
-      $query .= ' AND item.price >= :price_from';
+    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($attributes)) {
+      $query .= !empty($whereConditions) ? '' : ' WHERE ';
+    }
 
-    if ($price_to !== null)
-      $query .= ' AND item.price <= :price_to';
+    if ($name_search !== null) {
+      $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
+      $whereConditions[':name_search'] = '%' . $name_search . '%';
+    }
+
+    if ($location_search !== null) {
+      if ($category !== null || $name_search !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
+                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search)) ';
+      $whereConditions[':location_search'] = '%' . $location_search . '%';
+    }
+
+    if ($price_from !== null) {
+      if ($category !== null || $location_search !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.price >= :price_from ';
+      $whereConditions[':price_from'] = $price_from;
+    }
+
+    if ($price_to !== null) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.price <= :price_to ';
+      $whereConditions[':price_to'] = $price_to;
+    }
 
     foreach ($attributes as $attributeId => $attributeValue) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
+        $query .= ' AND ';
+      }
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
-
-      $query .= " AND item.id IN (
-                SELECT item_attributes.item
-                FROM item_attributes
-                WHERE item_attributes.attribute = $paramId
-                AND item_attributes.`value` = $paramValue
-            )";
+      $query .= " item.id IN (
+                    SELECT item_attributes.item
+                    FROM item_attributes
+                    WHERE item_attributes.attribute = $paramId
+                    AND item_attributes.`value` = $paramValue
+                ) ";
+      $whereConditions[$paramId] = $attributeId;
+      $whereConditions[$paramValue] = $attributeValue;
     }
 
     $stmt = $db->prepare($query);
 
-    $stmt->bindParam(':category', $category, PDO::PARAM_INT);
-
-    if ($name_search !== null) {
-      $name_search_value = '%' . $name_search . '%';
-      $stmt->bindParam(':name_search', $name_search_value, PDO::PARAM_STR);
-    }
-
-    if ($location_search !== null) {
-      $location_search_value = '%' . $location_search . '%';
-      $stmt->bindParam(':location_search', $location_search_value, PDO::PARAM_STR);
-    }
-
-    if ($price_from !== null)
-      $stmt->bindParam(':price_from', $price_from, PDO::PARAM_STR);
-
-    if ($price_to !== null)
-      $stmt->bindParam(':price_to', $price_to, PDO::PARAM_STR);
-
-    foreach ($attributes as $attributeId => $attributeValue) {
-      $paramId = ':attributeId' . $attributeId;
-      $paramValue = ':attributeValue' . $attributeId;
-
-      $stmt->bindParam($paramId, $attributeId, PDO::PARAM_INT);
-      $stmt->bindParam($paramValue, $attributeValue, PDO::PARAM_STR);
-    }
-
-    $stmt->execute();
+    $stmt->execute($whereConditions);
 
     $total = $stmt->fetchColumn();
 

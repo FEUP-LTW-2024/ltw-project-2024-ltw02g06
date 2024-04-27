@@ -371,13 +371,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </form>
 <?php } ?>
 
-<?php function drawItems(Session $session)
+<?php function drawItems(Session $session, $order)
 { ?>
-  <?php
-  $search = isset($_GET['search']) ? $_GET['search'] : null;
-  $order = isset($search['order']) ? $search['order'] : 'relevance:desc';
-  ?>
-
   <section id="items">
 
     <header>

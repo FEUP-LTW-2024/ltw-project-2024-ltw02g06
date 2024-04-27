@@ -1,3 +1,7 @@
+#filters {
+  width: 100%;
+}
+
 #filters ol {
   display: flex;
   flex-direction: row;
@@ -6,22 +10,6 @@
   padding: 0;
 
   list-style: none;
-}
-
-.search-filter p {
-  margin: 0;
-  padding-bottom: 0.4rem;
-}
-
-.search-filter select, input {
-  width: 12rem;
-
-  padding: 1rem 1.2rem 1rem 1.2rem;
-  background-color: white;
-  border: none;
-  border-radius: 6px;
-
-  font-size: 1rem;
 }
 
 .range-filter {
@@ -50,4 +38,52 @@
   .range-filter input {
     width: 100%;
   }
+}
+
+#filters-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  margin: 0;
+  padding: 0;
+  padding-top: 1rem;
+
+  list-style: none;
+}
+
+#filters-list li {
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid gray;
+  border-radius: 6px;
+}
+
+#filters-list li label {
+  margin: 0;
+  padding: 0.4rem 0.6rem 0.4rem 0rem;
+
+  font-size: 0.9rem;
+}
+
+#filters-list li {
+  border: none;
+}
+
+#filters-list p {
+  margin: 0;
+  padding-bottom: 0.4rem;
+}
+
+#filters-list li select, #filters-list li input {
+  width: 12rem;
+
+  padding: 0.8rem 1rem 0.8rem 1rem;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+
+  font-size: 1rem;
 }
