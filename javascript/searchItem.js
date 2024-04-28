@@ -47,6 +47,7 @@ const handleSearchBar = () => {
   searchNameInput.addEventListener("input", () => {
     if (searchNameInput.value == "") deleteParam(`search[search]`);
     else updateParam(`search[search]`, searchNameInput.value);
+    navigateToPage(1);
     searchItems();
   });
 
@@ -54,6 +55,7 @@ const handleSearchBar = () => {
   searchLocationInput.addEventListener("input", () => {
     if (searchLocationInput.value == "") deleteParam(`search[location]`);
     else updateParam(`search[location]`, searchLocationInput.value);
+    navigateToPage(1);
     searchItems();
   });
 
@@ -63,15 +65,11 @@ const handleSearchBar = () => {
 
 const handleOrderSelector = () => {
   const selectElement = document.getElementById("items-order");
-  const queryString = window.location.search;
-  const params = new URLSearchParams(queryString);
-  let currentOrder = params.get("search[order]");
-
-  selectElement.value = currentOrder;
 
   selectElement.addEventListener("change", (event) => {
     const selectedValue = event.target.value;
     updateParam("search[order]", selectedValue);
+    navigateToPage(1);
     searchItems();
   });
 };
@@ -194,6 +192,7 @@ const handleFiltersList = () => {
               `search[attributes][${attributeId}]`,
               inputElement.value
             );
+          navigateToPage(1);
           searchItems();
         });
       } else if (attribute.type === "int" || attribute.type === "real") {
@@ -268,6 +267,7 @@ const handleFiltersList = () => {
               `search[attributes][${attributeId}]`,
               inputElement.value
             );
+          navigateToPage(1);
           searchItems();
         });
       }
@@ -290,6 +290,7 @@ const handleFiltersList = () => {
       deleteParam("search[category]");
       categorySelect.value = "all";
     }
+    navigateToPage(1);
     searchItems();
     updateAttributes();
   });
@@ -313,6 +314,7 @@ const initializePriceRangeInput = (inputElement, currentPrice, param) => {
     const value = parseFloat(inputElement.value);
     if (!isNaN(value)) updateParam(param, value);
     else deleteParam(param);
+    navigateToPage(1);
     searchItems();
   });
 };
@@ -334,6 +336,7 @@ const initializeFloatInput = (inputElement, currentValue, param) => {
     const value = parseFloat(inputElement.value);
     if (!isNaN(value)) updateParam(param, value);
     else deleteParam(param);
+    navigateToPage(1);
     searchItems();
   });
 };
@@ -355,6 +358,7 @@ const initializeIntInput = (inputElement, currentValue, param) => {
     const value = parseInt(inputElement.value);
     if (!isNaN(value)) updateParam(param, value);
     else deleteParam(param);
+    navigateToPage(1);
     searchItems();
   });
 };

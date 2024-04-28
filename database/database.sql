@@ -111,3 +111,18 @@ CREATE TABLE user_cart (
   FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
   FOREIGN KEY (user) REFERENCES user(id) ON DELETE CASCADE
 );
+
+CREATE TABLE message (
+  id INTEGER PRIMARY KEY,
+  item INTEGER NOT NULL,
+  sender INTEGER NOT NULL,
+  receiver INTEGER NOT NULL,
+  message TEXT,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  type TEXT DEFAULT 'default' CHECK (type IN ('default', 'negotiation')),
+  value REAL,
+  accepted INTEGER DEFAULT 0,
+  FOREIGN KEY (item) REFERENCES item(id) ON DELETE CASCADE,
+  FOREIGN KEY (sender) REFERENCES user(id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver) REFERENCES user(id) ON DELETE CASCADE
+)

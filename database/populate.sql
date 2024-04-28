@@ -115,3 +115,14 @@ VALUES (1, 2);
 
 INSERT INTO user_cart (item, user)
 VALUES (1, 2);
+
+INSERT INTO message (item, sender, receiver, message, type, value, accepted)
+VALUES 
+  (1, 1, 2, "Hey, I'm interested in your item.", 'default', NULL, 0),
+  (2, 2, 1, "Sure, what are you willing to pay?", 'default', NULL, 0),
+  (1, 1, 2, "Would you accept $45?", 'negotiation', 45, 0),
+  (3, 1, 2, "Hi, I saw your item and I'm interested.", 'default', NULL, 0),
+  (2, 2, 1, "Could you provide more details about the condition?", 'default', NULL, 0),
+  (3, 1, 2, "Sure, it's in excellent condition.", 'default', NULL, 0),
+  (3, 2, 1, "Great, I'll take it!", 'default', NULL, 0),
+  (2, 1, 2, "I'm sorry, but I've decided not to sell it anymore.", 'default', NULL, 0);
