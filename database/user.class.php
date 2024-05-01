@@ -7,7 +7,7 @@ class User
   public string $first_name;
   public string $last_name;
   public string $email;
-  public string $password;
+  public ?string $password;
   public string $address;
   public string $city;
   public string $state;
@@ -141,6 +141,36 @@ class User
     }
 
     return $reviews;
+  }
+
+  static function getWishlist(PDO $db, int $id): array
+  {
+    $stmt = $db->prepare('
+            SELECT item.id
+            FROM user_wishlist
+            LEFT JOIN item ON item.id = user_wishlist.item
+            WHERE user_wishlist.user = ? AND item.status = "active"
+          ');
+    $stmt->execute([$id]);
+
+    $items_id = $stmt->fetchAll() ?: [];
+
+    $wishlist = [];
+
+    foreach ($items_id as $item_id) {
+      $item = Item::getItem($db, $item_id['id']);
+      $seller = User::getUser($db, $item->seller);
+      $seller->password = null;
+      $isItemInCart = User::isItemInCart($db, $id, $item_id['id']);
+      $wishlistItem = array(
+        'item' => $item,
+        'seller' => $seller,
+        'isItemInCart' => $isItemInCart
+      );
+      $wishlist[] = $wishlistItem;
+    }
+
+    return $wishlist;
   }
 
   static function isItemInWishlist(PDO $db, int $id, int $item_id): bool

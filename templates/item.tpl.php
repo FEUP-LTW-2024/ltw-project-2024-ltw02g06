@@ -483,63 +483,42 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </li>
 <?php } ?>
 
-<?php function drawWishlistItems(Session $session)
+<?php function drawWishlistItems(Session $session, array $wishlist)
 { ?>
   <section id="items" class="wishlist">
     <h2>A minha whishlist:</h2>
-    <header>
-      <?php drawSmallSearchBar() ?>
-      <div>
-        <p>Ordenar por:</p>
-        <select name="items-order" id="items-order">
-          <option value="1" selected>Anúncios recomendados</option>
-          <option value="2">Mais barato</option>
-          <option value="3">Mais caro</option>
-          <option value="4">Mais recente</option>
-          <option value="5">Mais antigo</option>
-        </select>
-      </div>
-    </header>
-    <ol id="items-container">
-      <?php
-      drawWishlistItem($session);
-      drawWishlistItem($session);
-      ?>
-    </ol>
-
-    <nav>
-      <button><ion-icon name="chevron-back"></ion-icon></button>
-      <button>2</button>
-      <button class="selected-page">3</button>
-      <button>4</button>
-      <p>...</p>
-      <button>25</button>
-      <button><ion-icon name="chevron-forward"></ion-icon></button>
-    </nav>
-
+    <?php if (empty($wishlist)): ?>
+      <h2 id="empty-cart-title">O sua wishlist está vazia.</h2>
+    <?php else: ?>
+      <ol id="items-container">
+        <?php
+        foreach ($wishlist as $wishlistItem) {
+          drawWishlistItem($session, $wishlistItem['item'], $wishlistItem['seller'], $wishlistItem['isItemInCart']);
+        }
+        ?>
+      </ol>
+    <?php endif; ?>
   </section>
 <?php } ?>
 
-<?php function drawWishlistItem(Session $session)
+<?php function drawWishlistItem(Session $session, Item $item, User $seller, bool $isItemInCart)
 { ?>
-  <li>
-    <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
+  <li data-item-id="<?= $item->id ?>" data-item-in-cart="<?= $isItemInCart ? 1 : 0 ?>">
     <div>
       <div>
-        <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
+        <h3><?= $item->name ?></h3>
         <div>
-          <h3>15.990 €</h3>
-          <p>Negociável</p>
+          <h3><?= $item->price ?> €</h3>
         </div>
       </div>
       <div>
         <div>
-          <h4>Custóias, Leça Do Balio E Guifões,</h4>
-          <p>Porto</p>
+          <h4><?= $seller->city ?></h4>
+          <p><?= $seller->state . ", " . $seller->country ?></p>
         </div>
         <div>
-          <button><ion-icon name="heart-outline"></ion-icon></button>
-          <button><ion-icon name="cart-outline"></ion-icon></button>
+          <button class="wishlist-btn"><ion-icon name="heart"></ion-icon></button>
+          <button class="cart-btn"><ion-icon name="cart<?= $isItemInCart ? "" : "-outline" ?>"></ion-icon></button>
         </div>
       </div>
     </div>

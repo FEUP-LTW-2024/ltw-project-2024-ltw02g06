@@ -4,19 +4,34 @@ declare(strict_types=1);
 require_once (__DIR__ . '/../utils/session.php');
 $session = new Session();
 
+$id = $session->getId();
+
+if (!$id) {
+  $redirectUrl = urlencode("/pages/wishlist.php");
+  header("Location: login.php?redirect=$redirectUrl");
+  exit();
+}
+
 require_once (__DIR__ . '/../database/connection.db.php');
-require_once (__DIR__ . '/../database/item.class.php');
 
 require_once (__DIR__ . '/../templates/header.tpl.php');
 require_once (__DIR__ . '/../templates/footer.tpl.php');
+require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 require_once (__DIR__ . '/../templates/item.tpl.php');
+
+require_once (__DIR__ . '/../database/user.class.php');
 
 $db = getDatabaseConnection();
 
-// $items = Item::getItem($db, intval($_GET['id']));
-// create function to get all items depending on the filters
+$wishlist = User::getWishlist($db, $id);
 
 drawHeader($session);
-drawWishlistItems($session);
+drawWishlistItems($session, $wishlist);
 drawFooter();
 ?>
+<script>
+  const userId = <?php echo json_encode($id); ?>;
+  const wishlist = <?php echo json_encode($wishlist); ?>;
+</script>
+<!-- <script src="./../javascript/utils.js"></script> -->
+<script src="./../javascript/wishlist.js"></script>
