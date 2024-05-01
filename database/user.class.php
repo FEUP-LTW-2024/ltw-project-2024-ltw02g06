@@ -183,6 +183,22 @@ class User
     }
   }
 
+  static function getCart(PDO $db, int $id): array
+  {
+    $stmt = $db->prepare('
+            SELECT user_cart.item as item_id, item.name as item_name, item.price as old_price, 
+            user_cart.user, user_cart.price as new_price, user_cart.shipping
+            FROM user_cart
+            LEFT JOIN item ON item.id = user_cart.item
+            WHERE user = ? AND item.status = "active"
+          ');
+    $stmt->execute([$id]);
+
+    $cart = $stmt->fetchAll();
+
+    return $cart ?: [];
+  }
+
   static function isItemInCart(PDO $db, int $id, int $item_id): bool
   {
     $stmt = $db->prepare('
@@ -213,7 +229,7 @@ class User
 
   static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price): ?array
   {
-    $shipping = 0; // TODO Create function to calculate the shipping cost;
+    $shipping = round($price * 0.05, 2); // TODO Create function to calculate the shipping cost;
     try {
       $stmt = $db->prepare('
           SELECT * FROM user_cart
@@ -256,6 +272,19 @@ class User
       $stmt->execute([$item_id, $user_id]);
     } catch (PDOException $e) {
       throw $e; // Re-throwing the exception to be caught in the calling code
+    }
+  }
+
+  static function purchaseCart(PDO $db, int $id)
+  {
+    try {
+      $cart = User::getCart($db, $id);
+
+      foreach ($cart as $cartItem) {
+        Item::buyItem($db, $cartItem['item_id'], $cartItem['new_price']);
+      }
+    } catch (PDOException $e) {
+      throw $e;
     }
   }
 }

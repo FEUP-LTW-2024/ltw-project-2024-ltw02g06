@@ -113,8 +113,8 @@ VALUES (1, 1, "Attribute Value"),
 INSERT INTO user_wishlist (item, user)
 VALUES (1, 2);
 
-INSERT INTO user_cart (item, user)
-VALUES (1, 2);
+INSERT INTO user_cart (item, user, price, shipping)
+VALUES (1, 2, 99.99, 99.99);
 
 INSERT INTO message (item, sender, receiver, message, type, value, accepted)
 VALUES 

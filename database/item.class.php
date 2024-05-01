@@ -376,6 +376,7 @@ class Item
     }
   }
 
+  // TODO update this function so we are able to get items in a specific state
   static function getAllItems(PDO $db, ?int $user_id, int $page, int $items_per_page, array $search): array
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
@@ -576,6 +577,24 @@ class Item
 
     return $total;
   }
+
+  static function buyItem(PDO $db, int $id, float $sold_price): ?Item
+  {
+    try {
+      // Update item info
+      $stmt = $db->prepare('
+              UPDATE item
+              SET sold_price = ?, status = "to send"
+              WHERE id = ?');
+      $stmt->execute([$sold_price, $id]);
+
+      return Item::getItem($db, $id);
+    } catch (PDOException $e) {
+      $db->rollBack();
+      throw $e;
+    }
+  }
+
 }
 
 // Auxiliar function

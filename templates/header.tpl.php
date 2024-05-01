@@ -56,4 +56,10 @@ require_once (__DIR__ . '/../utils/session.php');
     </header>
 
     <main>
+      <div id="modal">
+        <div class="modal-content">
+          <p id="modal-message"></p>
+          <button><ion-icon class="close" name="close-circle-outline"><ion-icon></button>
+        </div>
+      </div>
     <?php } ?>
