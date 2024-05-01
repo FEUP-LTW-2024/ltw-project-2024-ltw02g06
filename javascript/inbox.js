@@ -81,7 +81,8 @@ const renderChat = (chatData) => {
 
   inboxChatItem.style.cursor = "pointer";
   inboxChatItem.addEventListener("click", () => {
-    window.location.href = `/pages/item.php?id=${chatData[0].item_id}`;
+    window.location.href = `/pages/item.php?id=${chatData[0].item_id}
+    }`;
   });
 
   inboxChatMsg.style.cursor = "pointer";
