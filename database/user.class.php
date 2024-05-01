@@ -197,16 +197,50 @@ class User
     return $result['count'] > 0;
   }
 
-  static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price)
+  static function getCartItem(PDO $db, int $id, int $item_id): array
+  {
+    $stmt = $db->prepare('
+            SELECT item, user, price, shipping
+            FROM user_cart
+            WHERE user = ? AND item = ?
+        ');
+    $stmt->execute([$id, $item_id]);
+
+    $item = $stmt->fetch();
+
+    return $item ? $item : [];
+  }
+
+  static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price): ?array
   {
     $shipping = 0; // TODO Create function to calculate the shipping cost;
     try {
       $stmt = $db->prepare('
-          INSERT INTO user_cart (item, user, price, shipping)
-          VALUES (?, ?, ?, ?)
+          SELECT * FROM user_cart
+          WHERE item = ? AND user = ?
       ');
 
-      $stmt->execute([$item_id, $id, $price, $shipping]);
+      $stmt->execute([$item_id, $id]);
+
+      $item = $stmt->fetchAll();
+
+      if (empty($item)) {
+        $stmt = $db->prepare('
+          INSERT INTO user_cart (item, user, price, shipping)
+          VALUES (?, ?, ?, ?)
+        ');
+        $stmt->execute([$item_id, $id, $price, $shipping]);
+      } else {
+        $stmt = $db->prepare('
+          UPDATE user_cart
+          SET price = ?
+          WHERE item = ? AND user = ?
+        ');
+        $stmt->execute([$price, $item_id, $id]);
+      }
+
+      return User::getCartItem($db, $id, $item_id);
+
     } catch (PDOException $e) {
       throw $e;
     }
