@@ -35,6 +35,7 @@ require_once (__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/seller.css">
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" href="../css/editItem.css">
+    <link rel="stylesheet" href="../css/chat.css">
   </head>
 
   <body>

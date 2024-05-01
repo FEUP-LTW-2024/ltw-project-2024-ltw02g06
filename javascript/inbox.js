@@ -61,37 +61,6 @@ const renderInbox = (inbox) => {
   }
 };
 
-const getTimeAgo = (timestamp) => {
-  let currentTime = new Date();
-  let timeDifference = currentTime - new Date(timestamp.date);
-
-  let seconds = Math.floor(timeDifference / 1000);
-  let minutes = Math.floor(seconds / 60);
-  let hours = Math.floor(minutes / 60);
-  let days = Math.floor(hours / 24);
-  let months = Math.floor(days / 30.44);
-  let years = Math.floor(months / 12);
-
-  let timeAgo = "há ";
-  if (years > 0) {
-    timeAgo += years + (years === 1 ? " ano" : " anos");
-  } else if (months > 0) {
-    timeAgo += months + "m";
-  } else if (days > 0) {
-    timeAgo += days + "d";
-  } else if (hours > 0) {
-    timeAgo += hours + "h";
-  } else if (minutes > 0) {
-    timeAgo += minutes + "min";
-  } else if (seconds > 0) {
-    timeAgo += seconds + "s";
-  } else {
-    timeAgo = "agora";
-  }
-
-  return timeAgo;
-};
-
 const renderChat = (chatData) => {
   const li = document.createElement("li");
 
@@ -112,12 +81,15 @@ const renderChat = (chatData) => {
 
   inboxChatItem.style.cursor = "pointer";
   inboxChatItem.addEventListener("click", () => {
-    window.location.href = `/pages/item.php?id=${chatData[0].item_id}`;
+    window.location.href = `/pages/item.php?id=${chatData[0].item_id}
+    }`;
   });
 
   inboxChatMsg.style.cursor = "pointer";
   inboxChatMsg.addEventListener("click", () => {
-    window.location.href = `/pages/chat.php?id=${chatData[0].item_id}`;
+    window.location.href = `/pages/chat.php?item=${chatData[0].item_id}&id=${
+      chatData[0].sender == userId ? chatData[0].receiver : chatData[0].sender
+    }`;
   });
 
   itemName.textContent = chatData[0].item_name;

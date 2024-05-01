@@ -37,4 +37,5 @@ drawFooter();
 <script>
   const userId = <?php echo json_encode($session->getId()); ?>;
 </script>
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/inbox.js"></script>

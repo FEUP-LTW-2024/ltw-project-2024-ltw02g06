@@ -7,6 +7,7 @@ $session = new Session();
 require_once (__DIR__ . '/../../database/connection.db.php');
 require_once (__DIR__ . '/../../database/user.class.php');
 require_once (__DIR__ . '/../../database/item.class.php');
+require_once (__DIR__ . '/../../database/message.class.php');
 
 $db = getDatabaseConnection();
 
@@ -22,6 +23,7 @@ switch ($request_method) {
     // Add a new item to the cart of a given user
     $user_id = $session->getId();
     $item_id = json_decode(file_get_contents("php://input"), true)['item_id'];
+    $message_id = json_decode(file_get_contents("php://input"), true)['message_id'];
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized
@@ -47,10 +49,15 @@ switch ($request_method) {
         echo json_encode(array("message" => "You can't add your own items to your cart."));
         exit();
       }
-
-      User::addItemToCart($db, $user_id, $item_id, $item->price);
+      $message = $message_id ? Message::getMessage($db, $message_id) : null;
+      $cartItem = User::addItemToCart(
+        $db,
+        $user_id,
+        $item_id,
+        $message->type == 'negotiation' && $message->item_id == $item_id && $message->accepted ? $message->value : $item->price
+      );
       http_response_code(201); // Created
-      echo json_encode(array("message" => "Item added to cart."));
+      echo json_encode(array("message" => "Item added to cart.", "cartItem" => $cartItem));
     } catch (PDOException $e) {
       http_response_code(500); // Internal Server Error
       echo json_encode(array("message" => $e->getMessage()));

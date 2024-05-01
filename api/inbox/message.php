@@ -14,26 +14,37 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
   case 'GET':
     // GET request handling
+    // TODO
+    break;
+  case 'PATCH':
+    // PATCH request handling
+    // Update a given item.
+    $accepted = json_decode(file_get_contents("php://input"), true)['accepted'];
+    $message_id = json_decode(file_get_contents("php://input"), true)['message_id'];
     $user_id = $session->getId();
 
-    if ($user_id === null) {
+    if (!$user_id) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
-    // Extract parameters from the URL
-    $search = isset($_GET['search']) ? $_GET['search'] : null;
-    if ($search == "")
-      $search = null;
 
     try {
-      $inbox = Message::getInbox($db, $user_id, $search);
-      if ($inbox) {
+      $message = Message::getMessage($db, $message_id);
+
+      if ($message->item_seller != $user_id) {
+        http_response_code(401); // Unauthorized
+        echo json_encode(array("message" => "Not authorized."));
+        exit();
+      }
+
+      $message = Message::updateMessage($db, $message_id, $accepted);
+      if ($message) {
         http_response_code(200); // OK
-        echo json_encode($inbox);
+        echo json_encode($message);
       } else {
-        http_response_code(404); // Not Found
-        echo json_encode(array("message" => "No messages found."));
+        http_response_code(400); // Bad Request
+        echo json_encode(array("message" => "Unable to update message."));
       }
     } catch (PDOException $e) {
       http_response_code(500); // Internal Server Error

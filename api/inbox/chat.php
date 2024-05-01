@@ -22,15 +22,17 @@ switch ($request_method) {
       exit();
     }
     // Extract parameters from the URL
-    $search = isset($_GET['search']) ? $_GET['search'] : null;
-    if ($search == "")
-      $search = null;
+    $item_id = isset($_GET['item']) ? $_GET['item'] : null;
+    $item_id = $item_id == "" ? null : $item_id;
+
+    $other_user = isset($_GET['id']) ? $_GET['id'] : null;
+    $other_user = $other_user == "" ? null : $other_user;
 
     try {
-      $inbox = Message::getInbox($db, $user_id, $search);
-      if ($inbox) {
+      $chat = Message::getChat($db, (int) $item_id, (int) $user_id, (int) $other_user);
+      if ($chat) {
         http_response_code(200); // OK
-        echo json_encode($inbox);
+        echo json_encode($chat);
       } else {
         http_response_code(404); // Not Found
         echo json_encode(array("message" => "No messages found."));
