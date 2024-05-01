@@ -52,7 +52,7 @@ switch ($request_method) {
       }
 
       try {
-        $item = Item::getItem($db, $item_id);
+        $item = Item::getItem($db, (int) $item_id);
         if (!$item || $item->status != 'active') {
           http_response_code(404); // Not Found
           echo json_encode(array("message" => "Item not found or already sold."));
@@ -67,7 +67,7 @@ switch ($request_method) {
         $cartItem = User::addItemToCart(
           $db,
           $user_id,
-          $item_id,
+          (int) $item_id,
           $message->type == 'negotiation' && $message->item_id == $item_id && $message->accepted ? $message->value : $item->price
         );
         http_response_code(201); // Created
