@@ -1,0 +1,217 @@
+#edit-profile {
+  display: grid;
+  grid-template-columns: 14rem auto;
+  grid-template-areas: "form-btns form-btns"
+                       "profile-image profile-location"
+                       "profile-name profile-location";
+  gap: 1rem;
+
+  width: 100%;
+}
+
+#edit-profile-buttons {
+  grid-area: form-btns;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+
+  width: 100%;
+}
+
+#edit-profile-buttons h2 {
+  width: 100%;
+  margin: 0;
+  margin-left: 1rem;
+}
+
+#edit-profile-cancel-btn, #edit-profile-submit-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.4rem 0.8rem 0.4rem 0.8rem;
+
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+#edit-profile-cancel-btn ion-icon {
+  color: red;
+}
+
+#edit-profile-submit-btn ion-icon {
+  color: green;
+}
+
+#edit-profile-image-container {
+  grid-area: profile-image;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+
+  width: 100%;
+
+  overflow: scroll;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  background-color: white;
+}
+
+#edit-profile-image-container > div {
+  position: relative;
+  height: 10rem;
+  width: 10rem;
+}
+
+#edit-profile-image-container > div > img {
+  width: 100%;
+  height: 100%;
+
+  border-radius: 100%;
+  
+  object-fit: cover;
+}
+
+#edit-profile-image-container > div > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  position: absolute;
+  right: 1rem;
+  top: 2rem;
+  transform: translateY(-50%);
+
+  padding: 0.4rem;
+  
+  border: none;
+  border-radius: 0.2rem;
+
+  background-color: white;
+}
+
+#edit-profile-image-container > div > label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  cursor: pointer;
+}
+
+#edit-profile-image-container > div > label > ion-icon {
+  font-size: 2rem;
+  display: none;
+}
+
+#edit-profile-image-container > div > label:hover > ion-icon {
+  display: block;
+}
+
+#edit-profile-image-container > div > label:hover {
+  background-color: rgba(0, 0, 0, 0.100);
+}
+
+#new-image-input {
+  display: none;
+}
+
+#close-preview-image-btn, #accept-preview-image-btn {
+  height: 2.5rem;
+  width: 2.5rem;
+  
+  border: none;
+  border-radius: 0.2rem;
+
+  background-color: white;
+
+  cursor: pointer;
+}
+
+#close-preview-image-btn {
+  color: red;
+}
+
+#accept-preview-image-btn {
+  color: green;
+}
+
+#edit-profile-name {
+  grid-area: profile-name;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+
+  border-radius: 6px;
+  padding: 2rem;
+
+  background-color: white;
+}
+
+#edit-profile-name > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+#edit-profile-location {
+  grid-area: profile-location;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+
+  border-radius: 6px;
+  padding: 2rem;
+
+  background-color: white;
+}
+
+#edit-profile-location > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-name {
+  width: auto;
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+
+  border: 1px solid gray;
+}
+
+@media all and (max-width: 600px) {
+  #edit-profile {
+    grid-template-columns: auto;
+    grid-template-areas: "form-btns"
+                         "profile-image"
+                         "profile-name "
+                         "profile-location";
+  }
+}

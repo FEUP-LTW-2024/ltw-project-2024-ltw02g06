@@ -16,7 +16,7 @@
     <div>
       <div>
         <h2 id="profile-name"><?= $user->first_name . " " . $user->last_name ?></h2>
-        <h3><?= $user->city ?></h3>
+        <h3><?= $id == $user->id ? "$user->address, $user->zipcode -" : "" ?><?= $user->city ?></h3>
         <h5><?= $user->state . ", " . $user->country ?></h5>
       </div>
       <div>
@@ -63,4 +63,57 @@
     </ul>
 
   </div>
+<?php } ?>
+
+<?php function drawEditProfile(Session $session, User $user)
+{ ?>
+  <form id="edit-profile"
+    action="../actions/action_edit_profile.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '?redirect=' . urlencode('/pages/profile.php') ?>"
+    method="post">
+
+    <input type="hidden" name="user_id" value=<?= htmlspecialchars($user->id) ?>>
+
+    <div id="edit-profile-buttons">
+      <button id="edit-profile-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>
+      <button id="edit-profile-submit-btn" type="submit">Confirmar<ion-icon name="checkmark" submit></ion-icon></button>
+    </div>
+
+    <div id="edit-profile-image-container">
+      <div>
+        <img id="profile-image-preview" src="/<?= $user->image ?>" alt="Item Image">
+        <label for="new-image-input"><ion-icon name="add"></ion-icon></label>
+        <input type="hidden" name="new_image_path" id="new-image-path">
+        <input type="file" name="new-image" id="new-image-input" accept="image/*">
+      </div>
+    </div>
+
+    <div id="edit-profile-name">
+      <h3>Nome</h3>
+      <div>
+        <label for="first_name">Primeiro nome:</label>
+        <input type="text" name="first_name" class="edit-name" placeholder="Primeiro nome"
+          value=<?= htmlspecialchars($user->first_name) ?>>
+        <label for="last_name">Sobrenome:</label>
+        <input type="text" name="last_name" class="edit-name" placeholder="Sobrenome"
+          value=<?= htmlspecialchars($user->last_name) ?>>
+      </div>
+    </div>
+    <div id="edit-profile-location">
+      <h3>Localização</h3>
+      <div>
+        <label for="address">Morada:</label>
+        <input type="text" name="address" placeholder="Morada" value="<?= htmlspecialchars($user->address) ?>">
+        <label for="zipcode">Código postal:</label>
+        <input type="text" name="zipcode" placeholder="Código postal" value="<?= htmlspecialchars($user->zipcode) ?>">
+        <label for="city">Cidade:</label>
+        <input type="text" name="city" placeholder="Cidade" value="<?= htmlspecialchars($user->city) ?>">
+        <label for="state">Distrito:</label>
+        <input type="text" name="state" placeholder="Distrito" value="<?= htmlspecialchars($user->state) ?>">
+        <label for="country">País:</label>
+        <input type="text" name="country" placeholder="País" value="<?= htmlspecialchars($user->country) ?>">
+      </div>
+
+    </div>
+  </form>
+
 <?php } ?>

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once (__DIR__ . '/../database/category.class.php');
 require_once (__DIR__ . '/../database/user.class.php');
+require_once (__DIR__ . '/../database/utils.php');
 
 class Item
 {
@@ -611,18 +612,5 @@ class Item
     }
   }
 
-}
-
-// Auxiliar function
-function generateUniqueFilename(string $extension)
-{
-  $new_filename = uniqid() . $extension;
-
-  // Check if the filename already exists, if so, generate a new one until it's unique
-  while (file_exists(dirname(__FILE__) . "/../database/files/$new_filename")) {
-    $new_filename = uniqid() . $extension;
-  }
-
-  return $new_filename;
 }
 ?>

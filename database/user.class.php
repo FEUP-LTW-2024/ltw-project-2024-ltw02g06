@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once (__DIR__ . '/../database/utils.php');
+
 class User
 {
   public int $id;
@@ -123,6 +125,85 @@ class User
       );
     } else
       return null;
+  }
+
+  static function updateUser(PDO $db, array $user_data)
+  {
+    $image = $user_data['new_image'];
+    $id = $user_data['id'];
+
+    if ($image) {
+
+      $stmt = $db->prepare('
+                  SELECT image.id, image.path 
+                  FROM user
+                  LEFT JOIN image ON user.image = image.id
+                  WHERE user.id = ?');
+      $stmt->execute([$id]);
+
+      $current_image = $stmt->fetchAll();
+
+      $db->beginTransaction();
+      try {
+        list(, $base64_data) = explode(';', $image);
+        list(, $base64_data) = explode(',', $base64_data);
+        $image_data = base64_decode($base64_data);
+        $filename = generateUniqueFilename('.png');
+
+        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $image_data);
+
+        $stmt = $db->prepare("
+                INSERT INTO image (path)
+                VALUES (?)");
+        $stmt->execute(["database/files/" . $filename]);
+
+        $image_id = $db->lastInsertId();
+
+        $stmt = $db->prepare("
+                UPDATE user
+                SET image = ?
+                WHERE id = ?");
+        $stmt->execute([$image_id, $id]);
+
+        $db->commit();
+      } catch (PDOException $e) {
+        $db->rollBack();
+      }
+
+      if ($current_image['id'] != "1") {
+        $stmt = $db->prepare('
+                  DELETE FROM image 
+                  WHERE id = ?');
+        $stmt->execute([$current_image['id']]);
+
+        $image_path = dirname(__FILE__) . '/../' . $current_image['path'];
+        if (file_exists($image_path))
+          unlink($image_path);
+      }
+    }
+
+    $stmt = $db->prepare('
+          UPDATE user
+          SET first_name = ?,
+          last_name = ?,
+          address = ?,
+          city = ?,
+          state = ?,
+          country = ?,
+          zipcode = ?
+          WHERE id = ?
+        ');
+
+    $stmt->execute([
+      $user_data['first_name'],
+      $user_data['last_name'],
+      $user_data['address'],
+      $user_data['city'],
+      $user_data['state'],
+      $user_data['country'],
+      $user_data['zipcode'],
+      $user_data['id'],
+    ]);
   }
 
   static function getUserReviews(PDO $db, int $id): ?array
