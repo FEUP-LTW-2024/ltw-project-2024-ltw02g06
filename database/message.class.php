@@ -127,7 +127,7 @@ class Message
     return $messages;
   }
 
-  static function getMessage(PDO $db, int $message_id): Message
+  static function getMessage(PDO $db, int $message_id): ?Message
   {
 
     $query = 'SELECT message.id, message.item, item.name as item_name, item.price, item.seller, 
@@ -146,6 +146,9 @@ class Message
     $stmt->execute([$message_id]);
 
     $message = $stmt->fetch();
+
+    if (!$message)
+      return null;
 
     return new Message(
       $message['id'],
@@ -167,10 +170,14 @@ class Message
     );
   }
 
-  static function sendMessage(PDO $db, array $message_data): Message
+  static function sendMessage(PDO $db, array $message_data): ?Message
   {
     $negotiation = isset($message_data['value']);
+
     $item = Item::getItem($db, $message_data['item_id']);
+
+    if ($item->status != 'active')
+      return null;
 
     if ($negotiation) {
       $stmt = $db->prepare('
