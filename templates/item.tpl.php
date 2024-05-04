@@ -422,9 +422,34 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 
 <?php function drawProfileItems(Session $session)
 { ?>
+  <?php $order = 'relevance:desc'; ?>
   <!-- This is currently static - TODO make dinamic:
     -> Get items depending on the user profile from db; -->
+
   <section id="items">
+
+    <header>
+      <h2></h2>
+      <div>
+        <p>Ordenar por:</p>
+        <select name="items-order" id="items-order">
+          <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
+          <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
+          <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
+          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
+        </select>
+      </div>
+    </header>
+    <ol id="items-container">
+    </ol>
+
+    <nav>
+    </nav>
+
+  </section>
+
+  <!-- <section id="items">
     <h2>Os meus anúncios:</h2>
     <header>
       <?php drawSmallSearchBar() ?>
@@ -457,7 +482,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <button><ion-icon name="chevron-forward"></ion-icon></button>
     </nav>
 
-  </section>
+  </section> -->
 <?php } ?>
 
 <?php function drawProfileItem(Session $session)

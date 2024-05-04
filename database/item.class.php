@@ -377,7 +377,7 @@ class Item
   }
 
   // TODO update this function so we are able to get items in a specific state
-  static function getAllItems(PDO $db, ?int $user_id, int $page, int $items_per_page, array $search): array
+  static function getAllItems(PDO $db, ?int $user_id, ?int $seller_id, int $page, int $items_per_page, array $search): array
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
     $location_search = isset($search['location']) ? $search['location'] : null;
@@ -401,7 +401,7 @@ class Item
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($attributes)) {
+    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($attributes)) {
       $query .= !empty($whereConditions) ? ' ' : ' WHERE ';
     }
 
@@ -438,8 +438,16 @@ class Item
       $whereConditions[':price_to'] = $price_to;
     }
 
-    foreach ($attributes as $attributeId => $attributeValue) {
+    if ($seller_id !== null) {
       if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.seller = :seller_id ';
+      $whereConditions[':seller_id'] = $seller_id;
+    }
+
+    foreach ($attributes as $attributeId => $attributeValue) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
         $query .= ' AND ';
       }
       $paramId = ':attributeId' . $attributeId;
@@ -495,7 +503,7 @@ class Item
     return $items;
   }
 
-  static function getItemsTotal(PDO $db, array $search): int
+  static function getItemsTotal(PDO $db, ?int $seller_id, array $search): int
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
     $location_search = isset($search['location']) ? $search['location'] : null;
@@ -516,7 +524,7 @@ class Item
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($attributes)) {
+    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($attributes)) {
       $query .= !empty($whereConditions) ? '' : ' WHERE ';
     }
 
@@ -553,8 +561,16 @@ class Item
       $whereConditions[':price_to'] = $price_to;
     }
 
-    foreach ($attributes as $attributeId => $attributeValue) {
+    if ($seller_id !== null) {
       if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
+        $query .= ' AND ';
+      }
+      $query .= ' item.seller = :seller_id ';
+      $whereConditions[':seller_id'] = $seller_id;
+    }
+
+    foreach ($attributes as $attributeId => $attributeValue) {
+      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
         $query .= ' AND ';
       }
       $paramId = ':attributeId' . $attributeId;

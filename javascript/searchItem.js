@@ -434,7 +434,7 @@ const deleteAllAtributes = () => {
 };
 
 const getItemsTotal = async () => {
-  return fetch(`./../api/item/index.php?total=1${window.location.search}`, {
+  return fetch(`./../api/item/index.php?${window.location.search}&total=1`, {
     method: "GET",
   })
     .then((response) => {
@@ -616,10 +616,7 @@ const navigateToPage = (page) => {
   currentPage = page;
   updateParam("page", page);
   handlePagination();
-  const itemsElement = document.getElementById("items");
-  if (itemsElement) {
-    itemsElement.scrollIntoView();
-  }
+  window.scrollTo(0, 0);
 };
 
 const createPreviousPageButton = (paginationNav) => {
@@ -656,17 +653,3 @@ const createPageEllipsis = (paginationNav) => {
   p.textContent = " ... ";
   paginationNav.appendChild(p);
 };
-
-// localhost:8000/pages/items.php?page=2&search[search]=item_name&search[location]=location_name&search[order]=created_at:desc&search[price:from]=10&search[price:to]=20&search[category]=category_id&search[attributes][2]=value2&search[attributes][5]=value5
-// localhost:8000/api/item/index.php?page=2&search[search]=item_name&search[location]=location_name&search[order]=created_at:desc&search[price:from]=10&search[price:to]=20&search[category]=category_id&search[attributes][2]=value2&search[attributes][5][from]=from5&search[attributes][5][to]=to5
-// localhost:8000/api/item/index.php?page=2&search[search]=item_name&search[location]=location_name&search[order]=created_at:desc&search[price][from]=10&search[price][to]=20&search[category]=category_id&search[attributes][2]=value2&search[attributes][5][from]=from5&search[attributes][5][to]=to5
-
-// localhost:8000/pages/items.php?
-// page=2&
-// search[search]=item_name&
-// search[location]=location_name&
-// search[order]=created_at:desc&
-// search[price:from]=10&search[price:to]=20&
-// search[category]=category_id&
-// search[attributes][2]=value2&
-// search[attributes][5]=value5
