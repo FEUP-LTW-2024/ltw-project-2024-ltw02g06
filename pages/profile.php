@@ -7,7 +7,7 @@ $session = new Session();
 
 $id = $session->getId();
 
-if (!$id) {
+if (!$id && !isset($_GET['user'])) {
   $redirectUrl = urlencode("/pages/profile.php");
   header("Location: login.php?redirect=$redirectUrl");
   exit();
