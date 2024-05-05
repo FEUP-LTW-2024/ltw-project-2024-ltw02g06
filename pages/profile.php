@@ -37,9 +37,12 @@ if (!$user): ?>
   exit();
 endif;
 
+$search = isset($_GET['search']) ? $_GET['search'] : null;
+$order = isset($search['order']) ? $search['order'] : 'relevance:desc';
+
 drawProfile($session, $user);
 drawSmallSearchBar();
-drawProfileItems($session);
+drawProfileItems($session, $order);
 drawFooter();
 ?>
 <script src="./../javascript/profile.js"></script>

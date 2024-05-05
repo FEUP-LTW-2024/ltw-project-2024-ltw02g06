@@ -60,12 +60,14 @@ CREATE TABLE item (
   description TEXT,
   price REAL DEFAULT 0,
   seller INTEGER,
+  buyer INTEGER,
   category INTEGER,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'to send', 'sold')),
   sold_price REAL,
   creation_date DATE DEFAULT CURRENT_DATE,
   clicks INTEGER DEFAULT 0,
   FOREIGN KEY (seller) REFERENCES user(id) ON DELETE CASCADE,
+  FOREIGN KEY (buyer) REFERENCES user(id) ON DELETE CASCADE,
   FOREIGN KEY (category) REFERENCES category(id)
 );
 

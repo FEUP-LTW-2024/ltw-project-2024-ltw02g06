@@ -371,7 +371,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </form>
 <?php } ?>
 
-<?php function drawItems(Session $session, $order)
+<?php function drawItems(Session $session, string $order)
 { ?>
   <section id="items">
 
@@ -420,12 +420,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </li>
 <?php } ?>
 
-<?php function drawProfileItems(Session $session)
+<?php function drawProfileItems(Session $session, string $order)
 { ?>
-  <?php $order = 'relevance:desc'; ?>
-  <!-- This is currently static - TODO make dinamic:
-    -> Get items depending on the user profile from db; -->
-
   <section id="items">
 
     <header>
@@ -448,41 +444,6 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
     </nav>
 
   </section>
-
-  <!-- <section id="items">
-    <h2>Os meus anúncios:</h2>
-    <header>
-      <?php drawSmallSearchBar() ?>
-      <div>
-        <p>Ordenar por:</p>
-        <select name="items-order" id="items-order">
-          <option value="1" selected>Anúncios recomendados</option>
-          <option value="2">Mais barato</option>
-          <option value="3">Mais caro</option>
-          <option value="4">Mais recente</option>
-          <option value="5">Mais antigo</option>
-        </select>
-      </div>
-    </header>
-
-    <ol id="items-container">
-      <?php
-      drawProfileItem($session);
-      drawProfileItem($session);
-      ?>
-    </ol>
-
-    <nav>
-      <button><ion-icon name="chevron-back"></ion-icon></button>
-      <button>2</button>
-      <button class="selected-page">3</button>
-      <button>4</button>
-      <p>...</p>
-      <button>25</button>
-      <button><ion-icon name="chevron-forward"></ion-icon></button>
-    </nav>
-
-  </section> -->
 <?php } ?>
 
 <?php function drawProfileItem(Session $session)
@@ -593,7 +554,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </li>
 <?php } ?>
 
-<?php function drawSellerDashboardItems(Session $session)
+<?php function drawSellerDashboardItems(Session $session, string $order)
 { ?>
   <section id="seller-dashboard-items-section">
     <h2>Os meus anúncios:</h2>
@@ -604,11 +565,11 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <div>
         <p>Ordenar por:</p>
         <select name="items-order" id="items-order">
-          <option value="1" selected>Mais recente</option>
-          <option value="2">Mais antigo</option>
-          <option value="4">Mais barato</option>
-          <option value="5">Mais caro</option>
-          <option value="3">Anúncios promovidos</option>
+          <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
+          <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
+          <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
+          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
         </select>
       </div>
     </header>
@@ -616,43 +577,19 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
     <div id="seller-dashboard-items">
       <div>
         <h3>Por vender:</h3>
-        <ol class="seller-dashboard-items-container">
-          <?php
-          drawSellerDashboardActiveItem($session);
-          drawSellerDashboardActiveItem($session);
-          drawSellerDashboardActiveItem($session);
-          drawSellerDashboardActiveItem($session);
-          drawSellerDashboardActiveItem($session);
-          drawSellerDashboardActiveItem($session);
-          ?>
+        <ol id="active-items-list" class="seller-dashboard-items-container">
         </ol>
       </div>
 
       <div>
         <h3>Por enviar:</h3>
-        <ol class="seller-dashboard-items-container">
-          <?php
-          drawSellerDashboardToSendItem($session);
-          drawSellerDashboardToSendItem($session);
-          drawSellerDashboardToSendItem($session);
-          drawSellerDashboardToSendItem($session);
-          drawSellerDashboardToSendItem($session);
-          drawSellerDashboardToSendItem($session);
-          ?>
+        <ol id="to-send-items-list" class="seller-dashboard-items-container">
         </ol>
       </div>
 
       <div>
         <h3>Vendidos:</h3>
-        <ol class="seller-dashboard-items-container">
-          <?php
-          drawSellerDashboardSoldItem($session);
-          drawSellerDashboardSoldItem($session);
-          drawSellerDashboardSoldItem($session);
-          drawSellerDashboardSoldItem($session);
-          drawSellerDashboardSoldItem($session);
-          drawSellerDashboardSoldItem($session);
-          ?>
+        <ol id="sold-items-list" class="seller-dashboard-items-container">
         </ol>
       </div>
     </div>

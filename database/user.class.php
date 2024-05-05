@@ -392,7 +392,7 @@ class User
       $cart = User::getCart($db, $id);
 
       foreach ($cart as $cartItem) {
-        Item::buyItem($db, $cartItem['item_id'], $cartItem['new_price']);
+        Item::buyItem($db, $id, $cartItem['item_id'], $cartItem['new_price']);
       }
     } catch (PDOException $e) {
       throw $e;
