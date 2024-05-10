@@ -57,7 +57,7 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
     <div>
       <div>
         <h2>Adminstradores:</h2>
-        <ul>
+        <ul id="admins-list">
           <li>
             <div>
               <h3>Luís Figo</h3>
@@ -102,7 +102,7 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
       </div>
       <div>
         <h2>Utilizadores:</h2>
-        <ul>
+        <ul id="users-list">
           <li>
             <div>
               <h3>Luís Figo</h3>

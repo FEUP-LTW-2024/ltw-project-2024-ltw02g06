@@ -14,8 +14,9 @@ $db = getDatabaseConnection();
 
 drawHeader($session);
 drawAdminCategoriesSection();
-drawAdminReportedItemsSection();
+// drawAdminReportedItemsSection();
 drawAdminUsersSection();
-drawAdminChangesHistorySection();
+// drawAdminChangesHistorySection();
 drawFooter();
 ?>
+<script src="./../javascript/admin.js"></script>

@@ -1,8 +1,9 @@
 PRAGMA foreign_keys = ON;
 
-INSERT INTO user (first_name, last_name, email, password, address, city, state, country, zipcode) 
-VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345'),
-       ('Luís', 'Figo', 'luis2@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Belém', 'Lisboa', 'Lisboa', 'Portugal', '12345');
+INSERT INTO user (first_name, last_name, email, password, address, city, state, country, zipcode, admin) 
+VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345', 0),
+       ('Luís2', 'Figo2', 'luis2@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Belém', 'Lisboa', 'Lisboa', 'Portugal', '12345', 0),
+       ('LuísAdmin', 'FigoAdmin', 'luisAdmin@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Praia de Matosinhos', 'Matosinhos', 'Porto', 'Portugal', '12345', 1);
 
 -- password is '1'; '356a192b7913b04c54574d18c28d46e6395428ab' is the hash code of '1'
 
