@@ -127,6 +127,36 @@ class User
       return null;
   }
 
+  static function getAllUsers(PDO $db, array $search): array
+  {
+    $searchStr = isset($search['search']) ? $search['search'] : null;
+
+    $stmt = $db->prepare('
+        SELECT user.id
+        FROM user
+        WHERE user.first_name LIKE :search
+        OR user.last_name LIKE :search
+        OR user.email LIKE :search
+        OR (user.city LIKE :search OR user.state LIKE :search OR user.country LIKE :search)
+        OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :search)
+        OR user.id LIKE :search
+        OR ("#" || user.id) LIKE :search
+      ');
+
+    $stmt->execute([':search' => "%" . $searchStr . "%"]);
+
+    $users_id = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+    $users = [];
+    foreach ($users_id as $user_id) {
+      $user = User::getUser($db, $user_id);
+      $user->password = null;
+      $users[] = $user;
+    }
+
+    return $users;
+  }
+
   static function updateUser(PDO $db, array $user_data)
   {
     $image = $user_data['new_image'];
