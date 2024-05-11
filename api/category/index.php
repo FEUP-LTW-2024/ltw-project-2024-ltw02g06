@@ -6,6 +6,7 @@ $session = new Session();
 
 require_once (__DIR__ . '/../../database/connection.db.php');
 require_once (__DIR__ . '/../../database/category.class.php');
+require_once (__DIR__ . '/../../database/user.class.php');
 
 $db = getDatabaseConnection();
 
@@ -50,6 +51,34 @@ switch ($request_method) {
   case 'PATCH':
     // PATCH request handling
     // TODO create code to update a given category
+    break;
+  case 'DELETE':
+    // DELETE request handling
+    // Delete a given category
+    $categoryId = (int) $_GET['id'];
+    $user_id = $session->getId();
+    $user = User::getUser($db, $user_id);
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if (!$user->admin) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    try {
+      Category::deleteCategory($db, $categoryId);
+      http_response_code(200); // OK
+      echo json_encode(array("message" => "Success!"));
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
     break;
   default:
     // Handle unsupported request methods

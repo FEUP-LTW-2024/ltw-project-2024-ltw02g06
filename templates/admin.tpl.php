@@ -11,26 +11,6 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
   <section id="admin-categories-section">
     <h2>Categorias:</h2>
     <ul>
-      <li>
-        <p>Carros</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Motas</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Tecnologia</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Roupa</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
     </ul>
   </section>
 <?php } ?>
@@ -58,81 +38,11 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
       <div>
         <h2>Adminstradores:</h2>
         <ul id="admins-list">
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Remover cargo"><ion-icon name="star-half-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Remover cargo"><ion-icon name="star-half-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Remover cargo"><ion-icon name="star-half-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Remover cargo"><ion-icon name="star-half-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
         </ul>
       </div>
       <div>
         <h2>Utilizadores:</h2>
         <ul id="users-list">
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Tornar administrador"><ion-icon name="star-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Tornar administrador"><ion-icon name="star-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
-          <li>
-            <div>
-              <h3>Luís Figo</h3>
-              <p>#10</p>
-            </div>
-            <div>
-              <button title="Tornar administrador"><ion-icon name="star-outline"></ion-icon></button>
-              <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-          </li>
         </ul>
       </div>
     </div>
