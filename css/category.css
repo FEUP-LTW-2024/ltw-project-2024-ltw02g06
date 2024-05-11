@@ -1,0 +1,158 @@
+#edit-category-section {
+  width: 100%;
+}
+
+#edit-category-section button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+#edit-category-section > div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#edit-category-section h2 {
+  width: 100%;
+}
+
+#edit-category-buttons {
+  grid-area: form-btns;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+
+  width: 100%;
+}
+
+#edit-category-buttons #edit-category-cancel-btn,
+#edit-category-buttons #edit-category-submit-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.4rem 0.8rem 0.4rem 0.8rem;
+
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+#edit-category-cancel-btn ion-icon {
+  color: red;
+}
+
+#edit-category-submit-btn ion-icon {
+  color: green;
+}
+
+#edit-category-section ul {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+}
+
+#edit-category-section > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+#edit-category-section > ul > li {
+  display: flex; 
+  flex-direction: column;
+
+  background-color: white;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+#edit-category-section > ul > li > div:first-of-type {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.1fr;
+  align-items: center;
+}
+
+#edit-category-section > ul > li > ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  border-top: 1px solid gray;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+
+  margin-bottom: 1rem;
+}
+
+#edit-category-section > ul > li > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+
+  border: 1px solid gray;
+  border-radius: 6px;
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+#edit-category-section > ul > li > div:last-of-type:not(:first-of-type) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+#edit-category-section > ul > li input {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+#new-attribute-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+#new-attribute-container input,
+#new-attribute-container select {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
+#new-attribute-container select {
+  background-color: white;
+  width: 20%;
+}
