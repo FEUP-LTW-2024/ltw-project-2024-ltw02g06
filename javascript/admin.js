@@ -1,20 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-<<<<<<< HEAD
-  const queryString = window.location.search;
-  const params = new URLSearchParams(queryString);
-
-  currentPage = params.get("page");
-  if (!currentPage || isNaN(parseInt(currentPage))) currentPage = 1;
-
-=======
   handleCategorySection();
->>>>>>> main
   handleSearchBar();
   searchUsers();
 });
 
-<<<<<<< HEAD
-=======
 const handleCategorySection = async () => {
   const categories = await getCategories();
   renderCategories(categories);
@@ -73,7 +62,6 @@ const renderCategory = (category) => {
   return li;
 };
 
->>>>>>> main
 const searchUsers = async () => {
   const users = await getUsers();
   renderUsers(users);
@@ -163,11 +151,7 @@ const renderAdmin = (user) => {
 
   adminButton.addEventListener("click", async () => {
     try {
-<<<<<<< HEAD
-      await removeAdmin(user.id);
-=======
       removeAdmin(user.id);
->>>>>>> main
       const adminsList = document.getElementById("admins-list");
       const usersList = document.getElementById("users-list");
       const noItemsFoundLi = document.querySelector(
@@ -184,11 +168,7 @@ const renderAdmin = (user) => {
 
   removeButton.addEventListener("click", async () => {
     try {
-<<<<<<< HEAD
-      await removeUser(user.id);
-=======
       removeUser(user.id);
->>>>>>> main
       const adminsList = document.getElementById("admins-list");
       li.remove();
       renderNoUsersFound(adminsList);
@@ -203,15 +183,10 @@ const renderAdmin = (user) => {
   removeIcon.name = "trash-outline";
   div1.appendChild(h3Name);
   div1.appendChild(pId);
-<<<<<<< HEAD
-  div2.appendChild(adminButton);
-  div2.appendChild(removeButton);
-=======
   if (user.id != sessionId) {
     div2.appendChild(adminButton);
     div2.appendChild(removeButton);
   }
->>>>>>> main
   adminButton.appendChild(adminIcon);
   adminButton.title = "Remover cargo";
   removeButton.appendChild(removeIcon);
@@ -239,11 +214,7 @@ const renderUser = (user) => {
 
   adminButton.addEventListener("click", async () => {
     try {
-<<<<<<< HEAD
-      await addAdmin(user.id);
-=======
       addAdmin(user.id);
->>>>>>> main
       const adminsList = document.getElementById("admins-list");
       const usersList = document.getElementById("users-list");
       const noItemsFoundLi = document.querySelector(
@@ -260,11 +231,7 @@ const renderUser = (user) => {
 
   removeButton.addEventListener("click", async () => {
     try {
-<<<<<<< HEAD
-      await removeUser(user.id);
-=======
       removeUser(user.id);
->>>>>>> main
       const usersList = document.getElementById("users-list");
       li.remove();
       renderNoUsersFound(usersList);
@@ -279,15 +246,10 @@ const renderUser = (user) => {
   removeIcon.name = "trash-outline";
   div1.appendChild(h3Name);
   div1.appendChild(pId);
-<<<<<<< HEAD
-  div2.appendChild(adminButton);
-  div2.appendChild(removeButton);
-=======
   if (user.id != sessionId) {
     div2.appendChild(adminButton);
     div2.appendChild(removeButton);
   }
->>>>>>> main
   adminButton.appendChild(adminIcon);
   adminButton.title = "Remover cargo";
   removeButton.appendChild(removeIcon);
@@ -329,18 +291,12 @@ const deleteParam = (param) => {
 };
 
 const addAdmin = (id) => {
-<<<<<<< HEAD
-  /*
-  fetch(`./../api/user/index.php?&id=${id}`, {
-    method: "POST",
-=======
   fetch(`./../api/user/index.php?&admin=1`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ id: id, admin: true }),
->>>>>>> main
   })
     .then((response) => {
       if (!response.ok) {
@@ -350,15 +306,6 @@ const addAdmin = (id) => {
     .catch((error) => {
       console.error("There was an unexpected error:", error);
     });
-<<<<<<< HEAD
-    */
-};
-
-const removeAdmin = (id) => {
-  /*
-  fetch(`./../api/user/index.php?&id=${id}`, {
-    method: "POST",
-=======
 };
 
 const removeAdmin = (id) => {
@@ -368,7 +315,6 @@ const removeAdmin = (id) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ id: id, admin: false }),
->>>>>>> main
   })
     .then((response) => {
       if (!response.ok) {
@@ -378,15 +324,6 @@ const removeAdmin = (id) => {
     .catch((error) => {
       console.error("There was an unexpected error:", error);
     });
-<<<<<<< HEAD
-    */
-};
-
-const removeUser = (id) => {
-  /*
-  fetch(`./../api/user/index.php?&id=${id}`, {
-    method: "POST",
-=======
 };
 
 const removeUser = (id) => {
@@ -424,7 +361,6 @@ const removeCategory = (categoryId) => {
   console.log("Remover categoria");
   fetch(`./../api/category/index.php?&id=${categoryId}`, {
     method: "DELETE",
->>>>>>> main
   })
     .then((response) => {
       if (!response.ok) {
@@ -434,8 +370,4 @@ const removeCategory = (categoryId) => {
     .catch((error) => {
       console.error("There was an unexpected error:", error);
     });
-<<<<<<< HEAD
-    */
-=======
->>>>>>> main
 };
