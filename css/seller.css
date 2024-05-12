@@ -107,7 +107,7 @@
   padding: 0;
   margin: 0;
 
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .seller-dashboard-items-container li {

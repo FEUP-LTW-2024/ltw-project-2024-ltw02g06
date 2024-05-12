@@ -12,6 +12,7 @@ class Item
   public string $description;
   public float $price;
   public int $seller;
+  public ?int $buyer;
   public int $category;
   public string $status;
   public ?float $sold_price;
@@ -26,6 +27,7 @@ class Item
     string $description,
     float $price,
     int $seller,
+    ?int $buyer,
     int $category,
     string $status,
     ?float $sold_price,
@@ -39,6 +41,7 @@ class Item
     $this->description = $description;
     $this->price = $price;
     $this->seller = $seller;
+    $this->buyer = $buyer;
     $this->category = $category;
     $this->status = $status;
     $this->sold_price = $sold_price;
@@ -51,7 +54,7 @@ class Item
   static function getItem(PDO $db, int $id): ?Item
   {
     $stmt = $db->prepare('
-        SELECT id, name, description, price, seller, category, status, sold_price, creation_date, clicks
+        SELECT id, name, description, price, seller, buyer, category, status, sold_price, creation_date, clicks
         FROM item
         WHERE id = ?
       ');
@@ -96,6 +99,7 @@ class Item
       $item['description'],
       $item['price'],
       $item['seller'],
+      $item['buyer'],
       $item['category'],
       $item['status'],
       $item['sold_price'],
@@ -493,11 +497,13 @@ class Item
       $in_cart = $user_id ? User::isItemInCart($db, $user_id, $item_id) : false;
       $in_wishlist = $user_id ? User::isItemInWishlist($db, $user_id, $item_id) : false;
       $seller = User::getUser($db, $item->seller);
+      $buyer = $item->buyer ? User::getUser($db, $item->buyer) : null;
       $items[] = [
         'item' => $item,
         'in_cart' => $in_cart,
         'in_wishlist' => $in_wishlist,
-        'seller' => $seller
+        'seller' => $seller,
+        'buyer' => $buyer,
       ];
     }
 
@@ -595,15 +601,17 @@ class Item
     return $total;
   }
 
-  static function buyItem(PDO $db, int $id, float $sold_price): ?Item
+  static function buyItem(PDO $db, int $buyer, int $id, float $sold_price): ?Item
   {
     try {
       // Update item info
       $stmt = $db->prepare('
               UPDATE item
-              SET sold_price = ?, status = "to send"
+              SET sold_price = ?, 
+                  status = "to send", 
+                  buyer = ?
               WHERE id = ?');
-      $stmt->execute([$sold_price, $id]);
+      $stmt->execute([$sold_price, $buyer, $id]);
 
       return Item::getItem($db, $id);
     } catch (PDOException $e) {
@@ -612,5 +620,20 @@ class Item
     }
   }
 
+  static function sendItem(PDO $db, int $id): ?Item
+  {
+    try {
+      $stmt = $db->prepare('
+              UPDATE item
+              SET status = "sold"
+              WHERE id = ?');
+      $stmt->execute([$id]);
+
+      return Item::getItem($db, $id);
+    } catch (PDOException $e) {
+      $db->rollBack();
+      throw $e;
+    }
+  }
 }
 ?>

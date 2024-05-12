@@ -37,7 +37,10 @@ drawAdminUsersSection();
 // drawAdminChangesHistorySection();
 drawFooter();
 ?>
+<<<<<<< HEAD
+=======
 <script>
   const sessionId = <?php echo json_encode($id); ?>;
 </script>
+>>>>>>> main
 <script src="./../javascript/admin.js"></script>
