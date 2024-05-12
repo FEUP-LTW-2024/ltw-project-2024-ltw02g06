@@ -223,8 +223,8 @@ class Message
           LEFT JOIN user as sender_user ON message.sender = sender_user.id
           LEFT JOIN user as receiver_user ON message.receiver = receiver_user.id
           INNER JOIN user as seller_user ON item.seller = seller_user.id
-          WHERE (message.sender = :sender OR message.receiver = :sender
-          OR message.sender = :receiver OR message.receiver = :receiver)
+          WHERE ((message.sender = :sender AND message.receiver = :receiver) OR 
+          (message.receiver = :sender AND message.sender = :receiver))
           AND message.item = :item ';
 
     $query .= ' AND item.status = "active"

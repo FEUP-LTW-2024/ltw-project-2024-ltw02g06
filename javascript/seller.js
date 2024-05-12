@@ -268,7 +268,8 @@ const renderToSendItem = (itemData) => {
   });
 
   h3Name.textContent = itemData.item.name;
-  h3Price.textContent = `${itemData.item.price} €`;
+  h3Price.textContent = `${itemData.item.sold_price} €`;
+  h3Price.innerHTML = `${itemData.item.sold_price} € <span>${itemData.item.price}</span>`;
   sendIcon.name = "send-outline";
   div1.appendChild(h3Name);
   div1.appendChild(h3Price);

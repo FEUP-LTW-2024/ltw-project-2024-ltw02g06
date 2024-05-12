@@ -172,6 +172,13 @@
   font-size: 0.9rem;
 }
 
+.seller-dashboard-items-container li span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: gray;
+  text-decoration: line-through;
+}
+
 .seller-dashboard-items-container li > div h3:first-of-type {
   display: -webkit-box;
   -webkit-line-clamp: 2;
