@@ -35,6 +35,11 @@
   list-style: none;
 }
 
+#header a {
+  text-decoration: none;
+  color: white;
+}
+
 #header ul a {
   display: flex;
   flex-direction: row;
@@ -46,14 +51,14 @@
   text-decoration: none;
 }
 
-#header ul li:last-of-type a {
+/* #header ul li:last-of-type a {
   background-color: white;
   color: var(--penn-blue);
 
   padding: 0.6rem 1.2rem 0.6rem 1.2rem;
   border: 6px solid white;
   border-radius: 6px;
-}
+} */
 
 #header ul li:last-of-type a:hover {
   background-color: var(--penn-blue);

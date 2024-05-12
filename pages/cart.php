@@ -24,7 +24,7 @@ require_once (__DIR__ . '/../database/user.class.php');
 $db = getDatabaseConnection();
 
 $cart = User::getCart($db, $id);
-
+$user = User::getUser($db, $id);
 drawHeader($session);
 drawCart($session, $cart);
 drawFooter();
