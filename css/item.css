@@ -191,7 +191,7 @@
   padding-bottom: 1rem;
 }
 
-#add-to-cart-btn, #negotiate-btn, #edit-btn, #delete-btn {
+#add-to-cart-btn, #negotiate-btn, #edit-btn, #delete-btn, #admin-delete-btn {
   border: none;
   height: 3.5rem;
 
@@ -201,6 +201,10 @@
   color: white;
 
   cursor: pointer;
+}
+
+#admin-delete-btn {
+  background-color: rgb(255, 106, 0);
 }
 
 #add-to-cart-btn[data-is-item-in-cart="1"] {

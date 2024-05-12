@@ -136,10 +136,11 @@ switch ($request_method) {
     }
 
     $item = Item::getItem($db, $id);
+    $user = User::getUser($db, $user_id);
 
-    if ($user_id != $item->seller) {
+    if ($user_id != $item->seller && !$user->admin) {
       http_response_code(401); // Unauthorized
-      echo json_encode(array("message" => "Not authenticated."));
+      echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 

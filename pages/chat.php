@@ -30,7 +30,7 @@ $item = Item::getItem($db, intval($_GET['item']));
 $other_user = User::getUser($db, intval($_GET['id']));
 $seller = User::getUser($db, $item->seller);
 
-if (!$other_user || !$item || !$item->status != 'active' || $other_user->id == $id): ?>
+if (!$other_user || !$item || $item->status != 'active' || $other_user->id == $id): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
   <?php
   exit();

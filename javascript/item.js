@@ -1,12 +1,11 @@
-const initialize = (sessionId, itemId) => {
-  document.addEventListener("DOMContentLoaded", () => {
-    handleWishlistBtn(sessionId, itemId);
-    handleCartBtn(sessionId, itemId);
-    handleEditBtn(itemId);
-    handleDeleteBtn(itemId);
-    handleImagesNavBtns();
-  });
-};
+document.addEventListener("DOMContentLoaded", () => {
+  handleWishlistBtn(sessionId, itemId);
+  handleCartBtn(sessionId, itemId);
+  handleEditBtn(itemId);
+  handleDeleteBtn(itemId);
+  handleMessageBtns(itemId, sellerId);
+  handleImagesNavBtns();
+});
 
 const handleImagesNavBtns = () => {
   const previousBtn = document.getElementById("previous-image-btn");
@@ -74,7 +73,6 @@ const removeFromWishlist = (itemId) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Item removed from wishlist");
     })
     .catch((error) => {
       console.error("Error removing item from wishlist:", error);
@@ -93,7 +91,6 @@ const addToWishlist = (itemId) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Item added to wishlist");
     })
     .catch((error) => {
       console.error("Error adding item to wishlist:", error);
@@ -137,7 +134,6 @@ const removeFromCart = (itemId) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Item removed from cart");
     })
     .catch((error) => {
       console.error("Error removing item from cart:", error);
@@ -156,7 +152,6 @@ const addToCart = (itemId) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Item added to cart");
     })
     .catch((error) => {
       console.error("Error adding item to cart:", error);
@@ -181,14 +176,25 @@ const handleEditBtn = (itemId) => {
 const handleDeleteBtn = (itemId) => {
   const deleteBtn = document.getElementById("delete-btn");
 
-  if (!deleteBtn) return;
-
-  deleteBtn.addEventListener("click", () => {
-    deleteItem(itemId, () => {
-      // Redirect the user to seller page
-      window.location.href = "/pages/seller.php";
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", () => {
+      deleteItem(itemId, () => {
+        // Redirect the user to seller page
+        window.location.href = "/pages/seller.php";
+      });
     });
-  });
+  }
+
+  const adminDeleteBtn = document.getElementById("admin-delete-btn");
+
+  if (adminDeleteBtn) {
+    adminDeleteBtn.addEventListener("click", () => {
+      deleteItem(itemId, () => {
+        // Redirect the user to seller page
+        window.location.href = "/pages/items.php";
+      });
+    });
+  }
 };
 
 const deleteItem = (itemId, callback) => {
@@ -199,10 +205,27 @@ const deleteItem = (itemId, callback) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      console.log("Item deleted.");
       callback();
     })
     .catch((error) => {
       console.error("Error deleting item:", error);
     });
+};
+
+const handleMessageBtns = (itemId, sellerId) => {
+  const negotiateBtn = document.getElementById("negotiate-btn");
+
+  if (negotiateBtn) {
+    negotiateBtn.addEventListener("click", () => {
+      window.location.href = `/pages/chat.php?item=${itemId}&id=${sellerId}`;
+    });
+  }
+
+  const sendMessageBtn = document.getElementById("send-message-btn");
+
+  if (sendMessageBtn) {
+    sendMessageBtn.addEventListener("click", () => {
+      window.location.href = `/pages/chat.php?item=${itemId}&id=${sellerId}`;
+    });
+  }
 };

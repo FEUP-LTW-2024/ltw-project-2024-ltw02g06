@@ -8,7 +8,7 @@ require_once (__DIR__ . '/../utils/session.php');
 require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 ?>
 
-<?php function drawItem(Item $item, User $seller, array $seller_reviews, bool $is_item_in_wishlist, bool $is_item_in_cart, Session $session)
+<?php function drawItem(Item $item, User $seller, bool $admin, array $seller_reviews, bool $is_item_in_wishlist, bool $is_item_in_cart, Session $session)
 { ?>
 
   <?php
@@ -54,9 +54,9 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <div>
         <p>ID: <?= $item->id ?></p>
         <p>Cliques: <?= $item->clicks ?></p>
-        <button id="report-button">
+        <!-- <button id="report-button">
           Reportar
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -77,12 +77,17 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <?php endif; ?>
       <h2 id="item-price"><?= $item->price ?> €</h2>
       <?php if (!$is_seller): ?>
-        <button id="add-to-cart-btn" data-is-item-in-cart=<?= $is_item_in_cart ? "1" : "0" ?>>
-          <?= $is_item_in_cart ? "Remover do carrinho" : "Adicionar ao carrinho" ?>
-        </button>
-        <button id="negotiate-btn">Propor outro preço</button>
-        <button id="send-message-btn">Enviar mensagem</button>
-      <?php else: ?>
+        <?php if ($item->status == 'active'): ?>
+          <button id="add-to-cart-btn" data-is-item-in-cart=<?= $is_item_in_cart ? "1" : "0" ?>>
+            <?= $is_item_in_cart ? "Remover do carrinho" : "Adicionar ao carrinho" ?>
+          </button>
+          <button id="negotiate-btn">Propor outro preço</button>
+          <button id="send-message-btn">Enviar mensagem</button>
+        <?php endif; ?>
+        <?php if ($admin): ?>
+          <button id="admin-delete-btn">Apagar anúncio</button>
+        <?php endif; ?>
+      <?php elseif ($item->status == 'active'): ?>
         <button id="edit-btn">Editar anúncio <ion-icon name="create-outline"></ion-icon></button>
         <button id="delete-btn">Apagar anúncio <ion-icon name="trash-outline"></ion-icon></button>
       <?php endif; ?>
@@ -104,7 +109,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 
     <div id="seller-info" class="edit-seller-info">
       <h3>Utilizador</h3>
-      <a href="/pages/profile.php?id=<?php echo $seller->id; ?>">
+      <a href="/pages/profile.php?user=<?php echo $seller->id; ?>">
         <img id="seller-img" src="<?= '/../' . $seller->image ?>" alt="User Profile Picture">
         <div>
           <h4 id="seller-name"><?= $seller->name() ?></h4>
@@ -115,7 +120,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </a>
-      <div>
+      <!-- <div>
         <?php if (empty($seller_reviews)): ?>
           <h6>Rating: </h6>
           <p>Sem classificações</p>
@@ -131,8 +136,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
           <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
         <?php endif; ?>
-      </div>
-      <a id="see-all-items-btn" href="/pages/profile.php?id=<?php echo $seller->id; ?>">
+      </div> -->
+      <a id="see-all-items-btn" href="/pages/profile.php?user=<?php echo $seller->id; ?>">
         <span>Todos os anúncios deste anunciante</span>
         <span>&gt;</span>
       </a>
