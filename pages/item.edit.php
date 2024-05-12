@@ -20,7 +20,7 @@ $item = Item::getItem($db, intval($_GET['id']));
 
 drawHeader($session);
 
-if (!$item || $item->seller != $id): ?>
+if (!$item || $item->seller != $id || $item->status != 'active'): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
 <?php else:
   $user = User::getUser($db, $id);
