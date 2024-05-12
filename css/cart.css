@@ -47,6 +47,10 @@
   background-color: white;
 }
 
+.cart-item-info {
+  cursor: pointer;
+}
+
 .cart-item-info, .cart-item-img {
   display: flex;
   flex-direction: row;

@@ -89,6 +89,10 @@ const removeFromCart = async (itemId) => {
     });
 };
 
+const handleItemBtn = (itemId) => {
+  window.location.href = `../pages/item.php?id=${itemId}`;
+};
+
 const showModal = (message) => {
   const modal = document.getElementById("modal");
   const modalMessage = document.getElementById("modal-message");

@@ -42,7 +42,7 @@ require_once (__DIR__ . '/../utils/session.php');
       <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
     </div> -->
 
-    <div class="cart-item-info">
+    <div class="cart-item-info" onclick="handleItemBtn(<?= $cartItem['item_id'] ?>)">
       <h3><?= $cartItem['item_name'] ?></h3>
     </div>
 
