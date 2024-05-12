@@ -134,5 +134,138 @@ class Category
 
     return self::getCategory($db, (int) $id);
   }
+
+  static function updateCategory(PDO $db, array $categoryData)
+  {
+    try {
+      $category = Category::getCategory($db, (int) $categoryData['id']);
+
+      $id = $category->id;
+      if ($id == 1)
+        return;
+      $currentAttributes = $category->attributes;
+      $newAttributes = $categoryData['attributes'];
+
+      foreach ($currentAttributes as $attribute) {
+        $attributeExists = false;
+        foreach ($newAttributes as $newAttribute) {
+          if ($attribute['id'] == $newAttribute['id']) {
+            $attributeExists = true;
+            if ($attribute['type'] == 'enum') {
+              foreach ($attribute['values'] as $currentValue) {
+                $valueExists = false;
+                foreach ($newAttribute['values'] as $newValue) {
+                  if ($currentValue['id'] == $newValue['id']) {
+                    $valueExists = true;
+                    break;
+                  }
+                }
+                if (!$valueExists) {
+                  $stmt = $db->prepare('
+                                DELETE FROM attribute_values
+                                WHERE id = ?
+                            ');
+                  $stmt->execute([$currentValue['id']]);
+
+                  $stmt = $db->prepare('
+                                DELETE FROM item_attributes
+                                WHERE attribute = ?
+                                AND value = ?
+                            ');
+                  $stmt->execute([$attribute['id'], $currentValue['value']]);
+                }
+              }
+            }
+            break;
+          }
+        }
+        if (!$attributeExists) {
+          $stmt = $db->prepare('
+                DELETE FROM attribute
+                WHERE id = ?
+            ');
+          $stmt->execute([$attribute['id']]);
+        }
+      }
+
+      foreach ($newAttributes as $attribute) {
+        if ($attribute['id'] == -1) {
+          $db->beginTransaction();
+
+          try {
+            $stmt = $db->prepare('
+                INSERT INTO attribute (name, type)
+                VALUES (?, ?)');
+            $stmt->execute([$attribute['name'], $attribute['type']]);
+
+            $attributeId = $db->lastInsertId();
+
+            if ($attribute['type'] == 'enum') {
+              foreach ($attribute['values'] as $value) {
+                $stmt = $db->prepare('
+                INSERT INTO attribute_values (attribute, value)
+                VALUES (?, ?)');
+                $stmt->execute([$attributeId, $value['value']]);
+              }
+            }
+
+            $stmt = $db->prepare('
+                INSERT INTO category_attributes (category, attribute) 
+                VALUES (?, ?)');
+            $stmt->execute([$id, $attributeId]);
+
+            $db->commit();
+          } catch (PDOException $e) {
+            $db->rollBack();
+            throw $e;
+          }
+        } else {
+          if ($attribute['type'] == 'enum') {
+            foreach ($attribute['values'] as $value) {
+              if ($value['id'] == -1) {
+                $stmt = $db->prepare('
+              INSERT INTO attribute_values (attribute, value)
+              VALUES (?, ?)');
+                $stmt->execute([$attribute['id'], $value['value']]);
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  static function deleteCategory(PDO $db, int $id)
+  {
+    try {
+      $stmt = $db->prepare('
+                UPDATE item
+                SET category = 1
+                WHERE category = ?
+            ');
+      $stmt->execute([$id]);
+
+      $stmt = $db->prepare('
+            DELETE FROM attribute
+            WHERE id IN (
+                SELECT attribute
+                FROM category_attributes
+                WHERE category = ?
+            )
+        ');
+      $stmt->execute([$id]);
+
+      $stmt = $db->prepare('
+                DELETE FROM category
+                WHERE id = ?
+            ');
+      $stmt->execute([$id]);
+
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
 }
 ?>

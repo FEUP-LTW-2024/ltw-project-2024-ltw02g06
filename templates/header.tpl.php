@@ -2,10 +2,19 @@
 declare(strict_types=1);
 
 require_once (__DIR__ . '/../utils/session.php');
+require_once (__DIR__ . '/../database/connection.db.php');
+require_once (__DIR__ . '/../database/user.class.php');
 ?>
 
 <?php function drawHeader(Session $session)
 { ?>
+  <?php
+  $id = $session->getId();
+  $db = getDatabaseConnection();
+  $user = null;
+  if ($id)
+    $user = User::getUser($db, $id);
+  ?>
   <!DOCTYPE html>
   <html lang="pt">
 
@@ -21,6 +30,7 @@ require_once (__DIR__ . '/../utils/session.php');
       rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
@@ -37,20 +47,36 @@ require_once (__DIR__ . '/../utils/session.php');
     <link rel="stylesheet" href="../css/editItem.css">
     <link rel="stylesheet" href="../css/editProfile.css">
     <link rel="stylesheet" href="../css/chat.css">
+    <link rel="stylesheet" href="../css/category.css">
   </head>
 
   <body>
 
     <header id="header">
       <div>
-        <h1>eKo</h1>
+        <a href="../pages/items.php">
+          <h1>eKo</h1>
+        </a>
         <nav>
           <ul>
-            <li><a href="#"><ion-icon name="chatbox-outline"></ion-icon></a></li>
-            <li><a href="#"><ion-icon name="heart-outline"></ion-icon></a></li>
-            <li><a href="#"><ion-icon name="cart-outline"></ion-icon></a></li>
-            <li><a href="#"><ion-icon name="person-outline"></ion-icon></a></li>
-            <li><a href="#">Anunciar e Vender</a></li>
+
+            <li title="Inbox"><a href="../pages/inbox.php"><ion-icon name="chatbox-outline"></ion-icon></a></li>
+            <li title="Wishlist"><a href="../pages/wishlist.php"><ion-icon name="heart-outline"></ion-icon></a></li>
+            <li title="Carrinho"><a href="../pages/cart.php"><ion-icon name="cart-outline"></ion-icon></a></li>
+            <?php if ($user && $user->admin): ?>
+              <li title="Admin"><a href="../pages/admin.php"><ion-icon name="star-outline"></ion-icon></a></li>
+            <?php endif; ?>
+            <li title="Vendedor"><a href="../pages/seller.php"><ion-icon name="storefront-outline"></ion-icon></a></li>
+            <?php if ($id): ?>
+              <li title="Perfil"><a href="../pages/profile.php"><ion-icon name="person-outline"></ion-icon></a></li>
+              <li title="Log out"><a href="../actions/action_logout.php"><ion-icon name="exit-outline"></ion-icon></a></li>
+            <?php else: ?>
+              <li title="Log in">
+                <a href="../pages/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"><ion-icon
+                    name="person-outline"></ion-icon></a>
+              </li>
+            <?php endif; ?>
+            <!-- <li><a href="#">Anunciar e Vender</a></li> -->
           </ul>
         </nav>
       </div>

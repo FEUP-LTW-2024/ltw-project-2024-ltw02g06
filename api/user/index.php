@@ -49,7 +49,87 @@ switch ($request_method) {
     break;
   case 'PATCH':
     // PATCH request handling
-    // TODO create code to update a given user
+    // Update a given user
+    $userData = json_decode(file_get_contents('php://input'), true);
+    $user_id = $session->getId();
+    $user = User::getUser($db, $user_id);
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($user_id != $userData['id'] && !$user->admin) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    $updateAdminStatus = isset($_GET['admin']) ? $_GET['admin'] : 0;
+
+    if ($updateAdminStatus && $user->admin) {
+      try {
+        User::updateAdminStatus($db, $userData);
+        $user = User::getUser($db, $userData['id']);
+        if ($user) {
+          $user->password = null;
+          http_response_code(200); // OK
+          echo json_encode($user);
+        } else {
+          http_response_code(400); // Bad Request
+          echo json_encode(array("message" => "Unable to update user."));
+        }
+      } catch (PDOException $e) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(array("message" => $e->getMessage()));
+      }
+      break;
+    }
+
+    try {
+      User::updateUser($db, $userData);
+      $user = User::getUser($db, $userData['id']);
+      if ($user) {
+        $user->password = null;
+        http_response_code(200); // OK
+        echo json_encode($user);
+      } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(array("message" => "Unable to update user."));
+      }
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
+    break;
+  case 'DELETE':
+    // DELETE request handling
+    // Delete an user.
+    $toDeleteUserId = (int) $_GET['id'];
+    $user_id = $session->getId();
+    $user = User::getUser($db, $user_id);
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($user_id != $toDeleteUserId && !$user->admin) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    try {
+      User::deleteUser($db, $toDeleteUserId);
+      http_response_code(200); // OK
+      echo json_encode(array("message" => "Success!"));
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
     break;
   default:
     // Handle unsupported request methods

@@ -11,26 +11,6 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
   <section id="admin-categories-section">
     <h2>Categorias:</h2>
     <ul>
-      <li>
-        <p>Carros</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Motas</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Tecnologia</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
-      <li>
-        <p>Roupa</p>
-        <button title="Editar"><ion-icon name="create-outline"></ion-icon></button>
-        <button title="Remover"><ion-icon name="trash-outline"></ion-icon></button>
-      </li>
     </ul>
   </section>
 <?php } ?>
@@ -58,6 +38,7 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
       <div>
         <h2>Adminstradores:</h2>
         <ul id="admins-list">
+<<<<<<< HEAD
           <li>
             <div>
               <h3>Luís Figo</h3>
@@ -98,11 +79,14 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
               <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
             </div>
           </li>
+=======
+>>>>>>> main
         </ul>
       </div>
       <div>
         <h2>Utilizadores:</h2>
         <ul id="users-list">
+<<<<<<< HEAD
           <li>
             <div>
               <h3>Luís Figo</h3>
@@ -133,6 +117,8 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
               <button title="Apagar utilizador"><ion-icon name="trash-outline"></ion-icon></button>
             </div>
           </li>
+=======
+>>>>>>> main
         </ul>
       </div>
     </div>

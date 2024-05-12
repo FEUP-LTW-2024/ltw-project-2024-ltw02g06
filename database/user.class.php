@@ -236,6 +236,33 @@ class User
     ]);
   }
 
+  static function deleteUser(PDO $db, int $user_id)
+  {
+    try {
+      $stmt = $db->prepare('
+            DELETE FROM user
+            WHERE id = ?
+        ');
+      $stmt->execute([$user_id]);
+    } catch (PDOException $e) {
+      throw $e;
+    }
+  }
+
+  static function updateAdminStatus(PDO $db, array $user_data)
+  {
+    $stmt = $db->prepare('
+          UPDATE user
+          SET admin = ?
+          WHERE id = ?
+        ');
+
+    $stmt->execute([
+      $user_data['admin'],
+      $user_data['id'],
+    ]);
+  }
+
   static function getUserReviews(PDO $db, int $id): ?array
   {
     $stmt = $db->prepare('
