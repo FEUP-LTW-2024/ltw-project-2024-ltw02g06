@@ -16,4 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     reader.readAsDataURL(file);
   });
+
+  const editProfileCancelBtn = document.getElementById(
+    "edit-profile-cancel-btn"
+  );
+
+  editProfileCancelBtn.addEventListener("click", () => {
+    window.location.href = "../pages/profile.php";
+  });
 });

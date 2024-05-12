@@ -562,7 +562,13 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 <?php function drawSellerDashboardItems(Session $session, string $order)
 { ?>
   <section id="seller-dashboard-items-section">
-    <h2>Os meus anúncios:</h2>
+    <div>
+      <h2>Os meus anúncios:</h2>
+      <a title="Novo anńuncio" href="../pages/item.create.php">
+        <span>Novo anńuncio</span>
+        <ion-icon name="add-outline"></ion-icon>
+      </a>
+    </div>
     <header>
       <?php
       drawSmallSearchBar();

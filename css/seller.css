@@ -6,6 +6,25 @@
   width: 100%;
 }
 
+#seller-dashboard-items-section > div:first-of-type {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#seller-dashboard-items-section > div:first-of-type a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color: white;
+  background-color: var(--penn-blue);
+  padding: 0.8rem 1.4rem 0.8rem 1.4rem;
+  border-radius: 6px;
+}
+
 #seller-dashboard-analytics-section div {
   display: flex;
   flex-direction: column;
