@@ -45,6 +45,32 @@
   font-size: 1.4rem;
 }
 
+#admin-categories-section > div {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+#new-category-input {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+#add-category-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
 
 
 #reported-items-container {

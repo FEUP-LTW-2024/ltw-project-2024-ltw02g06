@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const handleCategorySection = async () => {
   const categories = await getCategories();
   renderCategories(categories);
+  handleAddCategory();
 };
 
 const renderCategories = (categories) => {
@@ -39,7 +40,7 @@ const renderCategory = (category) => {
 
   removeButton.addEventListener("click", async () => {
     try {
-      await removeCategory(category.id);
+      removeCategory(category.id);
       li.remove();
     } catch (error) {
       console.error("Error removing category:", error);
@@ -60,6 +61,38 @@ const renderCategory = (category) => {
   removeButton.title = "Remover";
 
   return li;
+};
+
+const handleAddCategory = () => {
+  const addCategoryButton = document.getElementById("add-category-button");
+
+  addCategoryButton.addEventListener("click", async () => {
+    const newCategoryInput = document.getElementById("new-category-input");
+    const newCategory = newCategoryInput.value.trim();
+    if (newCategory !== "") {
+      await addNewCategory(newCategory);
+      handleCategorySection();
+      newCategoryInput.value = "";
+    }
+  });
+};
+
+const addNewCategory = async (newCategory) => {
+  fetch(`./../api/category/index.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name: newCategory, attributes: [] }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+    })
+    .catch((error) => {
+      console.error("There was an unexpected error:", error);
+    });
 };
 
 const searchUsers = async () => {
@@ -358,7 +391,6 @@ const getCategories = async () => {
 };
 
 const removeCategory = (categoryId) => {
-  console.log("Remover categoria");
   fetch(`./../api/category/index.php?&id=${categoryId}`, {
     method: "DELETE",
   })

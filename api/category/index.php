@@ -38,14 +38,35 @@ switch ($request_method) {
     break;
   case 'POST':
     // POST request handling
+
     $postData = json_decode(file_get_contents('php://input'), true);
-    $category = Category::createCategory($db, $postData);
-    if ($category) {
-      http_response_code(201); // Created
-      echo json_encode($category);
-    } else {
-      http_response_code(400); // Bad Request
-      echo json_encode(array("message" => "Unable to create category."));
+    $user_id = $session->getId();
+    $user = User::getUser($db, $user_id);
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if (!$user->admin) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    try {
+      $category = Category::createCategory($db, $postData);
+      if ($category) {
+        http_response_code(201); // Created
+        echo json_encode($category);
+      } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(array("message" => "Unable to create category."));
+      }
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
     }
     break;
   case 'PATCH':
