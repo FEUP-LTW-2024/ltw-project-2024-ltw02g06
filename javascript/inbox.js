@@ -18,7 +18,7 @@ const handleSearchBar = () => {
   searchInput.value = search;
   searchInput.addEventListener("input", () => {
     if (searchInput.value == "") deleteParam("search");
-    else updateParam("search", searchInput.value);
+    else updateParam("search", searchInput.value.trim());
     searchInbox();
   });
 

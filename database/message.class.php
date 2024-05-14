@@ -78,15 +78,19 @@ class Message
     $whereConditions[':user_id'] = $user_id;
 
     if ($search) {
+      $search_modified = str_replace([' ', ','], '%', $search);
+
       $query .= ' AND (item.name LIKE :search
                 OR item.description LIKE :search
                 OR item.price LIKE :search
                 OR seller_user.city LIKE :search
                 OR seller_user.state LIKE :search
                 OR seller_user.country LIKE :search
+                OR (seller_user.city || " " || seller_user.state || " " || seller_user.country) LIKE :search
                 OR seller_user.first_name LIKE :search
-                OR seller_user.last_name LIKE :search)';
-      $whereConditions[':search'] = '%' . $search . '%';
+                OR seller_user.last_name LIKE :search
+                OR (seller_user.first_name || " " || seller_user.last_name) LIKE :search)';
+      $whereConditions[':search'] = '%' . $search_modified . '%';
     }
 
     $query .= ' AND item.status = "active"

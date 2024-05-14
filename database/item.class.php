@@ -397,65 +397,48 @@ class Item
     $query = '
     SELECT item.id
     FROM item
-    LEFT JOIN user ON item.seller = user.id ';
+    LEFT JOIN user ON item.seller = user.id
+    WHERE item.status = "active" ';
 
     $whereConditions = [];
 
     if ($category !== null) {
-      $query .= ' WHERE item.category = :category ';
+      $query .= ' AND item.category = :category ';
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($attributes)) {
-      $query .= !empty($whereConditions) ? ' ' : ' WHERE ';
-    }
-
     if ($name_search !== null) {
-      if ($category !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
-      $whereConditions[':name_search'] = '%' . $name_search . '%';
+      $name_search_modified = str_replace([' ', ','], '%', $name_search);
+      $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search) ';
+      $whereConditions[':name_search'] = '%' . $name_search_modified . '%';
     }
 
     if ($location_search !== null) {
-      if ($category !== null || $name_search !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
-                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search)) ';
-      $whereConditions[':location_search'] = '%' . $location_search . '%';
+      $location_search_modified = str_replace([' ', ','], '%', $location_search);
+
+      $query .= ' AND (user.city LIKE :location_search 
+                  OR user.state LIKE :location_search 
+                  OR user.country LIKE :location_search
+                  OR (user.city || " " || user.state || " " || user.country) LIKE :location_search)';
+      $whereConditions[':location_search'] = '%' . $location_search_modified . '%';
     }
 
     if ($price_from !== null) {
-      if ($category !== null || $name_search !== null || $location_search !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.price >= :price_from ';
+      $query .= ' AND item.price >= :price_from ';
       $whereConditions[':price_from'] = $price_from;
     }
 
     if ($price_to !== null) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.price <= :price_to ';
+      $query .= ' AND item.price <= :price_to ';
       $whereConditions[':price_to'] = $price_to;
     }
 
     if ($seller_id !== null) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.seller = :seller_id ';
+      $query .= ' AND item.seller = :seller_id ';
       $whereConditions[':seller_id'] = $seller_id;
     }
 
     foreach ($attributes as $attributeId => $attributeValue) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
-        $query .= ' AND ';
-      }
-
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
 
@@ -464,7 +447,7 @@ class Item
       $attributeType = $stmt->fetchColumn();
 
       if ($attributeType == 'int' || $attributeType == 'real') {
-        $query .= " item.id IN (
+        $query .= " AND item.id IN (
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId ";
@@ -482,7 +465,7 @@ class Item
         $query .= ")";
         $whereConditions[$paramId] = $attributeId;
       } else {
-        $query .= " item.id IN (
+        $query .= " AND item.id IN (
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
@@ -548,65 +531,48 @@ class Item
     $query = '
     SELECT COUNT(item.id) AS total
     FROM item
-    LEFT JOIN user ON item.seller = user.id ';
+    LEFT JOIN user ON item.seller = user.id
+    WHERE item.status = "active" ';
 
     $whereConditions = [];
 
     if ($category !== null) {
-      $query .= ' WHERE item.category = :category ';
+      $query .= ' AND item.category = :category ';
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($attributes)) {
-      $query .= !empty($whereConditions) ? '' : ' WHERE ';
-    }
-
     if ($name_search !== null) {
-      if ($category !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' (item.name LIKE :name_search OR item.description LIKE :name_search) ';
-      $whereConditions[':name_search'] = '%' . $name_search . '%';
+      $name_search_modified = str_replace([' ', ','], '%', $name_search);
+      $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search) ';
+      $whereConditions[':name_search'] = '%' . $name_search_modified . '%';
     }
 
     if ($location_search !== null) {
-      if ($category !== null || $name_search !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' ((user.city LIKE :location_search OR user.state LIKE :location_search OR user.country LIKE :location_search)
-                  OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :location_search)) ';
-      $whereConditions[':location_search'] = '%' . $location_search . '%';
+      $location_search_modified = str_replace([' ', ','], '%', $location_search);
+
+      $query .= ' AND (user.city LIKE :location_search 
+                  OR user.state LIKE :location_search 
+                  OR user.country LIKE :location_search
+                  OR (user.city || " " || user.state || " " || user.country) LIKE :location_search)';
+      $whereConditions[':location_search'] = '%' . $location_search_modified . '%';
     }
 
     if ($price_from !== null) {
-      if ($category !== null || $location_search !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.price >= :price_from ';
+      $query .= ' AND item.price >= :price_from ';
       $whereConditions[':price_from'] = $price_from;
     }
 
     if ($price_to !== null) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.price <= :price_to ';
+      $query .= ' AND item.price <= :price_to ';
       $whereConditions[':price_to'] = $price_to;
     }
 
     if ($seller_id !== null) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || !empty($whereConditions)) {
-        $query .= ' AND ';
-      }
-      $query .= ' item.seller = :seller_id ';
+      $query .= ' AND item.seller = :seller_id ';
       $whereConditions[':seller_id'] = $seller_id;
     }
 
     foreach ($attributes as $attributeId => $attributeValue) {
-      if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
-        $query .= ' AND ';
-      }
-
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
 
@@ -615,7 +581,7 @@ class Item
       $attributeType = $stmt->fetchColumn();
 
       if ($attributeType == 'int' || $attributeType == 'real') {
-        $query .= " item.id IN (
+        $query .= " AND item.id IN (
                         SELECT item_attributes.item
                         FROM item_attributes
                         WHERE item_attributes.attribute = $paramId ";
@@ -633,7 +599,7 @@ class Item
         $query .= ")";
         $whereConditions[$paramId] = $attributeId;
       } else {
-        $query .= " item.id IN (
+        $query .= " AND item.id IN (
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
