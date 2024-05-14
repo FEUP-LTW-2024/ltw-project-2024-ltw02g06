@@ -455,5 +455,19 @@ class User
       throw $e;
     }
   }
+
+  static function isEmailRegistered(PDO $db, string $email): bool
+  {
+    $stmt = $db->prepare('
+              SELECT COUNT(*) AS count
+              FROM user
+              WHERE lower(email) = ?
+          ');
+
+    $stmt->execute([strtolower($email)]);
+    $result = $stmt->fetch();
+
+    return $result['count'] > 0;
+  }
 }
 ?>

@@ -1,6 +1,6 @@
 #edit-profile {
   display: grid;
-  grid-template-columns: 14rem auto;
+  grid-template-columns: 18rem auto;
   grid-template-areas: "form-btns form-btns"
                        "profile-image profile-location"
                        "profile-name profile-location";
@@ -194,19 +194,37 @@
   gap: 0.5rem;
 }
 
-.edit-name {
+#edit-profile input {
   width: auto;
 
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
 
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
 
   border: 1px solid gray;
+  border-radius: 6px;
 }
 
-@media all and (max-width: 600px) {
+#edit-profile input .invalid {
+  width: auto;
+
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+
+  border: 1px solid gray;
+  border-radius: 6px;
+}
+
+@media all and (max-width: 992px) {
   #edit-profile {
     grid-template-columns: auto;
     grid-template-areas: "form-btns"

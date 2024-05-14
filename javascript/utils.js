@@ -84,3 +84,34 @@ const validateIntInput = (inputElement) => {
     inputElement.value = inputValue;
   });
 };
+
+const validateEmailInput = (inputElement) => {
+  inputElement.addEventListener("blur", () => {
+    var emailValue = inputElement.value.trim();
+
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      inputElement.value = "";
+    }
+  });
+};
+
+const showModal = (message) => {
+  const modal = document.getElementById("modal");
+  const modalMessage = document.getElementById("modal-message");
+  modalMessage.textContent = message;
+  modal.style.display = "block";
+
+  // Close the modal when anywhere outside of the modal is clicked
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  // Close the modal when the close button is clicked
+  const closeBtn = document.querySelector(".close");
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+};

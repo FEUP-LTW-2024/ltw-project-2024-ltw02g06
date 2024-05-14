@@ -28,4 +28,8 @@ drawHeader($session);
 drawEditProfile($session, $user);
 drawFooter();
 ?>
+<script>
+  const currentEmail = <?php echo json_encode($user->email); ?>;
+</script>
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/editProfile.js"></script>

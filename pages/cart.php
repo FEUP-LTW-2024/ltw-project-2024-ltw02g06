@@ -33,5 +33,5 @@ drawFooter();
   const userId = <?php echo json_encode($id); ?>;
   const cart = <?php echo json_encode($cart); ?>;
 </script>
-<!-- <script src="./../javascript/utils.js"></script> -->
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/cart.js"></script>

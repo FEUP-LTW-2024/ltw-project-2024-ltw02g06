@@ -93,26 +93,6 @@ const handleItemBtn = (itemId) => {
   window.location.href = `../pages/item.php?id=${itemId}`;
 };
 
-const showModal = (message) => {
-  const modal = document.getElementById("modal");
-  const modalMessage = document.getElementById("modal-message");
-  modalMessage.textContent = message;
-  modal.style.display = "block";
-
-  // Close the modal when anywhere outside of the modal is clicked
-  window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  };
-
-  // Close the modal when the close button is clicked
-  const closeBtn = document.querySelector(".close");
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-};
-
 const processCartPurchase = async () => {
   return fetch(`./../api/user/cart.php`, {
     method: "POST",

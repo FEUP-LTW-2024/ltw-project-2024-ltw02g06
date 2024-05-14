@@ -88,14 +88,14 @@
     </div>
 
     <div id="edit-profile-name">
-      <h3>Nome</h3>
+      <h3>Informações Pessoais</h3>
       <div>
         <label for="first_name">Primeiro nome:</label>
-        <input type="text" name="first_name" class="edit-name" placeholder="Primeiro nome"
-          value=<?= htmlspecialchars($user->first_name) ?>>
+        <input type="text" name="first_name" placeholder="Primeiro nome" value=<?= htmlspecialchars($user->first_name) ?>>
         <label for="last_name">Sobrenome:</label>
-        <input type="text" name="last_name" class="edit-name" placeholder="Sobrenome"
-          value=<?= htmlspecialchars($user->last_name) ?>>
+        <input type="text" name="last_name" placeholder="Sobrenome" value=<?= htmlspecialchars($user->last_name) ?>>
+        <label for="email">Email:</label>
+        <input type="text" name="email" placeholder="Email" value=<?= htmlspecialchars($user->email) ?>>
       </div>
     </div>
     <div id="edit-profile-location">
