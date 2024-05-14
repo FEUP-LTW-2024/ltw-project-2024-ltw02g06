@@ -44,7 +44,7 @@ const handleSearchBar = () => {
 
   searchNameInput.value = currentSearchName;
   searchNameInput.addEventListener("input", () => {
-    if (searchNameInput.value == "") deleteParam(`search[search]`);
+    if (searchNameInput.value.trim() == "") deleteParam(`search[search]`);
     else updateParam(`search[search]`, searchNameInput.value.trim());
     navigateToPage(1);
     searchItems();
@@ -52,7 +52,7 @@ const handleSearchBar = () => {
 
   searchLocationInput.value = currentSearchLocation;
   searchLocationInput.addEventListener("input", () => {
-    if (searchLocationInput.value == "") deleteParam(`search[location]`);
+    if (searchLocationInput.value.trim() == "") deleteParam(`search[location]`);
     else updateParam(`search[location]`, searchLocationInput.value.trim());
     navigateToPage(1);
     searchItems();

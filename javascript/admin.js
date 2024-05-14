@@ -114,8 +114,8 @@ const handleSearchBar = () => {
   const searchNameInput = document.querySelector("#small-search-bar > input");
   searchNameInput.value = currentSearchName;
   searchNameInput.addEventListener("input", () => {
-    if (searchNameInput.value == "") deleteParam(`search[search]`);
-    else updateParam(`search[search]`, searchNameInput.value);
+    if (searchNameInput.value.trim() == "") deleteParam(`search[search]`);
+    else updateParam(`search[search]`, searchNameInput.value.trim());
     searchUsers();
   });
 
