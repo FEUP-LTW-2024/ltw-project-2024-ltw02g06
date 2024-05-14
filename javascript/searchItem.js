@@ -1,7 +1,6 @@
 let itemsTotal;
 let currentPage;
 const itemsPerPage = 10;
-let categories;
 
 document.addEventListener("DOMContentLoaded", () => {
   const queryString = window.location.search;
@@ -116,7 +115,10 @@ const handleFiltersList = () => {
     if (key.startsWith("search[attributes][")) {
       const match = key.match(/\[(\d+)\](\[\w+\])?/);
       if (match) {
-        const attributeId = match[1];
+        const attributeId = parseInt(match[1]);
+        if (!attributes[attributeId]) {
+          attributes[attributeId] = {};
+        }
         if (match[2] === "[from]") {
           // Handle from parameter
           attributes[attributeId].from = value;
@@ -306,10 +308,6 @@ const initializePriceRangeInput = (inputElement, currentPrice, param) => {
     updateParam(param, inputElement.value);
   else deleteParam(param);
 
-  inputElement.addEventListener("input", () => {
-    validatePriceInput(inputElement);
-  });
-
   inputElement.addEventListener("change", () => {
     const value = parseFloat(inputElement.value);
     if (!isNaN(value)) updateParam(param, value);
@@ -327,10 +325,6 @@ const initializeFloatInput = (inputElement, currentValue, param) => {
   if (!isNaN(inputElement.value) && inputElement.value != "")
     updateParam(param, inputElement.value);
   else deleteParam(param);
-
-  inputElement.addEventListener("input", () => {
-    validateFloatInput(inputElement);
-  });
 
   inputElement.addEventListener("change", () => {
     const value = parseFloat(inputElement.value);
@@ -350,10 +344,6 @@ const initializeIntInput = (inputElement, currentValue, param) => {
     updateParam(param, inputElement.value);
   else deleteParam(param);
 
-  inputElement.addEventListener("input", () => {
-    validateIntInput(inputElement);
-  });
-
   inputElement.addEventListener("change", () => {
     const value = parseInt(inputElement.value);
     if (!isNaN(value)) updateParam(param, value);
@@ -361,52 +351,6 @@ const initializeIntInput = (inputElement, currentValue, param) => {
     navigateToPage(1);
     searchItems();
   });
-};
-
-const validatePriceInput = (inputElement) => {
-  var inputValue = inputElement.value;
-  inputValue = inputValue.replace(/[^\d.]/g, "");
-
-  var dotIndex = inputValue.indexOf(".");
-  if (dotIndex !== -1)
-    inputValue =
-      inputValue.substr(0, dotIndex + 1) +
-      inputValue.substr(dotIndex + 1).replace(/\./g, "");
-
-  inputValue = inputValue.replace(/^0+(?=\d)/, "");
-  var decimalRegex = /^\d*\.?\d{0,2}$/;
-  if (!decimalRegex.test(inputValue)) inputValue = "0";
-
-  inputElement.value = inputValue;
-};
-
-const validateFloatInput = (inputElement) => {
-  var inputValue = inputElement.value;
-  inputValue = inputValue.replace(/[^\d.-]/g, "");
-
-  var dotIndex = inputValue.indexOf(".");
-  if (dotIndex !== -1)
-    inputValue =
-      inputValue.substr(0, dotIndex + 1) +
-      inputValue.substr(dotIndex + 1).replace(/\./g, "");
-
-  inputValue = inputValue.replace(/^(-)?0+(?=\d)/, "$1");
-
-  var decimalRegex = /^-?\d*\.?\d{0,2}$/;
-  if (!decimalRegex.test(inputValue)) inputValue = "0";
-
-  inputElement.value = inputValue;
-};
-
-const validateIntInput = (inputElement) => {
-  var inputValue = inputElement.value;
-  inputValue = inputValue.replace(/[^\d-]/g, "");
-  inputValue = inputValue.replace(/^(-)?0+(?=\d)/, "$1");
-
-  var integerRegex = /^-?\d*$/;
-  if (!integerRegex.test(inputValue)) inputValue = "0";
-
-  inputElement.value = inputValue;
 };
 
 const updateParam = (param, value) => {

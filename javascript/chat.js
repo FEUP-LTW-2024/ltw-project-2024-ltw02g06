@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   handleChatHeader();
   handleSendMessage(priceInput, messageInput, messageForm);
-  handlePriceInput(priceInput);
+  validatePriceInput(priceInput);
   const chat = await fetchChat();
   renderChat(chat);
 });

@@ -1,11 +1,10 @@
-const initialize = (item, categories) => {
-  document.addEventListener("DOMContentLoaded", () => {
-    handleCancelBtn();
-    handleEditItemPrice();
-    handleEditItemCategoryList(item, categories);
-    handleImageInput();
-  });
-};
+document.addEventListener("DOMContentLoaded", () => {
+  handleCancelBtn();
+  const editItemPrice = document.getElementById("edit-item-price");
+  validatePriceInput(editItemPrice);
+  handleEditItemCategoryList(item, categories);
+  handleImageInput();
+});
 
 const handleCancelBtn = () => {
   const cancelButton = document.getElementById("edit-item-cancel-btn");
@@ -58,19 +57,34 @@ const handleEditItemCategoryList = (item, categories) => {
 
       let inputElement;
 
-      if (attribute.type === "int" || attribute.type === "default") {
-        inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "text");
-        inputElement.setAttribute("placeholder", attribute.name);
-      } else if (attribute.type === "enum") {
-        inputElement = document.createElement("select");
+      switch (attribute.type) {
+        case "int":
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          validateIntInput(inputElement);
+          break;
+        case "real":
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          validateFloatInput(inputElement);
+          break;
+        case "enum":
+          inputElement = document.createElement("select");
 
-        attribute.values.forEach((value) => {
-          const option = document.createElement("option");
-          option.setAttribute("value", value.value);
-          option.textContent = value.value;
-          inputElement.appendChild(option);
-        });
+          attribute.values.forEach((value) => {
+            const option = document.createElement("option");
+            option.setAttribute("value", value.value);
+            option.textContent = value.value;
+            inputElement.appendChild(option);
+          });
+          break;
+        default:
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          break;
       }
 
       inputElement.setAttribute("name", `attributes[${attributeId}]`);

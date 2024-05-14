@@ -33,32 +33,54 @@ const getTimeAgo = (timestamp) => {
   return timeAgo;
 };
 
-const handlePriceInput = (element) => {
-  element.addEventListener("input", (event) => {
-    var inputValue = event.target.value;
-
-    // Remove any non-digit or non-decimal characters except the first dot
+const validatePriceInput = (inputElement) => {
+  inputElement.addEventListener("input", () => {
+    var inputValue = inputElement.value;
     inputValue = inputValue.replace(/[^\d.]/g, "");
 
-    // Ensure there's only one dot
     var dotIndex = inputValue.indexOf(".");
-    if (dotIndex !== -1) {
+    if (dotIndex !== -1)
       inputValue =
         inputValue.substr(0, dotIndex + 1) +
         inputValue.substr(dotIndex + 1).replace(/\./g, "");
-    }
 
-    // Remove leading zero if followed by another digit
     inputValue = inputValue.replace(/^0+(?=\d)/, "");
-
-    // Ensure it's a positive number with up to two decimal places
     var decimalRegex = /^\d*\.?\d{0,2}$/;
-    if (!decimalRegex.test(inputValue)) {
-      // If not a valid number, set value to empty
-      inputValue = "0";
-    }
+    if (!decimalRegex.test(inputValue)) inputValue = "0";
 
-    // Update the input value
-    element.value = inputValue;
+    inputElement.value = inputValue;
+  });
+};
+
+const validateFloatInput = (inputElement) => {
+  inputElement.addEventListener("input", () => {
+    var inputValue = inputElement.value;
+    inputValue = inputValue.replace(/[^\d.-]/g, "");
+
+    var dotIndex = inputValue.indexOf(".");
+    if (dotIndex !== -1)
+      inputValue =
+        inputValue.substr(0, dotIndex + 1) +
+        inputValue.substr(dotIndex + 1).replace(/\./g, "");
+
+    inputValue = inputValue.replace(/^(-)?0+(?=\d)/, "$1");
+
+    var decimalRegex = /^-?\d*\.?\d*$/;
+    if (!decimalRegex.test(inputValue)) inputValue = "0";
+
+    inputElement.value = inputValue;
+  });
+};
+
+const validateIntInput = (inputElement) => {
+  inputElement.addEventListener("input", () => {
+    var inputValue = inputElement.value;
+    inputValue = inputValue.replace(/[^\d-]/g, "");
+    inputValue = inputValue.replace(/^(-)?0+(?=\d)/, "$1");
+
+    var integerRegex = /^-?\d*$/;
+    if (!integerRegex.test(inputValue)) inputValue = "0";
+
+    inputElement.value = inputValue;
   });
 };

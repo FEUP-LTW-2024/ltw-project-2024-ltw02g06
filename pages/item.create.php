@@ -31,8 +31,8 @@ drawCreateItem($user, $user_reviews, $categories, $session);
 
 drawFooter();
 ?>
-<script src="./../javascript/createItem.js"></script>
 <script>
-  var categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
-  initialize(categories);
+  const categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
 </script>
+<script src="./../javascript/utils.js"></script>
+<script src="./../javascript/createItem.js"></script>

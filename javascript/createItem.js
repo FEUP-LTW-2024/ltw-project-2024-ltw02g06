@@ -1,11 +1,10 @@
-const initialize = (categories) => {
-  document.addEventListener("DOMContentLoaded", () => {
-    handleCancelBtn();
-    handleEditItemPrice();
-    handleEditItemCategoryList(categories);
-    handleImageInput();
-  });
-};
+document.addEventListener("DOMContentLoaded", () => {
+  handleCancelBtn();
+  const editItemPrice = document.getElementById("edit-item-price");
+  validatePriceInput(editItemPrice);
+  handleEditItemCategoryList(categories);
+  handleImageInput();
+});
 
 const handleCancelBtn = () => {
   const cancelButton = document.getElementById("edit-item-cancel-btn");
@@ -58,19 +57,34 @@ const handleEditItemCategoryList = (categories) => {
 
       let inputElement;
 
-      if (attribute.type === "int" || attribute.type === "default") {
-        inputElement = document.createElement("input");
-        inputElement.setAttribute("type", "text");
-        inputElement.setAttribute("placeholder", attribute.name);
-      } else if (attribute.type === "enum") {
-        inputElement = document.createElement("select");
+      switch (attribute.type) {
+        case "int":
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          validateIntInput(inputElement);
+          break;
+        case "real":
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          validateFloatInput(inputElement);
+          break;
+        case "enum":
+          inputElement = document.createElement("select");
 
-        attribute.values.forEach((value) => {
-          const option = document.createElement("option");
-          option.setAttribute("value", value.value);
-          option.textContent = value.value;
-          inputElement.appendChild(option);
-        });
+          attribute.values.forEach((value) => {
+            const option = document.createElement("option");
+            option.setAttribute("value", value.value);
+            option.textContent = value.value;
+            inputElement.appendChild(option);
+          });
+          break;
+        default:
+          inputElement = document.createElement("input");
+          inputElement.setAttribute("type", "text");
+          inputElement.setAttribute("placeholder", attribute.name);
+          break;
       }
 
       inputElement.setAttribute("name", `attributes[${attributeId}]`);
@@ -85,38 +99,6 @@ const handleEditItemCategoryList = (categories) => {
   categorySelect.addEventListener("change", updateAttributes);
 
   updateAttributes();
-};
-
-const handleEditItemPrice = () => {
-  const editItemPrice = document.getElementById("edit-item-price");
-
-  editItemPrice.addEventListener("input", (event) => {
-    var inputValue = event.target.value;
-
-    // Remove any non-digit or non-decimal characters except the first dot
-    inputValue = inputValue.replace(/[^\d.]/g, "");
-
-    // Ensure there's only one dot
-    var dotIndex = inputValue.indexOf(".");
-    if (dotIndex !== -1) {
-      inputValue =
-        inputValue.substr(0, dotIndex + 1) +
-        inputValue.substr(dotIndex + 1).replace(/\./g, "");
-    }
-
-    // Remove leading zero if followed by another digit
-    inputValue = inputValue.replace(/^0+(?=\d)/, "");
-
-    // Ensure it's a positive number with up to two decimal places
-    var decimalRegex = /^\d*\.?\d{0,2}$/;
-    if (!decimalRegex.test(inputValue)) {
-      // If not a valid number, set value to empty
-      inputValue = "0";
-    }
-
-    // Update the input value
-    editItemPrice.value = inputValue;
-  });
 };
 
 const checkImageCount = () => {

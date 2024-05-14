@@ -28,7 +28,8 @@ drawFilters($categories, $selectedCategory, $attributes);
 drawItems($session, $order);
 drawFooter();
 ?>
-<script src="./../javascript/searchItem.js"></script>
 <script>
-  categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
+  const categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
 </script>
+<script src="./../javascript/utils.js"></script>
+<script src="./../javascript/searchItem.js"></script>

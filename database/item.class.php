@@ -455,16 +455,42 @@ class Item
       if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
         $query .= ' AND ';
       }
+
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
-      $query .= " item.id IN (
+
+      $stmt = $db->prepare("SELECT type FROM attribute WHERE id = ?");
+      $stmt->execute([$attributeId]);
+      $attributeType = $stmt->fetchColumn();
+
+      if ($attributeType == 'int' || $attributeType == 'real') {
+        $query .= " item.id IN (
+                    SELECT item_attributes.item
+                    FROM item_attributes
+                    WHERE item_attributes.attribute = $paramId ";
+
+        if (isset($attributeValue['from'])) {
+          $query .= "AND CAST(item_attributes.`value` AS REAL) >= CAST(:fromAttributeValue$attributeId AS REAL) ";
+          $whereConditions[":fromAttributeValue$attributeId"] = $attributeValue['from'];
+        }
+
+        if (isset($attributeValue['to'])) {
+          $query .= "AND CAST(item_attributes.`value` AS REAL) <= CAST(:toAttributeValue$attributeId AS REAL)";
+          $whereConditions[":toAttributeValue$attributeId"] = $attributeValue['to'];
+        }
+
+        $query .= ")";
+        $whereConditions[$paramId] = $attributeId;
+      } else {
+        $query .= " item.id IN (
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
                     AND item_attributes.`value` LIKE $paramValue
                 ) ";
-      $whereConditions[$paramId] = $attributeId;
-      $whereConditions[$paramValue] = "%" . $attributeValue . "%";
+        $whereConditions[$paramId] = $attributeId;
+        $whereConditions[$paramValue] = "%" . $attributeValue . "%";
+      }
     }
 
     $query .= ' ORDER BY ';
@@ -580,16 +606,42 @@ class Item
       if ($category !== null || $name_search !== null || $location_search !== null || $price_from !== null || $price_to !== null || $seller_id !== null || !empty($whereConditions)) {
         $query .= ' AND ';
       }
+
       $paramId = ':attributeId' . $attributeId;
       $paramValue = ':attributeValue' . $attributeId;
-      $query .= " item.id IN (
+
+      $stmt = $db->prepare("SELECT type FROM attribute WHERE id = ?");
+      $stmt->execute([$attributeId]);
+      $attributeType = $stmt->fetchColumn();
+
+      if ($attributeType == 'int' || $attributeType == 'real') {
+        $query .= " item.id IN (
+                        SELECT item_attributes.item
+                        FROM item_attributes
+                        WHERE item_attributes.attribute = $paramId ";
+
+        if (isset($attributeValue['from'])) {
+          $query .= "AND CAST(item_attributes.`value` AS REAL) >= CAST(:fromAttributeValue$attributeId AS REAL) ";
+          $whereConditions[":fromAttributeValue$attributeId"] = $attributeValue['from'];
+        }
+
+        if (isset($attributeValue['to'])) {
+          $query .= "AND CAST(item_attributes.`value` AS REAL) <= CAST(:toAttributeValue$attributeId AS REAL) ";
+          $whereConditions[":toAttributeValue$attributeId"] = $attributeValue['to'];
+        }
+
+        $query .= ")";
+        $whereConditions[$paramId] = $attributeId;
+      } else {
+        $query .= " item.id IN (
                     SELECT item_attributes.item
                     FROM item_attributes
                     WHERE item_attributes.attribute = $paramId
                     AND item_attributes.`value` LIKE $paramValue
                 ) ";
-      $whereConditions[$paramId] = $attributeId;
-      $whereConditions[$paramValue] = "%" . $attributeValue . "%";
+        $whereConditions[$paramId] = $attributeId;
+        $whereConditions[$paramValue] = "%" . $attributeValue . "%";
+      }
     }
 
     $stmt = $db->prepare($query);

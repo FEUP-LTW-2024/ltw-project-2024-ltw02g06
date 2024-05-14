@@ -254,7 +254,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </div>
-      <div>
+      <!-- <div>
         <?php if (empty($seller_reviews)): ?>
           <h6>Rating: </h6>
           <p>Sem classificações</p>
@@ -270,7 +270,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
           <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
         <?php endif; ?>
-      </div>
+      </div> -->
     </div>
 
   </form>
@@ -354,7 +354,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </div>
-      <div>
+      <!-- <div>
         <?php if (empty($seller_reviews)): ?>
           <h6>Rating: </h6>
           <p>Sem classificações</p>
@@ -370,7 +370,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
           <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
         <?php endif; ?>
-      </div>
+      </div> -->
     </div>
 
   </form>

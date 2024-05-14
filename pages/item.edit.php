@@ -32,10 +32,11 @@ endif;
 drawFooter();
 ?>
 <?php if ($item && $item->seller == $id): ?>
-  <script src="./../javascript/editItem.js"></script>
   <script>
-    var item = JSON.parse(JSON.stringify(<?php echo json_encode($item); ?>));
-    var categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
-    initialize(item, categories);
+    const item = JSON.parse(JSON.stringify(<?php echo json_encode($item); ?>));
+    const categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
   </script>
+  <script src="./../javascript/utils.js"></script>
+  <script src="./../javascript/editItem.js"></script>
+
 <?php endif; ?>
