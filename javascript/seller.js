@@ -84,7 +84,7 @@ const deleteParam = (param) => {
 
 const getItemsTotal = async () => {
   return fetch(
-    `./../api/item/index.php?${window.location.search}&total=1&user=${userId}`,
+    `./../api/item/index.php?${window.location.search}&total=1&user=${userId}&status=all`,
     {
       method: "GET",
     }
@@ -106,7 +106,7 @@ const getItems = async () => {
   return fetch(
     `./../api/item/index.php?${
       window.location.search
-    }&page=${1}&itemsPerPage=${itemsTotal}&user=${userId}`,
+    }&page=${1}&itemsPerPage=${itemsTotal}&user=${userId}&status=all`,
     {
       method: "GET",
     }
@@ -249,6 +249,39 @@ const renderToSendItem = (itemData) => {
 
   sendButton.addEventListener("click", async () => {
     try {
+      var htmlContent = `
+        <html>
+            <head>
+                <title>My HTML File</title>
+                <style>
+                    body {
+                      font-family: "Montserrat", sans-serif;
+                    }
+                    h2:last-of-type() {
+                        padding-top: 2rem
+                    }
+                </style>
+            </head>
+            <body>
+              <h2><strong>Remetente:</strong> </h2>
+              <p><strong>Nome:</strong> ${itemData["seller"].first_name} ${itemData["seller"].last_name}</p>
+              <p><strong>Email:</strong> ${itemData["seller"].email}</p>
+              <p><strong>Endereço:</strong> ${itemData["seller"].address}, ${itemData["seller"].city}, ${itemData["seller"].state}, ${itemData["seller"].country} - ${itemData["seller"].zipcode}</p>
+              <p><strong>Artigo:</strong> #${itemData["item"].id}</p>
+              
+              <h2><strong>Destinatário:</strong> </h2>
+              <p><strong>Nome:</strong> ${itemData["buyer"].first_name} ${itemData["buyer"].last_name}</p>
+              <p><strong>Email:</strong> ${itemData["buyer"].email}</p>
+              <p><strong>Endereço:</strong> ${itemData["buyer"].address}, ${itemData["buyer"].city}, ${itemData["buyer"].state}, ${itemData["buyer"].country} - ${itemData["buyer"].zipcode}</p>            
+            </body>
+        </html>`;
+
+      var doc = new jsPDF();
+      doc.fromHTML(htmlContent, 15, 15, {
+        width: 170,
+      });
+      doc.save(`eKo_shipping_form-item_${itemData["item"].id}.pdf`);
+
       await sendItem(itemData.item.id);
       const toSendItemsList = document.getElementById("to-send-items-list");
       const soldItemsList = document.getElementById("sold-items-list");
@@ -269,7 +302,10 @@ const renderToSendItem = (itemData) => {
 
   h3Name.textContent = itemData.item.name;
   h3Price.textContent = `${itemData.item.sold_price} €`;
-  h3Price.innerHTML = `${itemData.item.sold_price} € <span>${itemData.item.price}</span>`;
+  h3Price.innerHTML =
+    itemData.item.sold_price == itemData.item.price
+      ? `${itemData.item.sold_price} €`
+      : `${itemData.item.sold_price} € <span>${itemData.item.price}</span>`;
   sendIcon.name = "send-outline";
   div1.appendChild(h3Name);
   div1.appendChild(h3Price);

@@ -29,9 +29,10 @@ switch ($request_method) {
     } else if ($getTotal) {
       $search = isset($_GET['search']) ? $_GET['search'] : [];
       $seller_id = isset($_GET['user']) ? intval($_GET['user']) : null;
+      $active = isset($_GET['status']) ? $_GET['status'] == "active" : true;
 
       try {
-        $total = Item::getItemsTotal($db, $seller_id, $search);
+        $total = Item::getItemsTotal($db, $seller_id, $search, $active);
         if ($total != null) {
           http_response_code(200); // OK
           echo json_encode($total);
@@ -49,9 +50,10 @@ switch ($request_method) {
       $items_per_page = isset($_GET['itemsPerPage']) ? intval($_GET['itemsPerPage']) : 10;
       $search = isset($_GET['search']) ? $_GET['search'] : [];
       $seller_id = isset($_GET['user']) ? intval($_GET['user']) : null;
+      $active = isset($_GET['status']) ? $_GET['status'] == "active" : true;
 
       try {
-        $items = Item::getAllItems($db, $user_id, $seller_id, $page, $items_per_page, $search);
+        $items = Item::getAllItems($db, $user_id, $seller_id, $page, $items_per_page, $search, $active);
         if ($items) {
           http_response_code(200); // OK
           echo json_encode($items);

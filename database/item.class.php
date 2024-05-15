@@ -382,7 +382,7 @@ class Item
   }
 
   // TODO update this function so we are able to get items in a specific state
-  static function getAllItems(PDO $db, ?int $user_id, ?int $seller_id, int $page, int $items_per_page, array $search): array
+  static function getAllItems(PDO $db, ?int $user_id, ?int $seller_id, int $page, int $items_per_page, array $search, bool $active = true): array
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
     $location_search = isset($search['location']) ? $search['location'] : null;
@@ -397,8 +397,12 @@ class Item
     $query = '
     SELECT item.id
     FROM item
-    LEFT JOIN user ON item.seller = user.id
-    WHERE item.status = "active" ';
+    LEFT JOIN user ON item.seller = user.id ';
+
+    if ($active)
+      $query .= ' WHERE item.status = "active" ';
+    else
+      $query .= ' WHERE item.status LIKE "%" ';
 
     $whereConditions = [];
 
@@ -519,7 +523,7 @@ class Item
     return $items;
   }
 
-  static function getItemsTotal(PDO $db, ?int $seller_id, array $search): int
+  static function getItemsTotal(PDO $db, ?int $seller_id, array $search, bool $active = true): int
   {
     $name_search = isset($search['search']) ? $search['search'] : null;
     $location_search = isset($search['location']) ? $search['location'] : null;
@@ -531,8 +535,12 @@ class Item
     $query = '
     SELECT COUNT(item.id) AS total
     FROM item
-    LEFT JOIN user ON item.seller = user.id
-    WHERE item.status = "active" ';
+    LEFT JOIN user ON item.seller = user.id ';
+
+    if ($active)
+      $query .= ' WHERE item.status = "active" ';
+    else
+      $query .= ' WHERE item.status LIKE "%" ';
 
     $whereConditions = [];
 

@@ -22,7 +22,7 @@ require_once (__DIR__ . '/../templates/item.tpl.php');
 
 $db = getDatabaseConnection();
 
-$items = Item::getAllItems($db, $id, $id, 1, PHP_INT_MAX, []);
+$items = Item::getAllItems($db, $id, $id, 1, PHP_INT_MAX, [], false);
 
 $revenue = 0;
 $sold = 0;
