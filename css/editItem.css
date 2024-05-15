@@ -99,6 +99,12 @@
   border-radius: 6px;
 }
 
+#preview-buttons {
+  display: none;
+  flex-direction: row;
+  gap: 0.2rem;
+}
+
 #preview-new-image img {
   width: 100%;
   height: 100%;
@@ -206,6 +212,7 @@
 
 #edit-item-name, #edit-item-price {
   border: 1px solid gray;
+  border-radius: 6px;
   width: 100%;
 }
 
@@ -333,4 +340,35 @@
 #item-location.edit-item-deactivated, #seller-info.edit-item-deactivated {
   filter: grayscale(100%);
   user-select: none;
+}
+
+@media all and (max-width: 992px) {
+  #edit-item {
+    grid-template-columns: auto;
+    grid-template-areas: "form-btns"
+                         "item-image"
+                         "item-info"
+                         "item-description"
+                         "seller-info"
+                         "item-location";
+  }
+
+  #edit-item-image-container {
+    padding: 1.5rem;
+  }
+}
+
+@media all and (max-width: 600px) {
+  #edit-item-image-container {
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem;
+  }
+
+  #edit-item-buttons {
+    gap: 0.4rem;
+  }
+
+  #edit-item-buttons h2 {
+    display: none;
+  }
 }

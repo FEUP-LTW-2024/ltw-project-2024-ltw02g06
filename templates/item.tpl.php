@@ -168,7 +168,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         <div id="preview-new-image"></div>
         <input onchange="previewImage(event)" type="file" name="new-image-input" id="new-image-input" accept="image/*">
         <label for="new-image-input"><ion-icon name="add"></ion-icon></label>
-        <div style="display: none;">
+        <div id="preview-buttons">
           <button onclick="closePreview()" id="close-preview-image-btn" type="button"><ion-icon
               name="close"></ion-icon></button>
           <button onclick="acceptPreview()" id="accept-preview-image-btn" type="button"><ion-icon
@@ -289,7 +289,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         <div id="preview-new-image"></div>
         <input onchange="previewImage(event)" type="file" name="new-image-input" id="new-image-input" accept="image/*">
         <label for="new-image-input"><ion-icon name="add"></ion-icon></label>
-        <div style="display: none;">
+        <div id="preview-buttons">
           <button onclick="closePreview()" id="close-preview-image-btn" type="button"><ion-icon
               name="close"></ion-icon></button>
           <button onclick="acceptPreview()" id="accept-preview-image-btn" type="button"><ion-icon

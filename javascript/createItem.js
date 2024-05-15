@@ -4,7 +4,34 @@ document.addEventListener("DOMContentLoaded", () => {
   validatePriceInput(editItemPrice);
   handleEditItemCategoryList(categories);
   handleImageInput();
+
+  // Handle form submit
+  handleFormSubmit();
 });
+
+const handleFormSubmit = () => {
+  const editItemForm = document.getElementById("edit-item");
+  editItemForm.addEventListener("submit", async (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const inputs = editItemForm.querySelectorAll("input[type='text'], select");
+    let isEmpty = false;
+
+    inputs.forEach((input) => {
+      if (input.value.trim() === "") {
+        isEmpty = true;
+      }
+    });
+
+    if (isEmpty) {
+      showModal("Por favor, preencha todos os campos.");
+      return; // Exit the function if any input is empty
+    }
+
+    // If all checks pass, allow form submission
+    editItemForm.submit();
+  });
+};
 
 const handleCancelBtn = () => {
   const cancelButton = document.getElementById("edit-item-cancel-btn");
