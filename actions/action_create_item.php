@@ -17,6 +17,16 @@ require_once (__DIR__ . '/../database/item.class.php');
 $db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if (
+    empty($_POST['item_name']) ||
+    empty($_POST['item_description']) ||
+    empty($_POST['item_price']) ||
+    empty($_POST['category'])
+  ) {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+    exit();
+  }
+
   $item_data = [
     'name' => $_POST['item_name'] ?? '',
     'description' => $_POST['item_description'] ?? '',

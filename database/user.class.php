@@ -216,6 +216,7 @@ class User
           UPDATE user
           SET first_name = ?,
           last_name = ?,
+          email = ?,
           address = ?,
           city = ?,
           state = ?,
@@ -227,6 +228,7 @@ class User
     $stmt->execute([
       $user_data['first_name'],
       $user_data['last_name'],
+      $user_data['email'],
       $user_data['address'],
       $user_data['city'],
       $user_data['state'],
