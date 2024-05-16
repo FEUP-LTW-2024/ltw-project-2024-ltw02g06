@@ -24,7 +24,7 @@ switch ($request_method) {
       exit();
     }
 
-    $id = isset($_GET['id']) ? intval($_GET['id']) : null;
+    $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
 
     if (!$id) {
       http_response_code(400); // Bad Request

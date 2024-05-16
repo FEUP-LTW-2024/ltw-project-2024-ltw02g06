@@ -67,12 +67,9 @@ require_once (__DIR__ . '/../utils/session.php');
   <li>
     <div class="inbox-chat-item">
 
-      <!-- <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image"> -->
-      <!-- <button><ion-icon name="heart-outline"></ion-icon></button> -->
-      <h3><?= $chat[0]->item_name ?></h3>
+      <h3><?= htmlspecialchars(trim($chat[0]->item_name)) ?></h3>
       <div>
         <h3><?= $chat[0]->item_price ?> €</h3>
-        <!-- <p>Negociável</p> -->
       </div>
 
     </div>
@@ -80,14 +77,14 @@ require_once (__DIR__ . '/../utils/session.php');
     <div class="inbox-chat-msg">
       <div>
         <h4>
-          <?= $chat[0]->receiver == $user_id ? $chat[0]->sender_first_name . " " . $chat[0]->sender_last_name : $chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name ?>
+          <?= $chat[0]->receiver == $user_id ? htmlspecialchars($chat[0]->sender_first_name . " " . $chat[0]->sender_last_name) : htmlspecialchars($chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name) ?>
         </h4>
         <span><?= $timeAgo ?></span>
       </div>
       <div>
-        <span><?= $chat[0]->sender == $user_id ? "Eu:" : $chat[0]->sender_first_name . ":" ?>
+        <span><?= $chat[0]->sender == $user_id ? "Eu:" : htmlspecialchars($chat[0]->sender_first_name . ":") ?>
         </span>
-        <p><?= $chat[0]->message ?></p>
+        <p><?= htmlspecialchars(trim($chat[0]->message)) ?></p>
       </div>
     </div>
 
@@ -101,12 +98,9 @@ require_once (__DIR__ . '/../utils/session.php');
   <header id="chat-header">
     <div class="chat-item">
 
-      <!-- <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image"> -->
-      <!-- <button><ion-icon name="heart-outline"></ion-icon></button> -->
-      <h3><?= $item->name ?></h3>
+      <h3><?= htmlspecialchars(trim($item->name)) ?></h3>
       <div>
         <h3><?= $item->price ?> €</h3>
-        <!-- <p>Negociável</p> -->
       </div>
 
     </div>
@@ -115,9 +109,9 @@ require_once (__DIR__ . '/../utils/session.php');
       <div>
         <h4>
           <?php if (empty($chat)): ?>
-            <?= $seller->first_name . " " . $seller->last_name ?>
+            <?= htmlspecialchars($seller->first_name . " " . $seller->last_name) ?>
           <?php else: ?>
-            <?= $chat[0]->receiver == $user_id ? $chat[0]->sender_first_name . " " . $chat[0]->sender_last_name : $chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name; ?>
+            <?= $chat[0]->receiver == $user_id ? htmlspecialchars($chat[0]->sender_first_name . " " . $chat[0]->sender_last_name) : htmlspecialchars($chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name); ?>
           <?php endif; ?>
         </h4>
       </div>
@@ -136,17 +130,9 @@ require_once (__DIR__ . '/../utils/session.php');
   <section id="chat">
     <?php drawChatHeader($id, $item, $seller, $chat); ?>
     <?php if (empty($chat)): ?>
-      <h2 id="start-chat">Inicie a coversa com <?= $seller->first_name ?>.</h2>
+      <h2 id="start-chat">Inicie a coversa com <?= htmlspecialchars(trim($seller->first_name)) ?>.</h2>
     <?php endif; ?>
     <ol id="chat-messages">
-      <?php
-      // $totalMessages = count($chat);
-    
-      // for ($i = $totalMessages - 1; $i >= 0; $i--) {
-      //   $message = $chat[$i];
-      //   drawChatMessage($id, $message);
-      // }
-      ?>
     </ol>
 
     <form action="../actions/action_send_message.php" method="post">
@@ -173,7 +159,7 @@ require_once (__DIR__ . '/../utils/session.php');
         <span><?= $timeAgo ?></span>
       </div>
       <p>
-        <?= $message->message ?>
+        <?= htmlspecialchars(trim($message->message)) ?>
       </p>
       <div class="proposition-btns">
         <?php if ($message->sender == $user_id): ?>
@@ -208,7 +194,7 @@ require_once (__DIR__ . '/../utils/session.php');
     <li class=<?= $message->receiver == $user_id ? "received-message" : "sent-message" ?>>
       <div>
         <p>
-          <?= $message->message ?>
+          <?= htmlspecialchars(trim($message->message)) ?>
           <span><?= $timeAgo ?></span>
         </p>
       </div>

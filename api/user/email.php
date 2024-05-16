@@ -18,19 +18,25 @@ switch ($request_method) {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if (isset($data['email'])) {
-      $email = $data['email'];
+      $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
 
-      // Check if email is already registered
-      $is_registered = User::isEmailRegistered($db, $email);
-
-      if ($is_registered) {
-        // Email is already registered
-        http_response_code(200);
-        echo json_encode(array("message" => "Email is already registered"));
+      if ($email === false) {
+        // Invalid email format
+        http_response_code(400);
+        echo json_encode(array("message" => "Invalid email format"));
       } else {
-        // Email is not registered
-        http_response_code(404);
-        echo json_encode(array("message" => "Email is not registered"));
+        // Email format is valid, check if it's registered
+        $is_registered = User::isEmailRegistered($db, $email);
+
+        if ($is_registered) {
+          // Email is already registered
+          http_response_code(200);
+          echo json_encode(array("message" => "Email is already registered"));
+        } else {
+          // Email is not registered
+          http_response_code(404);
+          echo json_encode(array("message" => "Email is not registered"));
+        }
       }
     } else {
       // Email parameter is missing in the request

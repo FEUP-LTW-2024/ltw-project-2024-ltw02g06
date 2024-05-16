@@ -17,15 +17,25 @@ require_once (__DIR__ . '/../database/user.class.php');
 $db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $first_name = filter_var($_POST['first_name'], FILTER_SANITIZE_STRING);
+  $last_name = filter_var($_POST['last_name'], FILTER_SANITIZE_STRING);
+  $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+  $new_image_path = filter_var($_POST['new_image_path'], FILTER_SANITIZE_STRING);
+  $address = filter_var($_POST['address'], FILTER_SANITIZE_STRING);
+  $zipcode = filter_var($_POST['zipcode'], FILTER_SANITIZE_STRING);
+  $city = filter_var($_POST['city'], FILTER_SANITIZE_STRING);
+  $state = filter_var($_POST['state'], FILTER_SANITIZE_STRING);
+  $country = filter_var($_POST['country'], FILTER_SANITIZE_STRING);
+
   if (
-    empty($_POST['first_name']) ||
-    empty($_POST['last_name']) ||
-    empty($_POST['email']) ||
-    empty($_POST['address']) ||
-    empty($_POST['zipcode']) ||
-    empty($_POST['city']) ||
-    empty($_POST['state']) ||
-    empty($_POST['country'])
+    empty($first_name) ||
+    empty($last_name) ||
+    empty($email) ||
+    empty($address) ||
+    empty($zipcode) ||
+    empty($city) ||
+    empty($state) ||
+    empty($country)
   ) {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit();
@@ -33,22 +43,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   $user_data = [
     'id' => $id,
-    'first_name' => $_POST['first_name'] ? $_POST['first_name'] != "" ? $_POST['first_name'] : null : null,
-    'last_name' => $_POST['last_name'] ? $_POST['last_name'] != "" ? $_POST['last_name'] : null : null,
-    'email' => $_POST['email'] ? $_POST['email'] != "" ? $_POST['email'] : null : null,
-    'new_image' => $_POST['new_image_path'] ? $_POST['new_image_path'] != "" ? $_POST['new_image_path'] : null : null,
-    'address' => $_POST['address'] ? $_POST['address'] != "" ? $_POST['address'] : null : null,
-    'zipcode' => $_POST['zipcode'] ? $_POST['zipcode'] != "" ? $_POST['zipcode'] : null : null,
-    'city' => $_POST['city'] ? $_POST['city'] != "" ? $_POST['city'] : null : null,
-    'state' => $_POST['state'] ? $_POST['state'] != "" ? $_POST['state'] : null : null,
-    'country' => $_POST['country'] ? $_POST['country'] != "" ? $_POST['country'] : null : null,
+    'first_name' => $first_name,
+    'last_name' => $last_name,
+    'email' => $email,
+    'new_image' => $new_image_path,
+    'address' => $address,
+    'zipcode' => $zipcode,
+    'city' => $city,
+    'state' => $state,
+    'country' => $country,
   ];
 
   User::updateUser($db, $user_data);
 }
 
 if (isset($_GET['redirect'])) {
-  header('Location: ' . $_GET['redirect']);
+  header('Location: ' . htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8'));
 } else {
   header('Location: ' . $_SERVER['HTTP_REFERER']);
 }

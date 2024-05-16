@@ -15,8 +15,8 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
   case 'GET':
     // GET request handling
-    $id = isset($_GET['id']) ? intval($_GET['id']) : null;
-    if ($id !== null) {
+    $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
+    if ($id !== false && $id !== null) {
       $category = Category::getCategory($db, $id);
       if ($category) {
         http_response_code(200); // OK
@@ -40,6 +40,8 @@ switch ($request_method) {
     // POST request handling
 
     $postData = json_decode(file_get_contents('php://input'), true);
+    $postData = filter_var_array($postData, FILTER_SANITIZE_STRING);
+
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
 
@@ -76,7 +78,7 @@ switch ($request_method) {
   case 'DELETE':
     // DELETE request handling
     // Delete a given category
-    $categoryId = (int) $_GET['id'];
+    $categoryId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
 
@@ -89,6 +91,12 @@ switch ($request_method) {
     if (!$user->admin) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    if ($categoryId === false || $categoryId === null) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Invalid category ID."));
       exit();
     }
 

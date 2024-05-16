@@ -33,5 +33,4 @@ drawFooter();
   const userId = <?php echo json_encode($id); ?>;
   const wishlist = <?php echo json_encode($wishlist); ?>;
 </script>
-<!-- <script src="./../javascript/utils.js"></script> -->
 <script src="./../javascript/wishlist.js"></script>

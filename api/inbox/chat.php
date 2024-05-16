@@ -21,15 +21,12 @@ switch ($request_method) {
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
-    // Extract parameters from the URL
-    $item_id = isset($_GET['item']) ? $_GET['item'] : null;
-    $item_id = $item_id == "" ? null : $item_id;
-
-    $other_user = isset($_GET['id']) ? $_GET['id'] : null;
-    $other_user = $other_user == "" ? null : $other_user;
+    // Extract and sanitize parameters from the URL
+    $item_id = isset($_GET['item']) ? filter_var($_GET['item'], FILTER_VALIDATE_INT) : null;
+    $other_user = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
 
     try {
-      $chat = Message::getChat($db, (int) $item_id, (int) $user_id, (int) $other_user);
+      $chat = Message::getChat($db, $item_id, $user_id, $other_user);
       if ($chat) {
         http_response_code(200); // OK
         echo json_encode($chat);

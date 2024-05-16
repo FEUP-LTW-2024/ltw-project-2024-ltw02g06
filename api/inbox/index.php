@@ -21,10 +21,12 @@ switch ($request_method) {
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
-    // Extract parameters from the URL
-    $search = isset($_GET['search']) ? $_GET['search'] : null;
-    if ($search == "")
+
+    // Extract and sanitize the search parameter from the URL
+    $search = isset($_GET['search']) ? filter_var($_GET['search'], FILTER_SANITIZE_STRING) : null;
+    if ($search == "") {
       $search = null;
+    }
 
     try {
       $inbox = Message::getInbox($db, $user_id, $search);

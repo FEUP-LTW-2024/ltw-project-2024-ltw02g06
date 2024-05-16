@@ -17,6 +17,7 @@ switch ($request_method) {
     $id = isset($_GET['id']) ? intval($_GET['id']) : null;
 
     if ($id !== null) {
+      // No further sanitization needed for $id
       $user = User::getUser($db, $id);
       $user->password = null;
       if ($user) {
@@ -43,10 +44,6 @@ switch ($request_method) {
       }
     }
     break;
-  case 'POST':
-    // POST request handling
-    // TODO create code to create a new user
-    break;
   case 'PATCH':
     // PATCH request handling
     // Update a given user
@@ -60,14 +57,18 @@ switch ($request_method) {
       exit();
     }
 
+    // Validate $userData fields if needed
+
     if ($user_id != $userData['id'] && !$user->admin) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 
-    $updateAdminStatus = isset($_GET['admin']) ? $_GET['admin'] : 0;
+    // Sanitize and validate $_GET['admin']
+    $updateAdminStatus = isset($_GET['admin']) ? (bool) $_GET['admin'] : false;
 
+    // Handle update admin status separately
     if ($updateAdminStatus && $user->admin) {
       try {
         User::updateAdminStatus($db, $userData);
@@ -105,14 +106,20 @@ switch ($request_method) {
     break;
   case 'DELETE':
     // DELETE request handling
-    // Delete an user.
-    $toDeleteUserId = (int) $_GET['id'];
+    // Delete a user.
+    $toDeleteUserId = isset($_GET['id']) ? (int) $_GET['id'] : null;
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
 
     if (!$user_id) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($toDeleteUserId === null) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "User ID is required."));
       exit();
     }
 

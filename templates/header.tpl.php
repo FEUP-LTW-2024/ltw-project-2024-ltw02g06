@@ -77,7 +77,6 @@ require_once (__DIR__ . '/../database/user.class.php');
                     name="person-outline"></ion-icon></a>
               </li>
             <?php endif; ?>
-            <!-- <li><a href="#">Anunciar e Vender</a></li> -->
           </ul>
         </nav>
       </div>

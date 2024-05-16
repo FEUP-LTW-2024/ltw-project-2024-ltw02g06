@@ -9,14 +9,16 @@ require_once (__DIR__ . '/../database/user.class.php');
 
 $db = getDatabaseConnection();
 
-$user = User::getUserWithPassword($db, $_POST['email'], $_POST['password']);
+$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+$password = $_POST['password'];
+$user = User::getUserWithPassword($db, $email, $password);
 
 if ($user) {
   $session->setId($user->id);
   $session->setName($user->name());
   $session->addMessage('success', 'Login successful!');
   if (isset($_GET['redirect'])) {
-    header('Location: ' . $_GET['redirect']);
+    header('Location: ' . htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8'));
   } else {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
   }

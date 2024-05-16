@@ -21,13 +21,16 @@ switch ($request_method) {
     // POST request handling
     // Add a new item to the wishlist of a given user
     $user_id = $session->getId();
-    $item_id = json_decode(file_get_contents("php://input"), true)['item_id'];
+    $postData = json_decode(file_get_contents("php://input"), true);
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
+
+    // Validate and sanitize item_id
+    $item_id = isset($postData['item_id']) ? intval($postData['item_id']) : null;
 
     if (!isset($item_id)) {
       http_response_code(400); // Bad Request
@@ -58,9 +61,9 @@ switch ($request_method) {
     break;
   case 'DELETE':
     // DELETE request handling
-    // Remove an item of the wishlist of a given user
+    // Remove an item from the wishlist of a given user
     $user_id = $session->getId();
-    $item_id = (int) $_GET['item_id'];
+    $item_id = isset($_GET['item_id']) ? intval($_GET['item_id']) : null;
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized

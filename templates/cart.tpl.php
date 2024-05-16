@@ -7,7 +7,6 @@ require_once (__DIR__ . '/../utils/session.php');
 
 <?php function drawCart(Session $session, array $cart)
 { ?>
-  <!-- This is currently static - TODO make dinamic: -->
   <section id="cart">
     <?php if (empty($cart)): ?>
       <h2 id="empty-cart-title">O seu carrinho está vazio.</h2>
@@ -38,12 +37,9 @@ require_once (__DIR__ . '/../utils/session.php');
 { ?>
   <li data-cart-item="<?= $cartItem['item_id'] ?>" data-item-price="<?= $cartItem['new_price'] ?>"
     data-item-shipping="<?= $cartItem['shipping'] ?>">
-    <!-- <div class="cart-item-img">
-      <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
-    </div> -->
 
     <div class="cart-item-info" onclick="handleItemBtn(<?= $cartItem['item_id'] ?>)">
-      <h3><?= $cartItem['item_name'] ?></h3>
+      <h3><?= htmlspecialchars($cartItem['item_name']) ?></h3>
     </div>
 
     <div class="cart-item-price">

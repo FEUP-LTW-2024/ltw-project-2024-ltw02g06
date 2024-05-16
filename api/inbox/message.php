@@ -19,13 +19,22 @@ switch ($request_method) {
   case 'PATCH':
     // PATCH request handling
     // Update a given item.
-    $accepted = json_decode(file_get_contents("php://input"), true)['accepted'];
-    $message_id = json_decode(file_get_contents("php://input"), true)['message_id'];
+
+    // Get and sanitize the input data
+    $inputData = json_decode(file_get_contents("php://input"), true);
+    $accepted = isset($inputData['accepted']) ? filter_var($inputData['accepted'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null;
+    $message_id = isset($inputData['message_id']) ? filter_var($inputData['message_id'], FILTER_VALIDATE_INT) : null;
     $user_id = $session->getId();
 
     if (!$user_id) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($message_id === null || $accepted === null) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Invalid input."));
       exit();
     }
 
@@ -38,10 +47,10 @@ switch ($request_method) {
         exit();
       }
 
-      $message = Message::updateMessage($db, $message_id, $accepted);
-      if ($message) {
+      $updatedMessage = Message::updateMessage($db, $message_id, $accepted);
+      if ($updatedMessage) {
         http_response_code(200); // OK
-        echo json_encode($message);
+        echo json_encode($updatedMessage);
       } else {
         http_response_code(400); // Bad Request
         echo json_encode(array("message" => "Unable to update message."));

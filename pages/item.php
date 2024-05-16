@@ -12,7 +12,6 @@ require_once (__DIR__ . '/../database/user.class.php');
 require_once (__DIR__ . '/../templates/header.tpl.php');
 require_once (__DIR__ . '/../templates/footer.tpl.php');
 require_once (__DIR__ . '/../templates/search-bar.tpl.php');
-require_once (__DIR__ . '/../templates/breadcrumb-nav.tpl.php');
 require_once (__DIR__ . '/../templates/item.tpl.php');
 
 $db = getDatabaseConnection();

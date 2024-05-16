@@ -41,22 +41,21 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <?php if (trim($item->description) === ""): ?>
         <p>Sem descrição.</p>
       <?php else: ?>
-        <p><?= nl2br(trim($item->description)) ?></p>
+        <p><?= htmlspecialchars(nl2br(trim($item->description))) ?></p>
       <?php endif; ?>
 
       <ul id="item-category-list">
         <?php foreach ($item->attributes as $attribute): ?>
           <li>
-            <p><?= $attribute['name'] ?>: <?= $attribute['value'] ?></p>
+            <p><?= htmlspecialchars(trim($attribute['name'])) ?>:
+              <?= htmlspecialchars(trim((string) $attribute['value'])) ?>
+            </p>
           </li>
         <?php endforeach; ?>
       </ul>
       <div>
         <p>ID: <?= $item->id ?></p>
         <p>Cliques: <?= $item->clicks ?></p>
-        <!-- <button id="report-button">
-          Reportar
-        </button> -->
       </div>
     </div>
 
@@ -70,10 +69,10 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
               name=<?= $is_item_in_wishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
         <?php endif; ?>
       </div>
-      <?php if (trim($item->description) === ""): ?>
+      <?php if (trim($item->name) === ""): ?>
         <h3 id="item-name">Sem nome</h3>
       <?php else: ?>
-        <h3 id="item-name"><?= trim($item->name) ?></h3>
+        <h3 id="item-name"><?= htmlspecialchars(trim($item->name)) ?></h3>
       <?php endif; ?>
       <h2 id="item-price"><?= $item->price ?> €</h2>
       <?php if (!$is_seller): ?>
@@ -97,8 +96,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h3>Localização</h3>
       <div>
         <div>
-          <h4><?= $seller->city ?></h4>
-          <p><?= $seller->state . ', ' . $seller->country ?></p>
+          <h4><?= htmlspecialchars($seller->city) ?></h4>
+          <p><?= htmlspecialchars($seller->state . ', ' . $seller->country) ?></p>
         </div>
         <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($seller->city . ', ' . $seller->state . ', ' . $seller->country) ?>"
           target="_blank">
@@ -112,31 +111,13 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <a href="/pages/profile.php?user=<?php echo $seller->id; ?>">
         <img id="seller-img" src="<?= '/../' . $seller->image ?>" alt="User Profile Picture">
         <div>
-          <h4 id="seller-name"><?= $seller->name() ?></h4>
+          <h4 id="seller-name"><?= htmlspecialchars(trim($seller->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
             <?= $seller->registration_date->format('d/m/Y'); ?>
           </p>
-          <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </a>
-      <!-- <div>
-        <?php if (empty($seller_reviews)): ?>
-          <h6>Rating: </h6>
-          <p>Sem classificações</p>
-        <?php else: ?>
-          <?php
-          $total_rating = 0;
-          foreach ($seller_reviews as $review) {
-            $total_rating += $review['rating'];
-          }
-
-          $average_rating = count($seller_reviews) > 0 ? $total_rating / count($seller_reviews) : 0;
-          ?>
-          <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
-          <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
-        <?php endif; ?>
-      </div> -->
       <a id="see-all-items-btn" href="/pages/profile.php?user=<?php echo $seller->id; ?>">
         <span>Todos os anúncios deste anunciante</span>
         <span>&gt;</span>
@@ -182,31 +163,32 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         Descrição
       </h2>
       <textarea id="edit-item-description" name="item_description" rows="10"
-        placeholder="Descrição do anúncio"><?= $item->description ?></textarea>
+        placeholder="Descrição do anúncio"><?= htmlspecialchars(trim($item->description)) ?></textarea>
       <ol id="edit-item-category-list">
         <li>
           <label for="category">Categoria</label>
           <select name="category" id="category">
             <?php foreach ($categories as $category): ?>
-              <option value=<?= $category->id ?>     <?= $category->id == $item->category ? "selected" : "" ?>><?= $category->name ?></option>
+              <option value=<?= $category->id ?>     <?= $category->id == $item->category ? "selected" : "" ?>><?= htmlspecialchars(trim($category->name)) ?></option>
             <?php endforeach; ?>
           </select>
         </li>
         <?php foreach ($categories[$item->category]->attributes as $attribute): ?>
           <li>
-            <label for="<?= $attribute["name"] ?>"><?= $attribute["name"] ?></label>
+            <label for="<?= $attribute["name"] ?>"><?= htmlspecialchars(trim($attribute["name"])) ?></label>
 
-            <?php if ($attribute["type"] == "real"): // TODO Change this input later ?>
-              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+            <?php if ($attribute["type"] == "real"): ?>
+              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= htmlspecialchars(trim($attribute["name"])) ?>>
 
             <?php elseif ($attribute["type"] == "default"): ?>
-              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+              <input type="text" name="attributes[<?= $attribute['id'] ?>]" id=<?= htmlspecialchars(trim($attribute["name"])) ?>>
 
             <?php elseif ($attribute["type"] == "enum"): ?>
-              <select name="attributes[<?= $attribute['id'] ?>]" id=<?= $attribute["name"] ?>>
+              <select name="attributes[<?= $attribute['id'] ?>]" id=<?= htmlspecialchars(trim($attribute["name"])) ?>>
                 <?php foreach ($attribute["values"] as $value): ?>
-                  <option value=<?= $value["value"] ?>         <?= $item->attributes[$attribute['id']]['value'] == $value["value"] ? "selected" : "" ?>>
-                    <?= $value["value"] ?>
+                  <option value=<?= htmlspecialchars(trim((string) $value["value"])) ?>
+                    <?= $item->attributes[$attribute['id']]['value'] == $value["value"] ? "selected" : "" ?>>
+                    <?= htmlspecialchars((string) trim($value["value"])) ?>
                   </option>
                 <?php endforeach; ?>
               </select>
@@ -220,7 +202,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <p class="small-font-size">Publicado
         <?= $item->creation_date->format('d/m/Y'); ?>
       </p>
-      <input type="text" name="item_name" id="edit-item-name" placeholder="Nome do anúncio" value=<?= $item->name ?>>
+      <input type="text" name="item_name" id="edit-item-name" placeholder="Nome do anúncio"
+        value=<?= htmlspecialchars(trim($item->name)) ?>>
       <span>
         <input type="text" name="item_price" id="edit-item-price" placeholder="Preço" value=<?= $item->price ?>>
         €
@@ -234,8 +217,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h3>Localização</h3>
       <div>
         <div>
-          <h4><?= $user->city ?></h4>
-          <p><?= $user->state . ', ' . $user->country ?></p>
+          <h4><?= htmlspecialchars($user->city) ?></h4>
+          <p><?= htmlspecialchars($user->state . ', ' . $user->country) ?></p>
         </div>
         <img src="https://www.olx.pt/app/static/media/staticmap.65e20ad98.svg" alt="Location Map">
       </div>
@@ -246,31 +229,13 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <div>
         <img id="seller-img" src="<?= '/../' . $user->image ?>" alt="User Profile Picture">
         <div>
-          <h4 id="seller-name"><?= $user->name() ?></h4>
+          <h4 id="seller-name"><?= htmlspecialchars(trim($user->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
             <?= $user->registration_date->format('d/m/Y'); ?>
           </p>
-          <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </div>
-      <!-- <div>
-        <?php if (empty($seller_reviews)): ?>
-          <h6>Rating: </h6>
-          <p>Sem classificações</p>
-        <?php else: ?>
-          <?php
-          $total_rating = 0;
-          foreach ($seller_reviews as $review) {
-            $total_rating += $review['rating'];
-          }
-
-          $average_rating = count($seller_reviews) > 0 ? $total_rating / count($seller_reviews) : 0;
-          ?>
-          <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
-          <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
-        <?php endif; ?>
-      </div> -->
     </div>
 
   </form>
@@ -309,7 +274,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <label for="category">Categoria</label>
           <select name="category" id="category">
             <?php foreach ($categories as $category): ?>
-              <option value=<?= $category->id ?>><?= $category->name ?></option>
+              <option value=<?= $category->id ?>><?= htmlspecialchars(trim($category->name)) ?></option>
             <?php endforeach; ?>
           </select>
         </li>
@@ -334,8 +299,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h3>Localização</h3>
       <div>
         <div>
-          <h4><?= $user->city ?></h4>
-          <p><?= $user->state . ', ' . $user->country ?></p>
+          <h4><?= htmlspecialchars($user->city) ?></h4>
+          <p><?= htmlspecialchars($user->state . ', ' . $user->country) ?></p>
         </div>
         <img src="https://www.olx.pt/app/static/media/staticmap.65e20ad98.svg" alt="Location Map">
       </div>
@@ -346,31 +311,13 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <div>
         <img id="seller-img" src="<?= '/../' . $user->image ?>" alt="User Profile Picture">
         <div>
-          <h4 id="seller-name"><?= $user->name() ?></h4>
+          <h4 id="seller-name"><?= htmlspecialchars(trim($user->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
             <?= $user->registration_date->format('d/m/Y'); ?>
           </p>
-          <!-- <p class="small-font-size">Esteve online dia 07 de abril de 2024</p> -->
         </div>
       </div>
-      <!-- <div>
-        <?php if (empty($seller_reviews)): ?>
-          <h6>Rating: </h6>
-          <p>Sem classificações</p>
-        <?php else: ?>
-          <?php
-          $total_rating = 0;
-          foreach ($seller_reviews as $review) {
-            $total_rating += $review['rating'];
-          }
-
-          $average_rating = count($seller_reviews) > 0 ? $total_rating / count($seller_reviews) : 0;
-          ?>
-          <h6>Rating <?= number_format($average_rating, 1) ?>/5</h6>
-          <p class="small-font-size"><?= count($seller_reviews) ?> classificações</p>
-        <?php endif; ?>
-      </div> -->
     </div>
 
   </form>
@@ -402,29 +349,6 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </section>
 <?php } ?>
 
-<?php function drawSearchPageItem(Session $session)
-{ ?>
-  <li>
-    <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
-    <div>
-      <div>
-        <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
-        <div>
-          <h3>15.990 €</h3>
-          <p>Negociável</p>
-        </div>
-      </div>
-      <div>
-        <div>
-          <h4>Custóias, Leça Do Balio E Guifões,</h4>
-          <p>Porto</p>
-        </div>
-        <button><ion-icon name="heart-outline"></ion-icon></button>
-      </div>
-    </div>
-  </li>
-<?php } ?>
-
 <?php function drawProfileItems(Session $session, string $order)
 { ?>
   <section id="items">
@@ -451,29 +375,6 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </section>
 <?php } ?>
 
-<?php function drawProfileItem(Session $session)
-{ ?>
-  <li>
-    <img src="https://ireland.apollo.olxcdn.com/v1/files/5inzf0kibmye2-PT/image;s=1000x700" alt="Item Image">
-    <div>
-      <div>
-        <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
-        <div>
-          <h3>15.990 €</h3>
-          <p>Negociável</p>
-        </div>
-      </div>
-      <div>
-        <div>
-          <h4>Custóias, Leça Do Balio E Guifões,</h4>
-          <p>Porto</p>
-        </div>
-        <button><ion-icon name="heart-outline"></ion-icon></button>
-      </div>
-    </div>
-  </li>
-<?php } ?>
-
 <?php function drawWishlistItems(Session $session, array $wishlist)
 { ?>
   <section id="items" class="wishlist">
@@ -497,64 +398,21 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   <li data-item-id="<?= $item->id ?>" data-item-in-cart="<?= $isItemInCart ? 1 : 0 ?>">
     <div>
       <div>
-        <h3><?= $item->name ?></h3>
+        <h3><?= htmlspecialchars(trim($item->name)) ?></h3>
         <div>
           <h3><?= $item->price ?> €</h3>
         </div>
       </div>
       <div>
         <div>
-          <h4><?= $seller->city ?></h4>
-          <p><?= $seller->state . ", " . $seller->country ?></p>
+          <h4><?= htmlspecialchars($seller->city) ?></h4>
+          <p><?= htmlspecialchars($seller->state . ", " . $seller->country) ?></p>
         </div>
         <div>
           <button class="wishlist-btn"><ion-icon name="heart"></ion-icon></button>
           <button class="cart-btn"><ion-icon name="cart<?= $isItemInCart ? "" : "-outline" ?>"></ion-icon></button>
         </div>
       </div>
-    </div>
-  </li>
-<?php } ?>
-
-<?php function drawSellerDashboardActiveItem(Session $session)
-{ ?>
-  <li>
-    <div>
-      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
-        Nacional - Bastantes Extras - 345cv</h3>
-      <h3>15.990 €</h3>
-    </div>
-    <div>
-      <button title="Promover anúncio"><ion-icon name="star-outline"></ion-icon></button>
-      <button title="Editar anúncio"><ion-icon name="create-outline"></ion-icon></button>
-    </div>
-  </li>
-<?php } ?>
-
-<?php function drawSellerDashboardToSendItem(Session $session)
-{ ?>
-  <li>
-    <div>
-      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
-        Nacional - Bastantes Extras - 345cv</h3>
-      <h3>15.990 €</h3>
-    </div>
-    <div>
-      <button title="Enviar"><ion-icon name="send-outline"></ion-icon></button>
-    </div>
-  </li>
-<?php } ?>
-
-<?php function drawSellerDashboardSoldItem(Session $session)
-{ ?>
-  <li>
-    <div>
-      <h3 title="Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv">Lexus GS 450H - Garantia -
-        Nacional - Bastantes Extras - 345cv</h3>
-      <h3>15.990 €</h3>
-    </div>
-    <div>
-      <button title="Apagar"><ion-icon name="trash-outline"></ion-icon></button>
     </div>
   </li>
 <?php } ?>
@@ -605,40 +463,4 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       </div>
     </div>
   </section>
-<?php } ?>
-
-
-<?php function drawAdminReportedItems()
-{ ?>
-  <ul id="reported-items-container">
-    <?php
-    drawAdminReportedItem();
-    drawAdminReportedItem();
-    drawAdminReportedItem();
-    drawAdminReportedItem();
-    ?>
-  </ul>
-<?php } ?>
-
-<?php function drawAdminReportedItem()
-{ ?>
-  <li>
-    <div class="reported-item">
-      <h3>Lexus GS 450H - Garantia - Nacional - Bastantes Extras - 345cv</h3>
-      <div>
-        <button title="Manter anúncio"><ion-icon name="checkmark-circle-outline"></ion-icon></button>
-        <button title="Apagar anúncio"><ion-icon name="trash-outline"></ion-icon></button>
-      </div>
-    </div>
-
-    <div class="report-item-msg">
-      <div>
-        <h4>Luís Figo</h4>
-        <span>há 3 min</span>
-      </div>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa doloribus vel quis adipisci non vitae eius
-        saepe.</p>
-    </div>
-
-  </li>
 <?php } ?>

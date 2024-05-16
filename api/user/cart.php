@@ -22,9 +22,10 @@ switch ($request_method) {
     // POST request handling
     // Add a new item to the cart of a given user
     $user_id = $session->getId();
-    $checkout = json_decode(file_get_contents("php://input"), true)['checkout'];
-    $item_id = json_decode(file_get_contents("php://input"), true)['item_id'];
-    $message_id = json_decode(file_get_contents("php://input"), true)['message_id'];
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $checkout = isset($postData['checkout']) ? filter_var($postData['checkout'], FILTER_VALIDATE_BOOLEAN) : false;
+    $item_id = isset($postData['item_id']) ? filter_var($postData['item_id'], FILTER_VALIDATE_INT) : null;
+    $message_id = isset($postData['message_id']) ? filter_var($postData['message_id'], FILTER_VALIDATE_INT) : null;
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized
@@ -34,11 +35,8 @@ switch ($request_method) {
 
     if ($checkout) {
       try {
-        User::purchaseCart(
-          $db,
-          $user_id,
-        );
-        http_response_code(200); // Created
+        User::purchaseCart($db, $user_id);
+        http_response_code(200); // OK
         echo json_encode(array("message" => "All items in the cart were purchased."));
       } catch (PDOException $e) {
         http_response_code(500); // Internal Server Error
@@ -52,7 +50,7 @@ switch ($request_method) {
       }
 
       try {
-        $item = Item::getItem($db, (int) $item_id);
+        $item = Item::getItem($db, $item_id);
         if (!$item || $item->status != 'active') {
           http_response_code(404); // Not Found
           echo json_encode(array("message" => "Item not found or already sold."));
@@ -64,12 +62,11 @@ switch ($request_method) {
           exit();
         }
         $message = $message_id ? Message::getMessage($db, $message_id) : null;
-        $cartItem = User::addItemToCart(
-          $db,
-          $user_id,
-          (int) $item_id,
-          $message->type == 'negotiation' && $message->item_id == $item_id && $message->accepted ? $message->value : $item->price
-        );
+        $price = $item->price;
+        if ($message && $message->type == 'negotiation' && $message->item_id == $item_id && $message->accepted) {
+          $price = $message->value;
+        }
+        $cartItem = User::addItemToCart($db, $user_id, $item_id, $price);
         http_response_code(201); // Created
         echo json_encode(array("message" => "Item added to cart.", "cartItem" => $cartItem));
       } catch (PDOException $e) {
@@ -80,9 +77,9 @@ switch ($request_method) {
     break;
   case 'DELETE':
     // DELETE request handling
-    // Remove an item of the cart of a given user
+    // Remove an item from the cart of a given user
     $user_id = $session->getId();
-    $item_id = (int) $_GET['item_id'];
+    $item_id = isset($_GET['item_id']) ? filter_var($_GET['item_id'], FILTER_VALIDATE_INT) : null;
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized

@@ -26,7 +26,7 @@ if (!$user->admin) {
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $category_data = [
-    'id' => $_POST['category'] ?? null,
+    'id' => filter_var($_POST['category'], FILTER_SANITIZE_NUMBER_INT) ?? null,
     'attributes' => $_POST['attribute'] ?? [],
   ];
 
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 if (isset($_GET['redirect'])) {
-  header('Location: ' . $_GET['redirect']);
+  header('Location: ' . htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8'));
 } else {
   header('Location: ' . $_SERVER['HTTP_REFERER']);
 }

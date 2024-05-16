@@ -32,9 +32,7 @@ if (!$user->admin) { ?>
 }
 
 drawAdminCategoriesSection();
-// drawAdminReportedItemsSection();
 drawAdminUsersSection();
-// drawAdminChangesHistorySection();
 drawFooter();
 ?>
 <script>
