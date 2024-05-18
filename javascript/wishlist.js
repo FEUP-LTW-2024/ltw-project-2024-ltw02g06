@@ -1,6 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const wishlistBtns = document.querySelectorAll(".wishlist-btn");
   const cartBtns = document.querySelectorAll(".cart-btn");
+  const wishlistLiItems = document.querySelectorAll(
+    "#items-container li > div:last-of-type > div:first-of-type"
+  );
+
+  wishlistLiItems.forEach((item) => {
+    handleWishlistItem(item);
+  });
 
   wishlistBtns.forEach((button) => {
     handleWishlistBtn(button);
@@ -10,6 +17,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     handleCartBtn(button);
   });
 });
+
+const handleWishlistItem = (item) => {
+  const itemId = item.closest("li").dataset.itemId;
+  item.addEventListener("click", async () => {
+    window.location.href = `../pages/item.php?id=${itemId}`;
+  });
+};
 
 const handleWishlistBtn = (button) => {
   const li = button.closest("li");

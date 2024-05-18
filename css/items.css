@@ -103,6 +103,11 @@
   width: 100%;
 }
 
+#items-container li > div:last-of-type > div:first-of-type {
+  height: 100%;
+  cursor: pointer;
+}
+
 #items-container li > div:last-of-type > div:first-of-type > div {
   display: flex;
   flex-direction: column;
