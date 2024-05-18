@@ -44,6 +44,69 @@ switch ($request_method) {
       }
     }
     break;
+  case 'POST':
+    // POST request handling
+    $userData = filter_var_array(json_decode(file_get_contents('php://input'), true), [
+      'email' => FILTER_VALIDATE_EMAIL,
+      'password' => FILTER_SANITIZE_STRING,
+      'confirmPassword' => FILTER_SANITIZE_STRING,
+      'firstName' => FILTER_SANITIZE_STRING,
+      'lastName' => FILTER_SANITIZE_STRING,
+      'address' => FILTER_SANITIZE_STRING,
+      'zipcode' => FILTER_SANITIZE_STRING,
+      'city' => FILTER_SANITIZE_STRING,
+      'state' => FILTER_SANITIZE_STRING,
+      'country' => FILTER_SANITIZE_STRING,
+    ]);
+
+    foreach ($userData as $key => $value) {
+      $userData[$key] = trim($value);
+    }
+
+    if (
+      empty($userData['email']) ||
+      empty($userData['password']) ||
+      empty($userData['confirmPassword']) ||
+      empty($userData['firstName']) ||
+      empty($userData['lastName']) ||
+      empty($userData['address']) ||
+      empty($userData['zipcode']) ||
+      empty($userData['city']) ||
+      empty($userData['state']) ||
+      empty($userData['country'])
+    ) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Invalid input."));
+      exit();
+    }
+
+    if ($userData['password'] !== $userData['confirmPassword']) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Passwords do not match."));
+      exit();
+    }
+
+    try {
+      $user = User::createUser($db, $userData['email'], $userData['password'], $userData['firstName'], $userData['lastName'], $userData['address'], $userData['zipcode'], $userData['city'], $userData['state'], $userData['country']);
+      if ($user) {
+        $session->setId($user->id);
+        $session->setName($user->name());
+        $session->generateSessionToken();
+
+        $response = [
+          'status' => 'success',
+          'redirect' => isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8') : $_SERVER['HTTP_REFERER']
+        ];
+        http_response_code(201); // Created
+        echo json_encode(array("message" => "User created successfully."));
+      } else {
+        throw new PDOException;
+      }
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
+    break;
   case 'PATCH':
     // PATCH request handling
     // Update a given user

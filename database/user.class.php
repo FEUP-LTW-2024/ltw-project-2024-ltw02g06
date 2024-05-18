@@ -65,6 +65,30 @@ class User
     $stmt->execute(array($this->first_name, $this->last_name, $this->id));
   }
 
+  static function createUser(PDO $db, string $email, string $password, string $firstName, string $lastName, string $address, string $city, string $state, string $country, string $zipcode): ?User
+  {
+    $stmt = $db->prepare('
+        INSERT INTO user (email, password, first_name, last_name, address, city, state, country, zipcode, admin, registration_date)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+    ');
+    $stmt->execute([
+      $email,
+      sha1($password),
+      $firstName,
+      $lastName,
+      $address,
+      $city,
+      $state,
+      $country,
+      $zipcode,
+      (new DateTime())->format('Y-m-d H:i:s')
+    ]);
+
+    $id = $db->lastInsertId();
+
+    return User::getUser($db, (int) $id);
+  }
+
   static function getUserWithPassword(PDO $db, string $email, string $password): ?User
   {
     $stmt = $db->prepare('

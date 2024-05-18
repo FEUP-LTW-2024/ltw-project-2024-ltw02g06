@@ -81,27 +81,3 @@ const isEmailValid = async (newEmail, currentEmail) => {
 
   return true;
 };
-
-const isEmailAlreadyRegistered = async (email) => {
-  return fetch(`./../api/user/email.php`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: email,
-      csrf: csrf,
-    }),
-  })
-    .then((response) => {
-      if (response.status === 404) {
-        return false;
-      } else if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return true;
-    })
-    .catch((error) => {
-      console.error("There was an unexpected error:", error);
-    });
-};

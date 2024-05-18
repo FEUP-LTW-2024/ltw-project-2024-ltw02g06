@@ -115,3 +115,24 @@ const showModal = (message) => {
     modal.style.display = "none";
   });
 };
+
+const isEmailAlreadyRegistered = async (email) => {
+  return fetch(`./../api/user/email.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return false;
+      }
+      return true;
+    })
+    .catch((error) => {
+      console.error("There was an unexpected error:", error);
+    });
+};
