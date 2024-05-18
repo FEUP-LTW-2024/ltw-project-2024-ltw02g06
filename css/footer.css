@@ -1,0 +1,10 @@
+body > footer {
+  padding-top: 1rem;
+  padding-bottom: 3rem;
+
+  font-family: "Karla", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  color: var(--penn-blue);
+}

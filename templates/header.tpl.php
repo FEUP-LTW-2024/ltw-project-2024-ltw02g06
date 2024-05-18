@@ -35,6 +35,7 @@ require_once (__DIR__ . '/../database/user.class.php');
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/search-bar.css">
     <link rel="stylesheet" href="../css/breadcrumb-nav.css">
     <link rel="stylesheet" href="../css/filters.css">
