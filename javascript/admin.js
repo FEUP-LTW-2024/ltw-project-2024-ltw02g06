@@ -83,7 +83,7 @@ const addNewCategory = async (newCategory) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ name: newCategory, attributes: [] }),
+    body: JSON.stringify({ name: newCategory, attributes: [], csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -127,9 +127,12 @@ const handleSearchBar = () => {
 
 // TODO change api call URL
 const getUsers = async () => {
-  return fetch(`./../api/user/index.php?${window.location.search}`, {
-    method: "GET",
-  })
+  return fetch(
+    `./../api/user/index.php?${window.location.search}&csrf=${csrf}`,
+    {
+      method: "GET",
+    }
+  )
     .then((response) => {
       if (response.status == 404) {
         return [];
@@ -329,7 +332,7 @@ const addAdmin = (id) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id: id, admin: true }),
+    body: JSON.stringify({ id: id, admin: true, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -347,7 +350,7 @@ const removeAdmin = (id) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id: id, admin: false }),
+    body: JSON.stringify({ id: id, admin: false, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -362,6 +365,10 @@ const removeAdmin = (id) => {
 const removeUser = (id) => {
   fetch(`./../api/user/index.php?&id=${id}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -374,7 +381,7 @@ const removeUser = (id) => {
 };
 
 const getCategories = async () => {
-  return fetch(`./../api/category/index.php`, {
+  return fetch(`./../api/category/index.php?csrf=${csrf}`, {
     method: "GET",
   })
     .then((response) => {
@@ -393,6 +400,10 @@ const getCategories = async () => {
 const removeCategory = (categoryId) => {
   fetch(`./../api/category/index.php?&id=${categoryId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {

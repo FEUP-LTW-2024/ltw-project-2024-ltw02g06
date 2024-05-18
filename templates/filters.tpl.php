@@ -11,7 +11,7 @@
             Mostrar Tudo
           </option>
           <?php foreach ($categories as $category): ?>
-            <option value=<?= htmlspecialchars($category->id) ?>     <?= $category->id == $selectedCategory ? "selected" : "" ?>>
+            <option value=<?= htmlspecialchars((string) $category->id) ?>     <?= $category->id == $selectedCategory ? "selected" : "" ?>>
               <?= htmlspecialchars($category->name) ?>
             </option>
           <?php endforeach; ?>
@@ -27,33 +27,34 @@
       <?php if ($selectedCategory): ?>
         <?php foreach ($categories[$selectedCategory]->attributes as $attribute): ?>
           <li>
-            <label for="<?= htmlspecialchars($attribute["id"]) ?>"><?= htmlspecialchars($attribute["name"]) ?></label>
+            <label
+              for="<?= htmlspecialchars((string) $attribute["id"]) ?>"><?= htmlspecialchars($attribute["name"]) ?></label>
 
             <?php if ($attribute["type"] == "int"): ?>
-              <div class="range-filter" id=<?= htmlspecialchars($attribute["id"]) ?>
-                name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>]">
-                <input class="int" type="text" name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>][from]"
-                  placeholder="De">
-                <input class="int" type="text" name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>][to]"
+              <div class="range-filter" id=<?= htmlspecialchars((string) $attribute["id"]) ?>
+                name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>]">
+                <input class="int" type="text"
+                  name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>][from]" placeholder="De">
+                <input class="int" type="text" name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>][to]"
                   placeholder="Até">
               </div>
 
             <?php elseif ($attribute["type"] == "real"): ?>
-              <div class="range-filter" id=<?= htmlspecialchars($attribute["id"]) ?>
-                name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>]">
-                <input class="real" type="text" name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>][from]"
-                  placeholder="De">
-                <input class="real" type="text" name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>][to]"
-                  placeholder="Até">
+              <div class="range-filter" id=<?= htmlspecialchars((string) $attribute["id"]) ?>
+                name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>]">
+                <input class="real" type="text"
+                  name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>][from]" placeholder="De">
+                <input class="real" type="text"
+                  name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>][to]" placeholder="Até">
               </div>
 
             <?php elseif ($attribute["type"] == "default"): ?>
-              <input type="text" name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>]"
-                id=<?= htmlspecialchars($attribute["id"]) ?> placeholder="<?= htmlspecialchars($attribute["name"]) ?>">
+              <input type="text" name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>]"
+                id=<?= htmlspecialchars((string) $attribute["id"]) ?> placeholder="<?= htmlspecialchars($attribute["name"]) ?>">
 
             <?php elseif ($attribute["type"] == "enum"): ?>
-              <select name="search[attributes][<?= htmlspecialchars($attribute["id"]) ?>]"
-                id=<?= htmlspecialchars($attribute["id"]) ?>>
+              <select name="search[attributes][<?= htmlspecialchars((string) $attribute["id"]) ?>]"
+                id=<?= htmlspecialchars((string) $attribute["id"]) ?>>
                 <option value="all" <?= !$attributes[$attribute['id']] ? "selected" : "" ?>>
                   Mostrar Tudo
                 </option>

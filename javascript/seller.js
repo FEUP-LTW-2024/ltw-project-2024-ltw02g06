@@ -127,6 +127,10 @@ const getItems = async () => {
 const sendItem = async (itemId) => {
   fetch(`./../api/item/send.php?&id=${itemId}`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {

@@ -21,14 +21,20 @@ switch ($request_method) {
     // Update a given item.
 
     // Get and sanitize the input data
-    $inputData = json_decode(file_get_contents("php://input"), true);
-    $accepted = isset($inputData['accepted']) ? filter_var($inputData['accepted'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null;
-    $message_id = isset($inputData['message_id']) ? filter_var($inputData['message_id'], FILTER_VALIDATE_INT) : null;
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $accepted = isset($postData['accepted']) ? filter_var($postData['accepted'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null;
+    $message_id = isset($postData['message_id']) ? filter_var($postData['message_id'], FILTER_VALIDATE_INT) : null;
     $user_id = $session->getId();
 
     if (!$user_id) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($session->getSessionToken() !== $postData['csrf']) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 
@@ -43,7 +49,7 @@ switch ($request_method) {
 
       if ($message->item_seller != $user_id) {
         http_response_code(401); // Unauthorized
-        echo json_encode(array("message" => "Not authorized."));
+        echo json_encode(array("message" => "Unauthorized."));
         exit();
       }
 

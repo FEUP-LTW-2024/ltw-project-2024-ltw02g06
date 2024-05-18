@@ -49,6 +49,7 @@ drawSellerDashboardItems($session, $order);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const userId = <?php echo json_encode($session->getId()); ?>;
 </script>
 <script src="./../javascript/seller.js"></script>

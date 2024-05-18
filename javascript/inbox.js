@@ -122,7 +122,11 @@ const renderChat = (chatData) => {
 };
 
 const getInbox = async () => {
-  return fetch(`./../api/inbox/index.php${window.location.search}`, {
+  const queryString = window.location.search;
+  const separator = queryString ? "&" : "?";
+  const url = `./../api/inbox/index.php${queryString}${separator}csrf=${csrf}`;
+
+  return fetch(url, {
     method: "GET",
   })
     .then((response) => {

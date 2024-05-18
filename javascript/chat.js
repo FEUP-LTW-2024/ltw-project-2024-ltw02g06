@@ -23,7 +23,7 @@ const handleChatHeader = () => {
   });
 
   chatOtherUser.addEventListener("click", () => {
-    window.location.href = `/pages/profile.php?id=${otherUserId}`;
+    window.location.href = `/pages/profile.php?user=${otherUserId}`;
     return;
   });
 };
@@ -196,6 +196,7 @@ const updateMessage = (messageId, accepted) => {
     body: JSON.stringify({
       message_id: messageId,
       accepted: accepted,
+      csrf: csrf,
     }),
   })
     .then((response) => {
@@ -217,6 +218,7 @@ const addToCart = async (itemId, messageId) => {
     body: JSON.stringify({
       item_id: itemId,
       message_id: messageId,
+      csrf: csrf,
     }),
   })
     .then((response) => {
@@ -235,6 +237,10 @@ const addToCart = async (itemId, messageId) => {
 const removeFromCart = async (itemId) => {
   return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -250,9 +256,12 @@ const removeFromCart = async (itemId) => {
 };
 
 const fetchChat = async () => {
-  return fetch(`./../api/inbox/chat.php?item=${itemId}&id=${otherUserId}`, {
-    method: "GET",
-  })
+  return fetch(
+    `./../api/inbox/chat.php?item=${itemId}&id=${otherUserId}&csrf=${csrf}`,
+    {
+      method: "GET",
+    }
+  )
     .then((response) => {
       if (response.status == 404) {
         return [];

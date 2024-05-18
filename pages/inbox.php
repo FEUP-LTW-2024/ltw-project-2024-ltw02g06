@@ -35,6 +35,7 @@ drawInbox($session, $inbox);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const userId = <?php echo json_encode($session->getId()); ?>;
 </script>
 <script src="./../javascript/utils.js"></script>

@@ -41,6 +41,16 @@ class Session
     $_SESSION['name'] = $name;
   }
 
+  public function generateSessionToken()
+  {
+    $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+  }
+
+  public function getSessionToken(): ?string
+  {
+    return isset($_SESSION['csrf']) ? $_SESSION['csrf'] : null;
+  }
+
   public function addMessage(string $type, string $text)
   {
     $_SESSION['messages'][] = array('type' => $type, 'text' => $text);

@@ -33,6 +33,7 @@ drawFooter();
 ?>
 <?php if ($item && $item->seller == $id): ?>
   <script>
+    const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
     const item = JSON.parse(JSON.stringify(<?php echo json_encode($item); ?>));
     const categories = JSON.parse(JSON.stringify(<?php echo json_encode($categories); ?>));
   </script>

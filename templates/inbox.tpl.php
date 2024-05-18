@@ -137,6 +137,7 @@ require_once (__DIR__ . '/../utils/session.php');
 
     <form action="../actions/action_send_message.php" method="post">
       <input type="text" name="value" placeholder="Propor novo preço">
+      <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
       <input type="hidden" name="item_id" value=<?= $item->id ?>>
       <input type="hidden" name="receiver" value=<?= $other_user ?>>
       <input type="text" name="message" placeholder="Mensagem">

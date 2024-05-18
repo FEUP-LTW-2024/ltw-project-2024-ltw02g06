@@ -14,16 +14,17 @@ $password = $_POST['password'];
 $user = User::getUserWithPassword($db, $email, $password);
 
 if ($user) {
-  $session->setId($user->id);
-  $session->setName($user->name());
-  $session->addMessage('success', 'Login successful!');
-  if (isset($_GET['redirect'])) {
-    header('Location: ' . htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8'));
-  } else {
-    header('Location: ' . $_SERVER['HTTP_REFERER']);
-  }
+    $session->setId($user->id);
+    $session->setName($user->name());
+    $session->addMessage('success', 'Login successful!');
+    $session->generateSessionToken();
+    if (isset($_GET['redirect'])) {
+        header('Location: ' . htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8'));
+    } else {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+    }
 } else {
-  $session->addMessage('error', 'Wrong credentials!');
+    $session->addMessage('error', 'Wrong credentials!');
 }
 
 ?>

@@ -17,6 +17,10 @@ require_once (__DIR__ . '/../database/user.class.php');
 $db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if ($session->getSessionToken() !== $_POST['csrf']) {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+  }
+
   $first_name = filter_var($_POST['first_name'], FILTER_SANITIZE_STRING);
   $last_name = filter_var($_POST['last_name'], FILTER_SANITIZE_STRING);
   $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);

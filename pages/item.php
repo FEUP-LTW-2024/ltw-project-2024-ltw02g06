@@ -46,6 +46,7 @@ drawFooter();
 
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const sellerId = <?php echo json_encode($item->seller); ?>;
   const sessionId = <?php echo json_encode($session->getId()); ?>;
   const itemId = <?php echo json_encode($item->id); ?>;

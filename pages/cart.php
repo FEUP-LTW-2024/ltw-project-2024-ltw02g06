@@ -30,6 +30,7 @@ drawCart($session, $cart);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const userId = <?php echo json_encode($id); ?>;
   const cart = <?php echo json_encode($cart); ?>;
 </script>

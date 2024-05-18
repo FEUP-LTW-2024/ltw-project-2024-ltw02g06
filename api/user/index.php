@@ -14,7 +14,7 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
   case 'GET':
     // GET request handling
-    $id = isset($_GET['id']) ? intval($_GET['id']) : null;
+    $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
 
     if ($id !== null) {
       // No further sanitization needed for $id
@@ -27,7 +27,7 @@ switch ($request_method) {
         echo json_encode(array("message" => "User not found."));
       }
     } else {
-      $search = isset($_GET['search']) ? $_GET['search'] : [];
+      $search = isset($_GET['search']) ? filter_var_array($_GET['search'], FILTER_SANITIZE_STRING) : [];
 
       try {
         $users = User::getAllUsers($db, $search);
@@ -47,7 +47,7 @@ switch ($request_method) {
   case 'PATCH':
     // PATCH request handling
     // Update a given user
-    $userData = json_decode(file_get_contents('php://input'), true);
+    $userData = filter_var_array(json_decode(file_get_contents('php://input'), true), FILTER_SANITIZE_STRING);
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
 
@@ -57,22 +57,21 @@ switch ($request_method) {
       exit();
     }
 
-    // Validate $userData fields if needed
-
-    if ($user_id != $userData['id'] && !$user->admin) {
+    if (
+      ($user_id != filter_var($userData['id'], FILTER_VALIDATE_INT) && !$user->admin) ||
+      $session->getSessionToken() !== filter_var($userData['csrf'], FILTER_SANITIZE_STRING)
+    ) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 
-    // Sanitize and validate $_GET['admin']
-    $updateAdminStatus = isset($_GET['admin']) ? (bool) $_GET['admin'] : false;
+    $updateAdminStatus = isset($_GET['admin']) ? filter_var($_GET['admin'], FILTER_VALIDATE_BOOLEAN) : false;
 
-    // Handle update admin status separately
     if ($updateAdminStatus && $user->admin) {
       try {
         User::updateAdminStatus($db, $userData);
-        $user = User::getUser($db, $userData['id']);
+        $user = User::getUser($db, filter_var($userData['id'], FILTER_VALIDATE_INT));
         if ($user) {
           $user->password = null;
           http_response_code(200); // OK
@@ -90,7 +89,7 @@ switch ($request_method) {
 
     try {
       User::updateUser($db, $userData);
-      $user = User::getUser($db, $userData['id']);
+      $user = User::getUser($db, filter_var($userData['id'], FILTER_VALIDATE_INT));
       if ($user) {
         $user->password = null;
         http_response_code(200); // OK
@@ -107,7 +106,7 @@ switch ($request_method) {
   case 'DELETE':
     // DELETE request handling
     // Delete a user.
-    $toDeleteUserId = isset($_GET['id']) ? (int) $_GET['id'] : null;
+    $toDeleteUserId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
 
@@ -123,7 +122,10 @@ switch ($request_method) {
       exit();
     }
 
-    if ($user_id != $toDeleteUserId && !$user->admin) {
+    if (
+      ($user_id != $toDeleteUserId && !$user->admin) ||
+      $session->getSessionToken() !== filter_var($_POST['csrf'], FILTER_SANITIZE_STRING)
+    ) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
       exit();

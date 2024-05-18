@@ -90,6 +90,7 @@ const isEmailAlreadyRegistered = async (email) => {
     },
     body: JSON.stringify({
       email: email,
+      csrf: csrf,
     }),
   })
     .then((response) => {

@@ -17,7 +17,8 @@
       <div>
         <h2 id="profile-name"><?= htmlspecialchars($user->first_name . " " . $user->last_name) ?></h2>
         <h3>
-          <?= $id == $user->id ? htmlspecialchars("$user->address, $user->zipcode -") : "" ?>  <?= htmlspecialchars($user->city) ?>
+          <?= $id == $user->id ? htmlspecialchars("$user->address, $user->zipcode -") : "" ?>
+          <?= htmlspecialchars($user->city) ?>
         </h3>
         <h5><?= htmlspecialchars($user->state . ", " . $user->country) ?></h5>
       </div>
@@ -45,6 +46,7 @@
     method="post">
 
     <input type="hidden" name="user_id" value=<?= $user->id ?>>
+    <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
 
     <div id="edit-profile-buttons">
       <button id="edit-profile-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>

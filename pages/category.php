@@ -37,6 +37,7 @@ drawEditCategory($session, $category);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const categoryId = <?php echo json_encode($category->id); ?>;
   const category = <?php echo json_encode($category); ?>;
 </script>

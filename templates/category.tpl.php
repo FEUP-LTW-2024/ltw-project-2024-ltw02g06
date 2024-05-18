@@ -7,6 +7,7 @@ declare(strict_types=1);
   <form id="edit-category-section"
     action="../actions/action_edit_category.php?redirect=<?php echo urlencode('../pages/admin.php'); ?>" method="post">
     <input type="hidden" name="category" value="<?= $category->id ?>">
+    <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
     <div>
       <h2><?= htmlspecialchars($category->name) ?></h2>
       <div id="edit-category-buttons">
@@ -21,11 +22,13 @@ declare(strict_types=1);
         ?>
         <?php if ($attribute['type'] == 'enum'): ?>
           <li>
-            <input type="hidden" class="attribute-id" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][id]"
-              value="<?= htmlspecialchars($attribute['id']) ?>">
-            <input type="hidden" class="attribute-type" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][type]"
+            <input type="hidden" class="attribute-id" name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][id]"
+              value="<?= htmlspecialchars((string) $attribute['id']) ?>">
+            <input type="hidden" class="attribute-type"
+              name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][type]"
               value="<?= htmlspecialchars($attribute['type']) ?>">
-            <input type="hidden" class="attribute-name" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][name]"
+            <input type="hidden" class="attribute-name"
+              name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][name]"
               value="<?= htmlspecialchars($attribute['name']) ?>">
             <div>
               <h3><?= htmlspecialchars($attribute['name']) ?></h3>
@@ -36,10 +39,10 @@ declare(strict_types=1);
               <?php foreach ($attribute['values'] as $value): ?>
                 <li>
                   <input type="hidden"
-                    name="attribute[<?= htmlspecialchars($attribute['id']) ?>][values][<?= htmlspecialchars($value['id']) ?>][id]"
-                    value="<?= htmlspecialchars($value['id']) ?>">
+                    name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][values][<?= htmlspecialchars((string) $value['id']) ?>][id]"
+                    value="<?= htmlspecialchars((string) $value['id']) ?>">
                   <input type="hidden"
-                    name="attribute[<?= htmlspecialchars($attribute['id']) ?>][values][<?= htmlspecialchars($value['id']) ?>][value]"
+                    name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][values][<?= htmlspecialchars((string) $value['id']) ?>][value]"
                     value="<?= htmlspecialchars($value['value']) ?>">
                   <p><?= htmlspecialchars($value['value']) ?></p>
                   <button onclick="removeLi(this)" type="button"><ion-icon name="close"></ion-icon></button>
@@ -53,11 +56,11 @@ declare(strict_types=1);
           </li>
         <?php else: ?>
           <li>
-            <input type="hidden" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][id]"
-              value="<?= htmlspecialchars($attribute['id']) ?>">
-            <input type="hidden" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][type]"
+            <input type="hidden" name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][id]"
+              value="<?= htmlspecialchars((string) $attribute['id']) ?>">
+            <input type="hidden" name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][type]"
               value="<?= htmlspecialchars($attribute['type']) ?>">
-            <input type="hidden" name="attribute[<?= htmlspecialchars($attribute['id']) ?>][name]"
+            <input type="hidden" name="attribute[<?= htmlspecialchars((string) $attribute['id']) ?>][name]"
               value="<?= htmlspecialchars($attribute['name']) ?>">
             <div>
               <h3><?= htmlspecialchars($attribute['name']) ?></h3>

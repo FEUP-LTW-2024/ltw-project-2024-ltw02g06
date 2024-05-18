@@ -33,6 +33,12 @@ switch ($request_method) {
       exit();
     }
 
+    if (!isset($postData['csrf']) || $session->getSessionToken() !== filter_var($postData['csrf'], FILTER_SANITIZE_STRING)) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
     if ($checkout) {
       try {
         User::purchaseCart($db, $user_id);
@@ -79,11 +85,18 @@ switch ($request_method) {
     // DELETE request handling
     // Remove an item from the cart of a given user
     $user_id = $session->getId();
+    $postData = json_decode(file_get_contents("php://input"), true);
     $item_id = isset($_GET['item_id']) ? filter_var($_GET['item_id'], FILTER_VALIDATE_INT) : null;
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($session->getSessionToken() !== filter_var($postData['csrf'], FILTER_SANITIZE_STRING)) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 

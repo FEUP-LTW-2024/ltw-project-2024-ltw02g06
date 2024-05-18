@@ -78,6 +78,10 @@ const updateTotalPrices = (itemPrice, itemShipping) => {
 const removeFromCart = async (itemId) => {
   return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -96,8 +100,12 @@ const handleItemBtn = (itemId) => {
 const processCartPurchase = async () => {
   return fetch(`./../api/user/cart.php`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       checkout: true,
+      csrf: csrf,
     }),
   })
     .then((response) => {

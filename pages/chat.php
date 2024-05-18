@@ -49,6 +49,7 @@ drawChat($session, $chat, $other_user->id, $item, $seller);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const itemId = <?php echo json_encode($item->id); ?>;
   const userId = <?php echo json_encode($id); ?>;
   const otherUserId = <?php echo json_encode($other_user->id); ?>;

@@ -29,6 +29,7 @@ drawEditProfile($session, $user);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const currentEmail = <?php echo json_encode($user->email); ?>;
 </script>
 <script src="./../javascript/utils.js"></script>

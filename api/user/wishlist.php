@@ -21,7 +21,7 @@ switch ($request_method) {
     // POST request handling
     // Add a new item to the wishlist of a given user
     $user_id = $session->getId();
-    $postData = json_decode(file_get_contents("php://input"), true);
+    $postData = filter_var_array(json_decode(file_get_contents("php://input"), true), FILTER_SANITIZE_STRING);
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized
@@ -29,8 +29,14 @@ switch ($request_method) {
       exit();
     }
 
+    if ($session->getSessionToken() !== $postData['csrf']) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
     // Validate and sanitize item_id
-    $item_id = isset($postData['item_id']) ? intval($postData['item_id']) : null;
+    $item_id = isset($postData['item_id']) ? filter_var($postData['item_id'], FILTER_VALIDATE_INT) : null;
 
     if (!isset($item_id)) {
       http_response_code(400); // Bad Request
@@ -63,7 +69,7 @@ switch ($request_method) {
     // DELETE request handling
     // Remove an item from the wishlist of a given user
     $user_id = $session->getId();
-    $item_id = isset($_GET['item_id']) ? intval($_GET['item_id']) : null;
+    $item_id = isset($_GET['item_id']) ? filter_var($_GET['item_id'], FILTER_VALIDATE_INT) : null;
 
     if (!isset($user_id)) {
       http_response_code(401); // Unauthorized

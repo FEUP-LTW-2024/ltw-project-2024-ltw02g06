@@ -33,6 +33,10 @@ const handleWishlistBtn = (button) => {
 const removeFromWishlist = async (itemId) => {
   fetch(`./../api/user/wishlist.php?item_id=${itemId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -68,6 +72,10 @@ const handleCartBtn = (button) => {
 const removeFromCart = async (itemId) => {
   return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -85,7 +93,7 @@ const addToCart = async (itemId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ item_id: itemId }),
+    body: JSON.stringify({ item_id: itemId, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {

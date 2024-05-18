@@ -21,6 +21,13 @@ switch ($request_method) {
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
+
+    if ($session->getSessionToken() !== $_GET['csrf']) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
     // Extract and sanitize parameters from the URL
     $item_id = isset($_GET['item']) ? filter_var($_GET['item'], FILTER_VALIDATE_INT) : null;
     $other_user = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;

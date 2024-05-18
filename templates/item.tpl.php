@@ -132,6 +132,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   <form id="edit-item"
     action="../actions/action_edit_item.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '?redirect=' . urlencode('/pages/item.php?id=' . $item->id) ?>"
     method="post">
+    <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
     <input type="hidden" name="item_id" value=<?= $item->id ?>>
     <div id="edit-item-buttons">
       <button id="edit-item-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>
@@ -244,6 +245,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 <?php function drawCreateItem(User $user, array $user_reviews, array $categories, Session $session)
 { ?>
   <form id="edit-item" action="../actions/action_create_item.php" method="post">
+    <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
     <div id="edit-item-buttons">
       <h2>Novo Anúncio:</h2>
       <button id="edit-item-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>

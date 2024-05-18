@@ -17,10 +17,17 @@ switch ($request_method) {
     // Send item
 
     $user_id = $session->getId();
+    $postData = json_decode(file_get_contents("php://input"), true);
 
     if (!$user_id) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if ($session->getSessionToken() !== $postData['csrf']) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
       exit();
     }
 

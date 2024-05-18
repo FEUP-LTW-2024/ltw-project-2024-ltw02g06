@@ -30,6 +30,7 @@ drawWishlistItems($session, $wishlist);
 drawFooter();
 ?>
 <script>
+  const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const userId = <?php echo json_encode($id); ?>;
   const wishlist = <?php echo json_encode($wishlist); ?>;
 </script>

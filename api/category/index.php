@@ -38,7 +38,7 @@ switch ($request_method) {
     break;
   case 'POST':
     // POST request handling
-
+    // Create a new category
     $postData = json_decode(file_get_contents('php://input'), true);
     $postData = filter_var_array($postData, FILTER_SANITIZE_STRING);
 
@@ -51,7 +51,7 @@ switch ($request_method) {
       exit();
     }
 
-    if (!$user->admin) {
+    if (!$user->admin || $session->getSessionToken() !== $postData['csrf']) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
       exit();
@@ -78,6 +78,7 @@ switch ($request_method) {
   case 'DELETE':
     // DELETE request handling
     // Delete a given category
+    $postData = json_decode(file_get_contents("php://input"), true);
     $categoryId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
     $user_id = $session->getId();
     $user = User::getUser($db, $user_id);
@@ -88,7 +89,7 @@ switch ($request_method) {
       exit();
     }
 
-    if (!$user->admin) {
+    if (!$user->admin || $session->getSessionToken() !== $postData['csrf']) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Unauthorized."));
       exit();

@@ -17,6 +17,10 @@ require_once (__DIR__ . '/../database/item.class.php');
 $db = getDatabaseConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  if ($session->getSessionToken() !== $_POST['csrf']) {
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
+  }
+
   $item_name = filter_var($_POST['item_name'], FILTER_SANITIZE_STRING);
   $item_description = filter_var($_POST['item_description'], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
   $item_price = filter_var($_POST['item_price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);

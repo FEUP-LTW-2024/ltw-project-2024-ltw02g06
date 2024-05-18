@@ -12,39 +12,45 @@ $db = getDatabaseConnection();
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request_method) {
-  case 'GET':
-    // GET request handling
-    $user_id = $session->getId();
+    case 'GET':
+        // GET request handling
+        $user_id = $session->getId();
 
-    if ($user_id === null) {
-      http_response_code(401); // Unauthorized
-      echo json_encode(array("message" => "Not authenticated."));
-      exit();
-    }
+        if ($user_id === null) {
+            http_response_code(401); // Unauthorized
+            echo json_encode(array("message" => "Not authenticated."));
+            exit();
+        }
 
-    // Extract and sanitize the search parameter from the URL
-    $search = isset($_GET['search']) ? filter_var($_GET['search'], FILTER_SANITIZE_STRING) : null;
-    if ($search == "") {
-      $search = null;
-    }
+        if ($session->getSessionToken() !== $_GET['csrf']) {
+            http_response_code(401); // Unauthorized
+            echo json_encode(array("message" => "Unauthorized."));
+            exit();
+        }
 
-    try {
-      $inbox = Message::getInbox($db, $user_id, $search);
-      if ($inbox) {
-        http_response_code(200); // OK
-        echo json_encode($inbox);
-      } else {
-        http_response_code(404); // Not Found
-        echo json_encode(array("message" => "No messages found."));
-      }
-    } catch (PDOException $e) {
-      http_response_code(500); // Internal Server Error
-      echo json_encode(array("message" => $e->getMessage()));
-    }
-    break;
-  default:
-    // Handle unsupported request methods
-    http_response_code(405);
-    exit("Unsupported request method");
+        // Extract and sanitize the search parameter from the URL
+        $search = isset($_GET['search']) ? filter_var($_GET['search'], FILTER_SANITIZE_STRING) : null;
+        if ($search == "") {
+            $search = null;
+        }
+
+        try {
+            $inbox = Message::getInbox($db, $user_id, $search);
+            if ($inbox) {
+                http_response_code(200); // OK
+                echo json_encode($inbox);
+            } else {
+                http_response_code(404); // Not Found
+                echo json_encode(array("message" => "No messages found."));
+            }
+        } catch (PDOException $e) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(array("message" => $e->getMessage()));
+        }
+        break;
+    default:
+        // Handle unsupported request methods
+        http_response_code(405);
+        exit("Unsupported request method");
 }
 ?>
