@@ -51,14 +51,5 @@ class Session
     return isset($_SESSION['csrf']) ? $_SESSION['csrf'] : null;
   }
 
-  public function addMessage(string $type, string $text)
-  {
-    $_SESSION['messages'][] = array('type' => $type, 'text' => $text);
-  }
-
-  public function getMessages()
-  {
-    return $this->messages;
-  }
 }
 ?>

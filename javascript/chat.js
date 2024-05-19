@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   validatePriceInput(priceInput);
   const chat = await fetchChat();
   renderChat(chat);
+
+  setInterval(async () => {
+    const chat = await fetchChat();
+    renderChat(chat);
+  }, 10000);
 });
 
 const handleChatHeader = () => {

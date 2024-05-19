@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   handleSearchBar();
   searchInbox();
+  setInterval(searchInbox, 10000);
 });
 
 const handleSearchBar = () => {
