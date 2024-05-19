@@ -15,12 +15,17 @@
     <img id="profile-img" src="/../<?= $user->image ?>" alt="User Profile Picture">
     <div>
       <div>
-        <h2 id="profile-name"><?= htmlspecialchars($user->first_name . " " . $user->last_name) ?></h2>
-        <h3>
+        <h2 id="profile-name" title="<?= htmlspecialchars($user->first_name . " " . $user->last_name) ?>">
+          <?= htmlspecialchars($user->first_name . " " . $user->last_name) ?>
+        </h2>
+        <h3
+          title="<?= $id == $user->id ? htmlspecialchars("$user->address, $user->zipcode - ") : "" ?><?= htmlspecialchars($user->city) ?>">
           <?= $id == $user->id ? htmlspecialchars("$user->address, $user->zipcode -") : "" ?>
           <?= htmlspecialchars($user->city) ?>
         </h3>
-        <h5><?= htmlspecialchars($user->state . ", " . $user->country) ?></h5>
+        <h5 title="<?= htmlspecialchars($user->state . ", " . $user->country) ?>">
+          <?= htmlspecialchars($user->state . ", " . $user->country) ?>
+        </h5>
       </div>
       <div>
         <p>No eKo desde

@@ -230,3 +230,9 @@
     gap: 2.5rem;
   }
 }
+
+@media all and (max-width: 576px) {
+  #small-search-bar-container ~ div p {
+    display: none;
+  }
+}

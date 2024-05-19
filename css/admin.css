@@ -262,4 +262,9 @@
 
     height: 6rem;
   }
+
+  #admin-users-section > div:last-of-type {
+    display: flex;
+    flex-direction: column;
+  }
 }

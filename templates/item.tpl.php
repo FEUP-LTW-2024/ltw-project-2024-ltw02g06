@@ -70,9 +70,10 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         <?php endif; ?>
       </div>
       <?php if (trim($item->name) === ""): ?>
-        <h3 id="item-name">Sem nome</h3>
+        <h3 title="Sem nome" id="item-name">Sem nome</h3>
       <?php else: ?>
-        <h3 id="item-name"><?= htmlspecialchars(trim($item->name)) ?></h3>
+        <h3 title="<?= htmlspecialchars(trim($item->name)) ?>" id="item-name"><?= htmlspecialchars(trim($item->name)) ?>
+        </h3>
       <?php endif; ?>
       <h2 id="item-price"><?= $item->price ?> €</h2>
       <?php if (!$is_seller): ?>

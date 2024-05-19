@@ -1,11 +1,11 @@
 PRAGMA foreign_keys = ON;
 
 INSERT INTO user (first_name, last_name, email, password, address, city, state, country, zipcode, admin) 
-VALUES ('Luís', 'Figo', 'luis@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345', 0),
-       ('Luís2', 'Figo2', 'luis2@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Belém', 'Lisboa', 'Lisboa', 'Portugal', '12345', 0),
-       ('LuísAdmin', 'FigoAdmin', 'luisAdmin@figo.com', '356a192b7913b04c54574d18c28d46e6395428ab', 'Praia de Matosinhos', 'Matosinhos', 'Porto', 'Portugal', '12345', 1);
+VALUES ('Luís', 'Figo', 'luis@figo.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Avenida dos Aliados', 'Porto', 'Porto', 'Portugal', '12345', 0),
+       ('Luís2', 'Figo2', 'luis2@figo.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Belém', 'Lisboa', 'Lisboa', 'Portugal', '12345', 0),
+       ('LuísAdmin', 'FigoAdmin', 'luisAdmin@figo.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Praia de Matosinhos', 'Matosinhos', 'Porto', 'Portugal', '12345', 1);
 
--- password is '1'; '356a192b7913b04c54574d18c28d46e6395428ab' is the hash code of '1'
+-- password is '1'; '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.' is the hash code of '1'
 
 INSERT INTO category (name)
 VALUES ('Outro'),

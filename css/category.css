@@ -2,6 +2,14 @@
   width: 100%;
 }
 
+#edit-category-section p, h2, h3, h4, h5 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #edit-category-section button {
   display: flex;
   flex-direction: row;
@@ -155,4 +163,20 @@
 #new-attribute-container select {
   background-color: white;
   width: 20%;
+}
+
+@media all and (max-width: 576px) {
+  #edit-category-section > div:first-of-type {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  #edit-category-section h2 {
+    text-align: center;
+  }
+
+  #edit-category-buttons {
+    justify-content: center;
+  }
 }

@@ -73,7 +73,7 @@ class User
     ');
     $stmt->execute([
       $email,
-      sha1($password),
+      password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]),
       $firstName,
       $lastName,
       $address,
@@ -95,12 +95,13 @@ class User
         SELECT user.id, first_name, last_name, email, password, address, city, state, country, zipcode, image.path AS image, admin, registration_date
         FROM user
         LEFT JOIN image ON user.image = image.id
-        WHERE lower(email) = ? AND password = ?
+        WHERE lower(email) = ?
       ');
 
-    $stmt->execute(array(strtolower($email), sha1($password)));
+    $stmt->execute(array(strtolower($email)));
+    $user = $stmt->fetch();
 
-    if ($user = $stmt->fetch()) {
+    if ($user && password_verify($password, $user['password'])) {
       return new User(
         $user['id'],
         $user['first_name'],
@@ -531,7 +532,7 @@ class User
       WHERE id = ?
     ');
     $stmt->execute([
-      sha1($newPassword),
+      password_hash($newPassword, PASSWORD_DEFAULT, ['cost' => 12]),
       $id,
     ]);
 

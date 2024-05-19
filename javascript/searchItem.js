@@ -504,7 +504,7 @@ const renderItem = (itemData) => {
   div2.appendChild(h3Name);
   div2.appendChild(div3);
   div3.appendChild(h3Price);
-  div3.appendChild(p);
+  // div3.appendChild(p);
   div1.appendChild(div4);
   div4.appendChild(div5);
   // div4.appendChild(div6);

@@ -9,6 +9,8 @@
   gap: 1rem;
 
   width: 100%;
+
+  box-sizing: border-box;
 }
 
 #edit-item-buttons {
@@ -370,5 +372,9 @@
 
   #edit-item-buttons h2 {
     display: none;
+  }
+
+  #edit-item-info, #edit-item-description-container, #seller-info, #item-location {
+    padding: 1rem;
   }
 }
