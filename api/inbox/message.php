@@ -12,13 +12,9 @@ $db = getDatabaseConnection();
 $request_method = $_SERVER['REQUEST_METHOD'];
 
 switch ($request_method) {
-  case 'GET':
-    // GET request handling
-    // TODO
-    break;
   case 'PATCH':
     // PATCH request handling
-    // Update a given item.
+    // Update a given message.
 
     // Get and sanitize the input data
     $postData = json_decode(file_get_contents("php://input"), true);

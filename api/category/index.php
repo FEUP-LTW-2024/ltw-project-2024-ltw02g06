@@ -73,7 +73,44 @@ switch ($request_method) {
     break;
   case 'PATCH':
     // PATCH request handling
-    // TODO create code to update a given category
+    // Update a given category
+    $postData = json_decode(file_get_contents('php://input'), true);
+    $postData = filter_var_array($postData, FILTER_SANITIZE_STRING);
+
+    $user_id = $session->getId();
+    $user = User::getUser($db, $user_id);
+
+    if (!$user_id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    if (!$user->admin || $session->getSessionToken() !== $postData['csrf']) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Unauthorized."));
+      exit();
+    }
+
+    $category_data = [
+      'id' => isset($postData['id']) ? filter_var($postData['id'], FILTER_SANITIZE_NUMBER_INT) : null,
+      'attributes' => $postData['attribute'] ?? [],
+    ];
+
+    if ($category_data['id'] === null) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Invalid category ID."));
+      exit();
+    }
+
+    try {
+      Category::updateCategory($db, $category_data);
+      http_response_code(200); // OK
+      echo json_encode(array("message" => "Category updated successfully."));
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
     break;
   case 'DELETE':
     // DELETE request handling

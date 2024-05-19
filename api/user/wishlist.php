@@ -15,7 +15,23 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 switch ($request_method) {
   case 'GET':
     // GET request handling
-    // TODO create code to get the wishlist of a given user
+    // Retrieve the wishlist of a given user
+    $user_id = $session->getId();
+
+    if (!isset($user_id)) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
+    }
+
+    try {
+      $wishlist = User::getWishlist($db, $user_id);
+      http_response_code(200); // OK
+      echo json_encode(array("wishlist" => $wishlist));
+    } catch (PDOException $e) {
+      http_response_code(500); // Internal Server Error
+      echo json_encode(array("message" => $e->getMessage()));
+    }
     break;
   case 'POST':
     // POST request handling
