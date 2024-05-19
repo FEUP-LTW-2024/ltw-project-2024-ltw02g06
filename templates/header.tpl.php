@@ -32,6 +32,7 @@ require_once (__DIR__ . '/../database/user.class.php');
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+    <script src="../javascript/header.js"></script>
 
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/header.css">
@@ -61,23 +62,30 @@ require_once (__DIR__ . '/../database/user.class.php');
         <a href="../pages/items.php">
           <h1>eKo</h1>
         </a>
+        <span id="hamburger-menu"><ion-icon name="reorder-four-outline"></ion-icon></span>
         <nav>
           <ul>
-
-            <li title="Inbox"><a href="../pages/inbox.php"><ion-icon name="chatbox-outline"></ion-icon></a></li>
-            <li title="Wishlist"><a href="../pages/wishlist.php"><ion-icon name="heart-outline"></ion-icon></a></li>
-            <li title="Carrinho"><a href="../pages/cart.php"><ion-icon name="cart-outline"></ion-icon></a></li>
+            <li title="Inbox"><a href="../pages/inbox.php"><span>Inbox</span><ion-icon name="chatbox-outline" role="img"
+                  class="md hydrated"></ion-icon></a></li>
+            <li title="Wishlist"><a href="../pages/wishlist.php"><span>Wishlist</span><ion-icon name="heart-outline"
+                  role="img" class="md hydrated"></ion-icon></a></li>
+            <li title="Carrinho"><a href="../pages/cart.php"><span>Carrinho</span><ion-icon name="cart-outline" role="img"
+                  class="md hydrated"></ion-icon></a></li>
             <?php if ($user && $user->admin): ?>
-              <li title="Admin"><a href="../pages/admin.php"><ion-icon name="star-outline"></ion-icon></a></li>
+              <li title="Admin"><a href="../pages/admin.php"><span>Admin</span><ion-icon name="star-outline" role="img"
+                    class="md hydrated"></ion-icon></a></li>
             <?php endif; ?>
-            <li title="Vendedor"><a href="../pages/seller.php"><ion-icon name="storefront-outline"></ion-icon></a></li>
+            <li title="Vendedor"><a href="../pages/seller.php"><span>Vendedor</span><ion-icon name="storefront-outline"
+                  role="img" class="md hydrated"></ion-icon></a></li>
             <?php if ($id): ?>
-              <li title="Perfil"><a href="../pages/profile.php"><ion-icon name="person-outline"></ion-icon></a></li>
-              <li title="Log out"><a href="../actions/action_logout.php"><ion-icon name="exit-outline"></ion-icon></a></li>
+              <li title="Perfil"><a href="../pages/profile.php"><span>Perfil</span><ion-icon name="person-outline"
+                    role="img" class="md hydrated"></ion-icon></a></li>
+              <li title="Log out"><a href="../actions/action_logout.php"><span>Log out</span><ion-icon name="exit-outline"
+                    role="img" class="md hydrated"></ion-icon></a></li>
             <?php else: ?>
               <li title="Log in">
-                <a href="../pages/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"><ion-icon
-                    name="person-outline"></ion-icon></a>
+                <a href="../pages/login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>"><span>Log
+                    in</span><ion-icon name="person-outline" role="img" class="md hydrated"></ion-icon></a>
               </li>
             <?php endif; ?>
           </ul>
