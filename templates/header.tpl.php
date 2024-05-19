@@ -51,6 +51,7 @@ require_once (__DIR__ . '/../database/user.class.php');
     <link rel="stylesheet" href="../css/chat.css">
     <link rel="stylesheet" href="../css/category.css">
     <link rel="stylesheet" href="../css/auth.css">
+    <link rel="stylesheet" href="../css/editPassword.css">
   </head>
 
   <body>

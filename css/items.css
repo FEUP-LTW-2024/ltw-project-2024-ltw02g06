@@ -103,8 +103,16 @@
   width: 100%;
 }
 
-#items-container li > div:last-of-type > div:first-of-type {
+.bought-items #items-container li {
+  cursor: pointer;
+}
+
+.wishlist #items-container li > div:last-of-type > div:first-of-type {
   height: 100%;
+  cursor: pointer;
+}
+
+.wishlist-btn, .cart-btn  {
   cursor: pointer;
 }
 

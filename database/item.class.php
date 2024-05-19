@@ -364,7 +364,6 @@ class Item
         WHERE id = ?');
       $stmt->execute([$image['id']]);
 
-      // correct path changes depending on the function call this function
       $image_path = dirname(__FILE__) . '/../' . $image['path'];
       if (file_exists($image_path))
         unlink($image_path);
@@ -381,7 +380,6 @@ class Item
     }
   }
 
-  // TODO update this function so we are able to get items in a specific state
   static function getAllItems(PDO $db, ?int $user_id, ?int $seller_id, int $page, int $items_per_page, array $search, bool $active = true): array
   {
     $name_search = isset($search['search']) ? $search['search'] : null;

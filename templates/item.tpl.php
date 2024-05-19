@@ -64,7 +64,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         <p class="small-font-size">Publicado
           <?= $item->creation_date->format('d/m/Y'); ?>
         </p>
-        <?php if (!$is_seller): ?>
+        <?php if (!$is_seller && $item->status == 'active'): ?>
           <button id="whishlist-btn" data-is-item-in-wishlist=<?= $is_item_in_wishlist ? "1" : "0" ?>><ion-icon
               name=<?= $is_item_in_wishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
         <?php endif; ?>
@@ -413,6 +413,44 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         <div>
           <button class="wishlist-btn"><ion-icon name="heart"></ion-icon></button>
           <button class="cart-btn"><ion-icon name="cart<?= $isItemInCart ? "" : "-outline" ?>"></ion-icon></button>
+        </div>
+      </div>
+    </div>
+  </li>
+<?php } ?>
+
+<?php function drawBoughtItems(Session $session, array $boughtItems)
+{ ?>
+  <section id="items" class="bought-items">
+    <h2>As minhas compras:</h2>
+    <?php if (empty($boughtItems)): ?>
+      <h2 id="empty-cart-title">Nenhuma compra encontrada</h2>
+    <?php else: ?>
+      <ol id="items-container">
+        <?php
+        foreach ($boughtItems as $boughtItem) {
+          drawBoughtItem($session, $boughtItem['item'], $boughtItem['seller']);
+        }
+        ?>
+      </ol>
+    <?php endif; ?>
+  </section>
+<?php } ?>
+
+<?php function drawBoughtItem(Session $session, Item $item, User $seller)
+{ ?>
+  <li data-item-id="<?= $item->id ?>">
+    <div>
+      <div>
+        <h3><?= htmlspecialchars(trim($item->name)) ?></h3>
+        <div>
+          <h3><?= $item->price ?> €</h3>
+        </div>
+      </div>
+      <div>
+        <div>
+          <h4><?= htmlspecialchars($seller->city) ?></h4>
+          <p><?= htmlspecialchars($seller->state . ", " . $seller->country) ?></p>
         </div>
       </div>
     </div>

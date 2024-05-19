@@ -482,6 +482,33 @@ class User
     }
   }
 
+  static function getBoughtItems(PDO $db, int $id): array
+  {
+    $stmt = $db->prepare('
+            SELECT item.id
+            FROM item
+            WHERE item.buyer = ?
+          ');
+    $stmt->execute([$id]);
+
+    $items_id = $stmt->fetchAll() ?: [];
+
+    $boughtItems = [];
+
+    foreach ($items_id as $item_id) {
+      $item = Item::getItem($db, $item_id['id']);
+      $seller = User::getUser($db, $item->seller);
+      $seller->password = null;
+      $boughtItem = array(
+        'item' => $item,
+        'seller' => $seller,
+      );
+      $boughtItems[] = $boughtItem;
+    }
+
+    return $boughtItems;
+  }
+
   static function isEmailRegistered(PDO $db, string $email): bool
   {
     $stmt = $db->prepare('
@@ -494,6 +521,21 @@ class User
     $result = $stmt->fetch();
 
     return $result['count'] > 0;
+  }
+
+  static function changeUserPassword(PDO $db, int $id, string $newPassword): ?User
+  {
+    $stmt = $db->prepare('
+      UPDATE user
+      SET password = ?
+      WHERE id = ?
+    ');
+    $stmt->execute([
+      sha1($newPassword),
+      $id,
+    ]);
+
+    return User::getUser($db, (int) $id);
   }
 }
 ?>

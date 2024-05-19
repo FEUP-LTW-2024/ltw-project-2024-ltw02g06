@@ -279,20 +279,3 @@ const fetchChat = async () => {
       console.error("There was an unexpected error:", error);
     });
 };
-
-const handlePropositionButtons = () => {
-  const rejectPropositionBtn = document.getElementById(
-    "reject-proposition-btn"
-  );
-  const acceptPropositionBtn = document.getElementById(
-    "accept-proposition-btn"
-  );
-
-  rejectPropositionBtn.addEventListener("click", () => {
-    rejectProposition();
-  });
-
-  acceptPropositionBtn.addEventListener("click", () => {
-    acceptProposition();
-  });
-};

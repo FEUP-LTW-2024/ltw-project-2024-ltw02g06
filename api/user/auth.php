@@ -23,19 +23,53 @@ switch ($request_method) {
       $session->setName($user->name());
       $session->generateSessionToken();
 
-      $response = [
-        'status' => 'success',
-        'redirect' => isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect'], ENT_QUOTES, 'UTF-8') : $_SERVER['HTTP_REFERER']
-      ];
       http_response_code(200); // OK
+      echo json_encode(array("message" => "Authenticated successfuly!"));
     } else {
-      $response = ['status' => 'error', 'message' => 'Wrong credentials!'];
       http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Wrong credentials!"));
+    }
+    break;
+  case 'PATCH':
+    // PATCH request handling for password change
+    $requestData = json_decode(file_get_contents('php://input'), true);
+
+    $oldPassword = filter_var($requestData['password'], FILTER_SANITIZE_STRING);
+    $newPassword = filter_var($requestData['newPassword'], FILTER_SANITIZE_STRING);
+    $confirmNewPassword = filter_var($requestData['confirmNewPassword'], FILTER_SANITIZE_STRING);
+
+    $id = $session->getId();
+
+    if (!$id) {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Not authenticated."));
+      exit();
     }
 
-    echo json_encode($response);
-    break;
+    if (empty($oldPassword) || empty($newPassword) || empty($confirmNewPassword)) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Invalid input."));
+      exit();
+    }
 
+    if ($newPassword !== $confirmNewPassword) {
+      http_response_code(400); // Bad Request
+      echo json_encode(array("message" => "Passwords do not match."));
+      exit();
+    }
+
+    $email = User::getUser($db, $id)->email;
+    $user = User::getUserWithPassword($db, $email, $oldPassword);
+
+    if ($user) {
+      User::changeUserPassword($db, $id, $newPassword);
+      http_response_code(200); // OK
+      echo json_encode(array("message" => "Password changed successfully."));
+    } else {
+      http_response_code(401); // Unauthorized
+      echo json_encode(array("message" => "Wrong credentials."));
+    }
+    break;
   default:
     // Handle unsupported request methods
     http_response_code(405);

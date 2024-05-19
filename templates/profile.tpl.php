@@ -34,6 +34,12 @@
         <a href="profile.edit.php" title="Editar perfil">
           <ion-icon name="settings-outline"></ion-icon>
         </a>
+        <a href="password.edit.php" title="Mudar password">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+        </a>
+        <a href="boughtItems.php" title="Histórico de compras">
+          <ion-icon name="reader-outline"></ion-icon>
+        </a>
       </div>
     <?php endif; ?>
   </div>
@@ -91,6 +97,31 @@
       </div>
 
     </div>
+  </form>
+
+<?php } ?>
+
+<?php function drawEditPassword(Session $session, User $user)
+{ ?>
+  <form id="edit-password" method="post">
+
+    <input type="hidden" name="user_id" value=<?= $user->id ?>>
+    <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
+
+    <div id="edit-password-buttons">
+      <button id="edit-password-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>
+      <button id="edit-password-submit-btn" type="submit">Confirmar<ion-icon name="checkmark" submit></ion-icon></button>
+    </div>
+
+    <div id="edit-password-container">
+      <label for="password">Password atual:</label>
+      <input type="password" name="password" placeholder="Password atual">
+      <label for="newPassword">Password nova:</label>
+      <input type="password" name="newPassword" placeholder="Password nova">
+      <label for="confirmNewPassword">Confirmar password:</label>
+      <input type="password" name="confirmNewPassword" placeholder="Password nova">
+    </div>
+
   </form>
 
 <?php } ?>
