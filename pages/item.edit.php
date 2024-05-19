@@ -24,9 +24,9 @@ if (!$item || $item->seller != $id || $item->status != 'active'): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
 <?php else:
   $user = User::getUser($db, $id);
-  $user_reviews = User::getUserReviews($db, $id);
+  $userReviews = User::getUserReviews($db, $id);
   $categories = Category::getAllCategories($db);
-  drawEditItem($item, $user, $user_reviews, $categories, $session);
+  drawEditItem($item, $user, $userReviews, $categories, $session);
 endif;
 
 drawFooter();

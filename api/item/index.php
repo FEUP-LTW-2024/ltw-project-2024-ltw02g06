@@ -10,13 +10,13 @@ require_once (__DIR__ . '/../../database/user.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
     case 'GET':
         // GET request handling
         $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
-        $user_id = $session->getId();
+        $userId = $session->getId();
         $getTotal = isset($_GET['total']) ? filter_var($_GET['total'], FILTER_VALIDATE_BOOLEAN) : false;
 
         if ($id !== null) {
@@ -29,11 +29,11 @@ switch ($request_method) {
             }
         } else if ($getTotal) {
             $search = isset($_GET['search']) ? filter_var_array($_GET['search'], FILTER_SANITIZE_STRING) : [];
-            $seller_id = isset($_GET['user']) ? filter_var($_GET['user'], FILTER_VALIDATE_INT) : null;
+            $sellerId = isset($_GET['user']) ? filter_var($_GET['user'], FILTER_VALIDATE_INT) : null;
             $active = isset($_GET['status']) ? ($_GET['status'] == "active") : true;
 
             try {
-                $total = Item::getItemsTotal($db, $seller_id, $search, $active);
+                $total = Item::getItemsTotal($db, $sellerId, $search, $active);
                 if ($total != null) {
                     http_response_code(200); // OK
                     echo json_encode($total);
@@ -48,13 +48,13 @@ switch ($request_method) {
         } else {
             // Extract parameters from the URL
             $page = isset($_GET['page']) ? filter_var($_GET['page'], FILTER_VALIDATE_INT) : 1;
-            $items_per_page = isset($_GET['itemsPerPage']) ? filter_var($_GET['itemsPerPage'], FILTER_VALIDATE_INT) : 10;
+            $itemsPerPage = isset($_GET['itemsPerPage']) ? filter_var($_GET['itemsPerPage'], FILTER_VALIDATE_INT) : 10;
             $search = isset($_GET['search']) ? filter_var_array($_GET['search'], FILTER_SANITIZE_STRING) : [];
-            $seller_id = isset($_GET['user']) ? filter_var($_GET['user'], FILTER_VALIDATE_INT) : null;
+            $sellerId = isset($_GET['user']) ? filter_var($_GET['user'], FILTER_VALIDATE_INT) : null;
             $active = isset($_GET['status']) ? ($_GET['status'] == "active") : true;
 
             try {
-                $items = Item::getAllItems($db, $user_id, $seller_id, $page, $items_per_page, $search, $active);
+                $items = Item::getAllItems($db, $userId, $sellerId, $page, $itemsPerPage, $search, $active);
                 if ($items) {
                     http_response_code(200); // OK
                     echo json_encode($items);
@@ -72,9 +72,9 @@ switch ($request_method) {
         // POST request handling
         // Create an item
         $postData = json_decode(file_get_contents('php://input'), true);
-        $user_id = $session->getId();
+        $userId = $session->getId();
 
-        if (!$user_id) {
+        if (!$userId) {
             http_response_code(401); // Unauthorized
             echo json_encode(array("message" => "Not authenticated."));
             exit();
@@ -105,9 +105,9 @@ switch ($request_method) {
         // PATCH request handling
         // Update a given item.
         $postData = json_decode(file_get_contents('php://input'), true);
-        $user_id = $session->getId();
+        $userId = $session->getId();
 
-        if (!$user_id || !isset($postData['id']) || !filter_var($postData['id'], FILTER_VALIDATE_INT)) {
+        if (!$userId || !isset($postData['id']) || !filter_var($postData['id'], FILTER_VALIDATE_INT)) {
             http_response_code(401); // Unauthorized
             echo json_encode(array("message" => "Not authenticated or invalid item ID."));
             exit();
@@ -115,7 +115,7 @@ switch ($request_method) {
 
         try {
             $item = Item::getItem($db, $postData['id']);
-            if ($item->seller != $user_id || $session->getSessionToken() !== $postData['csrf']) {
+            if ($item->seller != $userId || $session->getSessionToken() !== $postData['csrf']) {
                 http_response_code(401); // Unauthorized
                 echo json_encode(array("message" => "Unauthorized."));
                 exit();
@@ -138,11 +138,11 @@ switch ($request_method) {
     case 'DELETE':
         // DELETE request handling
         // Delete an item.
-        $user_id = $session->getId();
+        $userId = $session->getId();
         $postData = json_decode(file_get_contents('php://input'), true);
         $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
 
-        if (!$user_id) {
+        if (!$userId) {
             http_response_code(401); // Unauthorized
             echo json_encode(array("message" => "Not authenticated."));
             exit();
@@ -155,10 +155,10 @@ switch ($request_method) {
         }
 
         $item = Item::getItem($db, $id);
-        $user = User::getUser($db, $user_id);
+        $user = User::getUser($db, $userId);
 
         if (
-            ($user_id != $item->seller && !$user->admin) ||
+            ($userId != $item->seller && !$user->admin) ||
             $session->getSessionToken() !== $postData['csrf']
         ) {
             http_response_code(401); // Unauthorized

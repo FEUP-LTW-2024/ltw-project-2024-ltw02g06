@@ -15,8 +15,8 @@ class Item
   public ?int $buyer;
   public int $category;
   public string $status;
-  public ?float $sold_price;
-  public DateTime $creation_date;
+  public ?float $soldPrice;
+  public DateTime $creationDate;
   public int $clicks;
   public array $attributes = [];
   public array $images = [];
@@ -30,8 +30,8 @@ class Item
     ?int $buyer,
     int $category,
     string $status,
-    ?float $sold_price,
-    DateTime $creation_date,
+    ?float $soldPrice,
+    DateTime $creationDate,
     int $clicks,
     array $attributes,
     array $images
@@ -44,8 +44,8 @@ class Item
     $this->buyer = $buyer;
     $this->category = $category;
     $this->status = $status;
-    $this->sold_price = $sold_price;
-    $this->creation_date = $creation_date;
+    $this->soldPrice = $soldPrice;
+    $this->creationDate = $creationDate;
     $this->clicks = $clicks;
     $this->attributes = $attributes;
     $this->images = $images;
@@ -110,15 +110,15 @@ class Item
     );
   }
 
-  static function createItem(PDO $db, array $item_data): ?Item
+  static function createItem(PDO $db, array $itemData): ?Item
   {
-    $name = $item_data['name'];
-    $description = $item_data['description'];
-    $price = $item_data['price'];
-    $seller = $item_data['seller'];
-    $category = $item_data['category'];
-    $attributes = $item_data['attributes'];
-    $images = $item_data['images'];
+    $name = $itemData['name'];
+    $description = $itemData['description'];
+    $price = $itemData['price'];
+    $seller = $itemData['seller'];
+    $category = $itemData['category'];
+    $attributes = $itemData['attributes'];
+    $images = $itemData['images'];
 
     $stmt = $db->prepare('
           INSERT INTO item (name, description, price, seller, category) 
@@ -143,22 +143,22 @@ class Item
       try {
         list(, $base64_data) = explode(';', $image);
         list(, $base64_data) = explode(',', $base64_data);
-        $image_data = base64_decode($base64_data);
+        $imageData = base64_decode($base64_data);
         $filename = generateUniqueFilename('.png');
 
-        file_put_contents('./../database/files/' . $filename, $image_data);
+        file_put_contents('./../database/files/' . $filename, $imageData);
 
         $stmt = $db->prepare("
                 INSERT INTO image (path)
                 VALUES (?)");
         $stmt->execute(["database/files/" . $filename]);
 
-        $image_id = $db->lastInsertId();
+        $imageId = $db->lastInsertId();
 
         $stmt = $db->prepare("
                 INSERT INTO item_image (item, image)
                 VALUES (?, ?)");
-        $stmt->execute([$id, $image_id]);
+        $stmt->execute([$id, $imageId]);
 
         $db->commit();
       } catch (PDOException $e) {
@@ -180,11 +180,11 @@ class Item
     $this->clicks++;
   }
 
-  static function updateItemAttributes(PDO $db, $item, array $attributes, Category $new_category, array $new_attributes)
+  static function updateItemAttributes(PDO $db, $item, array $attributes, Category $newCategory, array $newAttributes)
   {
-    if ($new_category->id == $item->category) {
+    if ($newCategory->id == $item->category) {
       // Update attributes if the category matches
-      foreach ($new_attributes as $index => $new_value) {
+      foreach ($newAttributes as $index => $newValue) {
         if (!$attributes[$index])
           throw new Error("Attribute does not exist.");
 
@@ -194,9 +194,9 @@ class Item
                   SELECT value FROM attribute_values
                   WHERE attribute = ?');
           $stmt->execute([$index]);
-          $possible_values = $stmt->fetchAll(PDO::FETCH_COLUMN);
+          $possibleValues = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-          if (!in_array($new_value, $possible_values))
+          if (!in_array($newValue, $possibleValues))
             throw new Error("Invalid value for enum attribute.");
         }
 
@@ -205,7 +205,7 @@ class Item
                 UPDATE item_attributes 
                 SET value = ? 
                 WHERE item = ? AND attribute = ?');
-        $stmt->execute([$new_value, $item->id, $index]);
+        $stmt->execute([$newValue, $item->id, $index]);
       }
     } else {
       // Update item category
@@ -213,7 +213,7 @@ class Item
               UPDATE item
               SET category = ?
               WHERE id = ?');
-      $stmt->execute([(int) $new_category->id, $item->id]);
+      $stmt->execute([(int) $newCategory->id, $item->id]);
 
       // Remove all existing attributes of the item
       $stmt = $db->prepare('
@@ -222,7 +222,7 @@ class Item
       $stmt->execute([$item->id]);
 
       // Insert new attributes
-      foreach ($new_attributes as $index => $new_value) {
+      foreach ($newAttributes as $index => $newValue) {
         if (!$attributes[$index])
           throw new Error("Attribute does not exist.");
 
@@ -233,9 +233,9 @@ class Item
                   SELECT value FROM attribute_values 
                   WHERE attribute = ?');
           $stmt->execute([$index]);
-          $possible_values = $stmt->fetchAll(PDO::FETCH_COLUMN);
+          $possibleValues = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-          if (!in_array($new_value, $possible_values)) {
+          if (!in_array($newValue, $possibleValues)) {
             throw new Error("Invalid value for enum attribute.");
           }
         }
@@ -244,30 +244,30 @@ class Item
         $stmt = $db->prepare('
                 INSERT INTO item_attributes (item, attribute, value)
                 VALUES (?, ?, ?)');
-        $stmt->execute([$item->id, $index, $new_value]);
+        $stmt->execute([$item->id, $index, $newValue]);
       }
     }
   }
 
-  static function updateItem(PDO $db, array $item_data): ?Item
+  static function updateItem(PDO $db, array $itemData): ?Item
   {
-    $item = Item::getItem($db, (int) $item_data['id']);
+    $item = Item::getItem($db, (int) $itemData['id']);
     $categories = Category::getAllCategories($db);
 
-    $category = $categories[$item_data['category']];
+    $category = $categories[$itemData['category']];
     $attributes = $category->attributes;
 
     $db->beginTransaction();
 
     try {
-      Item::updateItemAttributes($db, $item, $attributes, $category, $item_data['attributes']);
+      Item::updateItemAttributes($db, $item, $attributes, $category, $itemData['attributes']);
 
       // Update item info
       $stmt = $db->prepare('
               UPDATE item
               SET price = ?, name = ?, description = ?
               WHERE id = ?');
-      $stmt->execute([(float) $item_data['price'], trim($item_data['name']), trim($item_data['description']), $item->id]);
+      $stmt->execute([(float) $itemData['price'], trim($itemData['name']), trim($itemData['description']), $item->id]);
 
       $db->commit();
     } catch (PDOException $e) {
@@ -282,7 +282,7 @@ class Item
               LEFT JOIN image ON item_image.image = image.id
               WHERE item_image.item = ?');
     $stmt->execute([$item->id]);
-    $existing_images = $stmt->fetchAll();
+    $existingImages = $stmt->fetchAll();
 
     $stmt = $db->prepare('
               SELECT image as id 
@@ -291,27 +291,27 @@ class Item
     $stmt->execute([$item->id]);
     $images = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-    foreach ($existing_images as $existing_image) {
-      $still_item_image = false;
-      foreach ($item_data['images'] as $index => $image) {
-        if ($existing_image['id'] == $index) {
-          $still_item_image = true;
+    foreach ($existingImages as $existingImage) {
+      $stillItemImage = false;
+      foreach ($itemData['images'] as $index => $image) {
+        if ($existingImage['id'] == $index) {
+          $stillItemImage = true;
           break;
         }
       }
-      if (!$still_item_image) {
+      if (!$stillItemImage) {
         $stmt = $db->prepare('
                   DELETE FROM image 
                   WHERE id = ?');
-        $stmt->execute([$existing_image['id']]);
+        $stmt->execute([$existingImage['id']]);
 
-        $image_path = dirname(__FILE__) . '/../' . $image['path'];
-        if (file_exists($image_path))
-          unlink($image_path);
+        $imagePath = dirname(__FILE__) . '/../' . $image['path'];
+        if (file_exists($imagePath))
+          unlink($imagePath);
       }
     }
 
-    foreach ($item_data['images'] as $index => $image) {
+    foreach ($itemData['images'] as $index => $image) {
 
       if (in_array($index, $images))
         continue;
@@ -320,22 +320,22 @@ class Item
       try {
         list(, $base64_data) = explode(';', $image);
         list(, $base64_data) = explode(',', $base64_data);
-        $image_data = base64_decode($base64_data);
+        $imageData = base64_decode($base64_data);
         $filename = generateUniqueFilename('.png');
 
-        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $image_data);
+        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $imageData);
 
         $stmt = $db->prepare("
                 INSERT INTO image (path)
                 VALUES (?)");
         $stmt->execute(["database/files/" . $filename]);
 
-        $image_id = $db->lastInsertId();
+        $imageId = $db->lastInsertId();
 
         $stmt = $db->prepare("
                 INSERT INTO item_image (item, image)
                 VALUES (?, ?)");
-        $stmt->execute([$item->id, $image_id]);
+        $stmt->execute([$item->id, $imageId]);
 
         $db->commit();
         $db->exec('PRAGMA foreign_keys = ON');
@@ -344,7 +344,7 @@ class Item
       }
     }
 
-    return Item::getItem($db, (int) $item_data['id']);
+    return Item::getItem($db, (int) $itemData['id']);
   }
 
   static function deleteItem(PDO $db, int $id): void
@@ -364,9 +364,9 @@ class Item
         WHERE id = ?');
       $stmt->execute([$image['id']]);
 
-      $image_path = dirname(__FILE__) . '/../' . $image['path'];
-      if (file_exists($image_path))
-        unlink($image_path);
+      $imagePath = dirname(__FILE__) . '/../' . $image['path'];
+      if (file_exists($imagePath))
+        unlink($imagePath);
     }
 
     try {
@@ -380,17 +380,17 @@ class Item
     }
   }
 
-  static function getAllItems(PDO $db, ?int $user_id, ?int $seller_id, int $page, int $items_per_page, array $search, bool $active = true): array
+  static function getAllItems(PDO $db, ?int $userId, ?int $sellerId, int $page, int $itemsPerPage, array $search, bool $active = true): array
   {
-    $name_search = isset($search['search']) ? $search['search'] : null;
-    $location_search = isset($search['location']) ? $search['location'] : null;
+    $nameSearch = isset($search['search']) ? $search['search'] : null;
+    $locationSearch = isset($search['location']) ? $search['location'] : null;
     $order = isset($search['order']) ? $search['order'] : null;
-    $price_from = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
-    $price_to = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
+    $priceFrom = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
+    $priceTo = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
     $category = isset($search['category']) ? intval($search['category']) : null;
     $attributes = isset($search['attributes']) ? $search['attributes'] : [];
 
-    $offset = ($page - 1) * $items_per_page;
+    $offset = ($page - 1) * $itemsPerPage;
 
     $query = '
     SELECT item.id
@@ -409,35 +409,35 @@ class Item
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null) {
-      $name_search_modified = str_replace([' ', ','], '%', $name_search);
+    if ($nameSearch !== null) {
+      $nameSearchModified = str_replace([' ', ','], '%', $nameSearch);
       $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search) ';
-      $whereConditions[':name_search'] = '%' . $name_search_modified . '%';
+      $whereConditions[':name_search'] = '%' . $nameSearchModified . '%';
     }
 
-    if ($location_search !== null) {
-      $location_search_modified = str_replace([' ', ','], '%', $location_search);
+    if ($locationSearch !== null) {
+      $locationSearchModified = str_replace([' ', ','], '%', $locationSearch);
 
       $query .= ' AND (user.city LIKE :location_search 
                   OR user.state LIKE :location_search 
                   OR user.country LIKE :location_search
                   OR (user.city || " " || user.state || " " || user.country) LIKE :location_search)';
-      $whereConditions[':location_search'] = '%' . $location_search_modified . '%';
+      $whereConditions[':location_search'] = '%' . $locationSearchModified . '%';
     }
 
-    if ($price_from !== null) {
+    if ($priceFrom !== null) {
       $query .= ' AND item.price >= :price_from ';
-      $whereConditions[':price_from'] = $price_from;
+      $whereConditions[':price_from'] = $priceFrom;
     }
 
-    if ($price_to !== null) {
+    if ($priceTo !== null) {
       $query .= ' AND item.price <= :price_to ';
-      $whereConditions[':price_to'] = $price_to;
+      $whereConditions[':price_to'] = $priceTo;
     }
 
-    if ($seller_id !== null) {
+    if ($sellerId !== null) {
       $query .= ' AND item.seller = :seller_id ';
-      $whereConditions[':seller_id'] = $seller_id;
+      $whereConditions[':seller_id'] = $sellerId;
     }
 
     foreach ($attributes as $attributeId => $attributeValue) {
@@ -484,9 +484,9 @@ class Item
       $query .= ' item.price ASC ';
     elseif ($order === 'price:desc')
       $query .= ' item.price DESC ';
-    elseif ($order === 'created_at:asc')
+    elseif ($order === 'createdAt:asc')
       $query .= ' item.creation_date ASC ';
-    elseif ($order === 'created_at:desc')
+    elseif ($order === 'createdAt:desc')
       $query .= ' item.creation_date DESC ';
     else
       $query .= 'item.clicks DESC';
@@ -495,24 +495,24 @@ class Item
 
     $stmt = $db->prepare($query);
 
-    $whereConditions[':limit'] = $items_per_page;
+    $whereConditions[':limit'] = $itemsPerPage;
     $whereConditions[':offset'] = $offset;
 
     $stmt->execute($whereConditions);
 
-    $items_id = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $itemsId = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     $items = [];
-    foreach ($items_id as $item_id) {
-      $item = Item::getItem($db, $item_id);
-      $in_cart = $user_id ? User::isItemInCart($db, $user_id, $item_id) : false;
-      $in_wishlist = $user_id ? User::isItemInWishlist($db, $user_id, $item_id) : false;
+    foreach ($itemsId as $itemId) {
+      $item = Item::getItem($db, $itemId);
+      $inCart = $userId ? User::isItemInCart($db, $userId, $itemId) : false;
+      $inWishlist = $userId ? User::isItemInWishlist($db, $userId, $itemId) : false;
       $seller = User::getUser($db, $item->seller);
       $buyer = $item->buyer ? User::getUser($db, $item->buyer) : null;
       $items[] = [
         'item' => $item,
-        'in_cart' => $in_cart,
-        'in_wishlist' => $in_wishlist,
+        'inCart' => $inCart,
+        'inWishlist' => $inWishlist,
         'seller' => $seller,
         'buyer' => $buyer,
       ];
@@ -521,12 +521,12 @@ class Item
     return $items;
   }
 
-  static function getItemsTotal(PDO $db, ?int $seller_id, array $search, bool $active = true): int
+  static function getItemsTotal(PDO $db, ?int $sellerId, array $search, bool $active = true): int
   {
-    $name_search = isset($search['search']) ? $search['search'] : null;
-    $location_search = isset($search['location']) ? $search['location'] : null;
-    $price_from = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
-    $price_to = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
+    $nameSearch = isset($search['search']) ? $search['search'] : null;
+    $locationSearch = isset($search['location']) ? $search['location'] : null;
+    $priceFrom = isset($search['price']['from']) ? floatval($search['price']['from']) : null;
+    $priceTo = isset($search['price']['to']) ? floatval($search['price']['to']) : null;
     $category = isset($search['category']) ? intval($search['category']) : null;
     $attributes = isset($search['attributes']) ? $search['attributes'] : [];
 
@@ -547,35 +547,35 @@ class Item
       $whereConditions[':category'] = $category;
     }
 
-    if ($name_search !== null) {
-      $name_search_modified = str_replace([' ', ','], '%', $name_search);
+    if ($nameSearch !== null) {
+      $nameSearchModified = str_replace([' ', ','], '%', $nameSearch);
       $query .= ' AND (item.name LIKE :name_search OR item.description LIKE :name_search) ';
-      $whereConditions[':name_search'] = '%' . $name_search_modified . '%';
+      $whereConditions[':name_search'] = '%' . $nameSearchModified . '%';
     }
 
-    if ($location_search !== null) {
-      $location_search_modified = str_replace([' ', ','], '%', $location_search);
+    if ($locationSearch !== null) {
+      $locationSearchModified = str_replace([' ', ','], '%', $locationSearch);
 
       $query .= ' AND (user.city LIKE :location_search 
                   OR user.state LIKE :location_search 
                   OR user.country LIKE :location_search
                   OR (user.city || " " || user.state || " " || user.country) LIKE :location_search)';
-      $whereConditions[':location_search'] = '%' . $location_search_modified . '%';
+      $whereConditions[':location_search'] = '%' . $locationSearchModified . '%';
     }
 
-    if ($price_from !== null) {
+    if ($priceFrom !== null) {
       $query .= ' AND item.price >= :price_from ';
-      $whereConditions[':price_from'] = $price_from;
+      $whereConditions[':price_from'] = $priceFrom;
     }
 
-    if ($price_to !== null) {
+    if ($priceTo !== null) {
       $query .= ' AND item.price <= :price_to ';
-      $whereConditions[':price_to'] = $price_to;
+      $whereConditions[':price_to'] = $priceTo;
     }
 
-    if ($seller_id !== null) {
+    if ($sellerId !== null) {
       $query .= ' AND item.seller = :seller_id ';
-      $whereConditions[':seller_id'] = $seller_id;
+      $whereConditions[':seller_id'] = $sellerId;
     }
 
     foreach ($attributes as $attributeId => $attributeValue) {
@@ -625,7 +625,7 @@ class Item
     return $total;
   }
 
-  static function buyItem(PDO $db, int $buyer, int $id, float $sold_price): ?Item
+  static function buyItem(PDO $db, int $buyer, int $id, float $soldPrice): ?Item
   {
     try {
       // Update item info
@@ -635,7 +635,7 @@ class Item
                   status = "to send", 
                   buyer = ?
               WHERE id = ?');
-      $stmt->execute([$sold_price, $buyer, $id]);
+      $stmt->execute([$soldPrice, $buyer, $id]);
 
       return Item::getItem($db, $id);
     } catch (PDOException $e) {

@@ -10,22 +10,22 @@ require_once (__DIR__ . '/../../database/item.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'GET':
     // GET request handling
     // Retrieve the wishlist of a given user
-    $user_id = $session->getId();
+    $userId = $session->getId();
 
-    if (!isset($user_id)) {
+    if (!isset($userId)) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
 
     try {
-      $wishlist = User::getWishlist($db, $user_id);
+      $wishlist = User::getWishlist($db, $userId);
       http_response_code(200); // OK
       echo json_encode(array("wishlist" => $wishlist));
     } catch (PDOException $e) {
@@ -36,10 +36,10 @@ switch ($request_method) {
   case 'POST':
     // POST request handling
     // Add a new item to the wishlist of a given user
-    $user_id = $session->getId();
+    $userId = $session->getId();
     $postData = filter_var_array(json_decode(file_get_contents("php://input"), true), FILTER_SANITIZE_STRING);
 
-    if (!isset($user_id)) {
+    if (!isset($userId)) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -51,29 +51,29 @@ switch ($request_method) {
       exit();
     }
 
-    // Validate and sanitize item_id
-    $item_id = isset($postData['item_id']) ? filter_var($postData['item_id'], FILTER_VALIDATE_INT) : null;
+    // Validate and sanitize itemId
+    $itemId = isset($postData['itemId']) ? filter_var($postData['itemId'], FILTER_VALIDATE_INT) : null;
 
-    if (!isset($item_id)) {
+    if (!isset($itemId)) {
       http_response_code(400); // Bad Request
       echo json_encode(array("message" => "Item ID is required."));
       exit();
     }
 
     try {
-      $item = Item::getItem($db, $item_id);
+      $item = Item::getItem($db, $itemId);
       if (!$item || $item->status != 'active') {
         http_response_code(404); // Not Found
         echo json_encode(array("message" => "Item not found or already sold."));
         exit();
       }
-      if ($item->seller === $user_id) {
+      if ($item->seller === $userId) {
         http_response_code(403); // Forbidden
         echo json_encode(array("message" => "You can't add your own items to your wishlist."));
         exit();
       }
 
-      User::addItemToWishlist($db, $user_id, $item_id);
+      User::addItemToWishlist($db, $userId, $itemId);
       http_response_code(201); // Created
       echo json_encode(array("message" => "Item added to wishlist."));
     } catch (PDOException $e) {
@@ -84,23 +84,23 @@ switch ($request_method) {
   case 'DELETE':
     // DELETE request handling
     // Remove an item from the wishlist of a given user
-    $user_id = $session->getId();
-    $item_id = isset($_GET['item_id']) ? filter_var($_GET['item_id'], FILTER_VALIDATE_INT) : null;
+    $userId = $session->getId();
+    $itemId = isset($_GET['itemId']) ? filter_var($_GET['itemId'], FILTER_VALIDATE_INT) : null;
 
-    if (!isset($user_id)) {
+    if (!isset($userId)) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
 
-    if (!isset($item_id)) {
+    if (!isset($itemId)) {
       http_response_code(400); // Bad Request
       echo json_encode(array("message" => "Item ID is required."));
       exit();
     }
 
     try {
-      User::removeItemFromWishlist($db, $user_id, $item_id);
+      User::removeItemFromWishlist($db, $userId, $itemId);
       http_response_code(200); // OK
       echo json_encode(array("message" => "Item removed from wishlist."));
     } catch (PDOException $e) {

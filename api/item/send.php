@@ -9,17 +9,17 @@ require_once (__DIR__ . '/../../database/item.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'POST':
     // POST request handling
     // Send item
 
-    $user_id = $session->getId();
+    $userId = $session->getId();
     $postData = json_decode(file_get_contents("php://input"), true);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -42,7 +42,7 @@ switch ($request_method) {
     try {
       $item = Item::getItem($db, $id);
 
-      if (!$item || $item->seller != $user_id) {
+      if (!$item || $item->seller != $userId) {
         http_response_code(401); // Unauthorized
         echo json_encode(array("message" => "Unauthorized."));
         exit();

@@ -15,8 +15,8 @@
     <img id="profile-img" src="/../<?= $user->image ?>" alt="User Profile Picture">
     <div>
       <div>
-        <h2 id="profile-name" title="<?= htmlspecialchars($user->first_name . " " . $user->last_name) ?>">
-          <?= htmlspecialchars($user->first_name . " " . $user->last_name) ?>
+        <h2 id="profile-name" title="<?= htmlspecialchars($user->firstName . " " . $user->lastName) ?>">
+          <?= htmlspecialchars($user->firstName . " " . $user->lastName) ?>
         </h2>
         <h3
           title="<?= $id == $user->id ? htmlspecialchars("$user->address, $user->zipcode - ") : "" ?><?= htmlspecialchars($user->city) ?>">
@@ -29,7 +29,7 @@
       </div>
       <div>
         <p>No eKo desde
-          <?= $user->registration_date->format('d/m/Y'); ?>
+          <?= $user->registrationDate->format('d/m/Y'); ?>
         </p>
       </div>
     </div>
@@ -56,7 +56,7 @@
     action="../actions/action_edit_profile.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '?redirect=' . urlencode('/pages/profile.php') ?>"
     method="post">
 
-    <input type="hidden" name="user_id" value=<?= $user->id ?>>
+    <input type="hidden" name="userId" value=<?= $user->id ?>>
     <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
 
     <div id="edit-profile-buttons">
@@ -68,7 +68,7 @@
       <div>
         <img id="profile-image-preview" src="/<?= $user->image ?>" alt="Item Image">
         <label for="new-image-input"><ion-icon name="add"></ion-icon></label>
-        <input type="hidden" name="new_image_path" id="new-image-path">
+        <input type="hidden" name="newImagePath" id="new-image-path">
         <input type="file" name="new-image" id="new-image-input" accept="image/*">
       </div>
     </div>
@@ -76,11 +76,10 @@
     <div id="edit-profile-name">
       <h3>Informações Pessoais</h3>
       <div>
-        <label for="first_name">Primeiro nome:</label>
-        <input type="text" name="first_name" placeholder="Primeiro nome"
-          value=<?= htmlspecialchars(trim($user->first_name)) ?>>
-        <label for="last_name">Sobrenome:</label>
-        <input type="text" name="last_name" placeholder="Sobrenome" value=<?= htmlspecialchars(trim($user->last_name)) ?>>
+        <label for="firstName">Primeiro nome:</label>
+        <input type="text" name="firstName" placeholder="Primeiro nome" value=<?= htmlspecialchars(trim($user->firstName)) ?>>
+        <label for="lastName">Sobrenome:</label>
+        <input type="text" name="lastName" placeholder="Sobrenome" value=<?= htmlspecialchars(trim($user->lastName)) ?>>
         <label for="email">Email:</label>
         <input type="text" name="email" placeholder="Email" value=<?= htmlspecialchars(trim($user->email)) ?>>
       </div>
@@ -110,7 +109,7 @@
 { ?>
   <form id="edit-password" method="post">
 
-    <input type="hidden" name="user_id" value=<?= $user->id ?>>
+    <input type="hidden" name="userId" value=<?= $user->id ?>>
     <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
 
     <div id="edit-password-buttons">

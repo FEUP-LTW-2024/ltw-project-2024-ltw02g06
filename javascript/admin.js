@@ -213,7 +213,7 @@ const renderAdmin = (user) => {
     }
   });
 
-  h3Name.textContent = `${user.first_name} ${user.last_name}`;
+  h3Name.textContent = `${user.firstName} ${user.lastName}`;
   pId.textContent = `#${user.id}`;
   adminIcon.name = "star-half-outline";
   removeIcon.name = "trash-outline";
@@ -276,7 +276,7 @@ const renderUser = (user) => {
     }
   });
 
-  h3Name.textContent = `${user.first_name} ${user.last_name}`;
+  h3Name.textContent = `${user.firstName} ${user.lastName}`;
   pId.textContent = `#${user.id}`;
   adminIcon.name = "star-outline";
   removeIcon.name = "trash-outline";
@@ -312,18 +312,6 @@ const renderNoUsersFound = (element) => {
     li.className = "no-users-found";
     element.appendChild(li);
   }
-};
-
-const updateParam = (param, value) => {
-  const url = new URL(window.location.href);
-  url.searchParams.set(param, value);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteParam = (param) => {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  history.pushState({}, "", url.toString());
 };
 
 const addAdmin = (id) => {

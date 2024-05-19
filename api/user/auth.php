@@ -9,9 +9,9 @@ require_once (__DIR__ . '/../../database/user.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'POST':
     // POST request handling for login
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);

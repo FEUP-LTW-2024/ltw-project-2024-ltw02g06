@@ -83,7 +83,7 @@ const renderMessage = (message, userId, itemId) => {
     propositionBtnsDiv.classList.add("proposition-btns");
 
     if (message.accepted === null) {
-      if (message.item_seller === userId) {
+      if (message.itemSeller === userId) {
         const rejectBtn = document.createElement("button");
         rejectBtn.classList.add("reject-proposition-btn");
         rejectBtn.textContent = "Rejeitar";
@@ -116,7 +116,7 @@ const renderMessage = (message, userId, itemId) => {
         propositionBtnsDiv.innerHTML = "<h5>Por decidir</h5>";
       }
     } else if (message.accepted) {
-      if (message.item_seller === userId) {
+      if (message.itemSeller === userId) {
         propositionBtnsDiv.innerHTML = "<h5>Aceite</h5>";
       } else {
         if (cartItemPrice == message.value) {
@@ -199,7 +199,7 @@ const updateMessage = (messageId, accepted) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      message_id: messageId,
+      messageId: messageId,
       accepted: accepted,
       csrf: csrf,
     }),
@@ -221,8 +221,8 @@ const addToCart = async (itemId, messageId) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      item_id: itemId,
-      message_id: messageId,
+      itemId: itemId,
+      messageId: messageId,
       csrf: csrf,
     }),
   })
@@ -240,7 +240,7 @@ const addToCart = async (itemId, messageId) => {
 };
 
 const removeFromCart = async (itemId) => {
-  return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
+  return fetch(`./../api/user/cart.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

@@ -45,7 +45,7 @@ const handleWishlistBtn = (button) => {
 };
 
 const removeFromWishlist = async (itemId) => {
-  fetch(`./../api/user/wishlist.php?item_id=${itemId}`, {
+  fetch(`./../api/user/wishlist.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const handleCartBtn = (button) => {
 };
 
 const removeFromCart = async (itemId) => {
-  return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
+  return fetch(`./../api/user/cart.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const addToCart = async (itemId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ item_id: itemId, csrf: csrf }),
+    body: JSON.stringify({ itemId: itemId, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {

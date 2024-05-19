@@ -45,4 +45,5 @@ drawSmallSearchBar();
 drawProfileItems($session, $order);
 drawFooter();
 ?>
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/profile.js"></script>

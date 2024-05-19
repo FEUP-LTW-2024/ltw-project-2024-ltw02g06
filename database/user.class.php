@@ -6,8 +6,8 @@ require_once (__DIR__ . '/../database/utils.php');
 class User
 {
   public int $id;
-  public string $first_name;
-  public string $last_name;
+  public string $firstName;
+  public string $lastName;
   public string $email;
   public ?string $password;
   public string $address;
@@ -17,13 +17,13 @@ class User
   public string $zipcode;
   public string $image;
   public bool $admin;
-  public DateTime $registration_date;
+  public DateTime $registrationDate;
 
 
   public function __construct(
     int $id,
-    string $first_name,
-    string $last_name,
+    string $firstName,
+    string $lastName,
     string $email,
     string $password,
     string $address,
@@ -33,11 +33,11 @@ class User
     string $zipcode,
     string $image,
     bool $admin,
-    DateTime $registration_date
+    DateTime $registrationDate
   ) {
     $this->id = $id;
-    $this->first_name = $first_name;
-    $this->last_name = $last_name;
+    $this->firstName = $firstName;
+    $this->lastName = $lastName;
     $this->email = $email;
     $this->password = $password;
     $this->address = $address;
@@ -47,12 +47,12 @@ class User
     $this->zipcode = $zipcode;
     $this->image = $image;
     $this->admin = $admin;
-    $this->registration_date = $registration_date;
+    $this->registrationDate = $registrationDate;
   }
 
   function name()
   {
-    return $this->first_name . ' ' . $this->last_name;
+    return $this->firstName . ' ' . $this->lastName;
   }
 
   function save($db)
@@ -62,7 +62,7 @@ class User
         WHERE id = ?
       ');
 
-    $stmt->execute(array($this->first_name, $this->last_name, $this->id));
+    $stmt->execute(array($this->firstName, $this->lastName, $this->id));
   }
 
   static function createUser(PDO $db, string $email, string $password, string $firstName, string $lastName, string $address, string $city, string $state, string $country, string $zipcode): ?User
@@ -154,27 +154,29 @@ class User
 
   static function getAllUsers(PDO $db, array $search): array
   {
-    $searchStr = isset($search['search']) ? $search['search'] : null;
+    $searchStr = isset($search['search']) ? $search['search'] : "";
+    $searchStr = str_replace([' ', ','], '%', $searchStr);
 
     $stmt = $db->prepare('
         SELECT user.id
         FROM user
         WHERE user.first_name LIKE :search
         OR user.last_name LIKE :search
+        OR (user.first_name || " " || user.last_name) LIKE :search
         OR user.email LIKE :search
         OR (user.city LIKE :search OR user.state LIKE :search OR user.country LIKE :search)
-        OR (user.city || "%" || user.state || "%" || user.country || "%" LIKE :search)
+        OR (user.city || " " || user.state || " " || user.country || " " LIKE :search)
         OR user.id LIKE :search
         OR ("#" || user.id) LIKE :search
       ');
 
     $stmt->execute([':search' => "%" . $searchStr . "%"]);
 
-    $users_id = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $usersId = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     $users = [];
-    foreach ($users_id as $user_id) {
-      $user = User::getUser($db, $user_id);
+    foreach ($usersId as $userId) {
+      $user = User::getUser($db, $userId);
       $user->password = null;
       $users[] = $user;
     }
@@ -182,10 +184,10 @@ class User
     return $users;
   }
 
-  static function updateUser(PDO $db, array $user_data)
+  static function updateUser(PDO $db, array $userData)
   {
-    $image = $user_data['new_image'];
-    $id = $user_data['id'];
+    $image = $userData['newImage'];
+    $id = $userData['id'];
 
     if ($image) {
 
@@ -196,44 +198,44 @@ class User
                   WHERE user.id = ?');
       $stmt->execute([$id]);
 
-      $current_image = $stmt->fetchAll();
+      $currentImage = $stmt->fetchAll();
 
       $db->beginTransaction();
       try {
         list(, $base64_data) = explode(';', $image);
         list(, $base64_data) = explode(',', $base64_data);
-        $image_data = base64_decode($base64_data);
+        $imageData = base64_decode($base64_data);
         $filename = generateUniqueFilename('.png');
 
-        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $image_data);
+        file_put_contents(dirname(__FILE__) . '/../database/files/' . $filename, $imageData);
 
         $stmt = $db->prepare("
                 INSERT INTO image (path)
                 VALUES (?)");
         $stmt->execute(["database/files/" . $filename]);
 
-        $image_id = $db->lastInsertId();
+        $imageId = $db->lastInsertId();
 
         $stmt = $db->prepare("
                 UPDATE user
                 SET image = ?
                 WHERE id = ?");
-        $stmt->execute([$image_id, $id]);
+        $stmt->execute([$imageId, $id]);
 
         $db->commit();
       } catch (PDOException $e) {
         $db->rollBack();
       }
 
-      if ($current_image['id'] != "1") {
+      if ($currentImage['id'] != "1") {
         $stmt = $db->prepare('
                   DELETE FROM image 
                   WHERE id = ?');
-        $stmt->execute([$current_image['id']]);
+        $stmt->execute([$currentImage['id']]);
 
-        $image_path = dirname(__FILE__) . '/../' . $current_image['path'];
-        if (file_exists($image_path))
-          unlink($image_path);
+        $imagePath = dirname(__FILE__) . '/../' . $currentImage['path'];
+        if (file_exists($imagePath))
+          unlink($imagePath);
       }
     }
 
@@ -251,32 +253,32 @@ class User
         ');
 
     $stmt->execute([
-      $user_data['first_name'],
-      $user_data['last_name'],
-      $user_data['email'],
-      $user_data['address'],
-      $user_data['city'],
-      $user_data['state'],
-      $user_data['country'],
-      $user_data['zipcode'],
-      $user_data['id'],
+      $userData['firstName'],
+      $userData['lastName'],
+      $userData['email'],
+      $userData['address'],
+      $userData['city'],
+      $userData['state'],
+      $userData['country'],
+      $userData['zipcode'],
+      $userData['id'],
     ]);
   }
 
-  static function deleteUser(PDO $db, int $user_id)
+  static function deleteUser(PDO $db, int $userId)
   {
     try {
       $stmt = $db->prepare('
             DELETE FROM user
             WHERE id = ?
         ');
-      $stmt->execute([$user_id]);
+      $stmt->execute([$userId]);
     } catch (PDOException $e) {
       throw $e;
     }
   }
 
-  static function updateAdminStatus(PDO $db, array $user_data)
+  static function updateAdminStatus(PDO $db, array $userData)
   {
     $stmt = $db->prepare('
           UPDATE user
@@ -285,8 +287,8 @@ class User
         ');
 
     $stmt->execute([
-      $user_data['admin'],
-      $user_data['id'],
+      $userData['admin'],
+      $userData['id'],
     ]);
   }
 
@@ -318,15 +320,15 @@ class User
           ');
     $stmt->execute([$id]);
 
-    $items_id = $stmt->fetchAll() ?: [];
+    $itemsId = $stmt->fetchAll() ?: [];
 
     $wishlist = [];
 
-    foreach ($items_id as $item_id) {
-      $item = Item::getItem($db, $item_id['id']);
+    foreach ($itemsId as $itemId) {
+      $item = Item::getItem($db, $itemId['id']);
       $seller = User::getUser($db, $item->seller);
       $seller->password = null;
-      $isItemInCart = User::isItemInCart($db, $id, $item_id['id']);
+      $isItemInCart = User::isItemInCart($db, $id, $itemId['id']);
       $wishlistItem = array(
         'item' => $item,
         'seller' => $seller,
@@ -338,41 +340,41 @@ class User
     return $wishlist;
   }
 
-  static function isItemInWishlist(PDO $db, int $id, int $item_id): bool
+  static function isItemInWishlist(PDO $db, int $id, int $itemId): bool
   {
     $stmt = $db->prepare('
             SELECT COUNT(*) AS count
             FROM user_wishlist
             WHERE user = ? AND item = ?
         ');
-    $stmt->execute([$id, $item_id]);
+    $stmt->execute([$id, $itemId]);
 
     $result = $stmt->fetch();
 
     return $result['count'] > 0;
   }
 
-  static function addItemToWishlist(PDO $db, int $id, int $item_id)
+  static function addItemToWishlist(PDO $db, int $id, int $itemId)
   {
     try {
       $stmt = $db->prepare('
           INSERT INTO user_wishlist (item, user)
           VALUES (?, ?)
       ');
-      $stmt->execute([$item_id, $id]);
+      $stmt->execute([$itemId, $id]);
     } catch (PDOException $e) {
       throw $e;
     }
   }
 
-  static function removeItemFromWishlist(PDO $db, int $user_id, int $item_id)
+  static function removeItemFromWishlist(PDO $db, int $userId, int $itemId)
   {
     try {
       $stmt = $db->prepare('
             DELETE FROM user_wishlist
             WHERE item = ? AND user = ?
         ');
-      $stmt->execute([$item_id, $user_id]);
+      $stmt->execute([$itemId, $userId]);
     } catch (PDOException $e) {
       throw $e;
     }
@@ -394,35 +396,35 @@ class User
     return $cart ?: [];
   }
 
-  static function isItemInCart(PDO $db, int $id, int $item_id): bool
+  static function isItemInCart(PDO $db, int $id, int $itemId): bool
   {
     $stmt = $db->prepare('
             SELECT COUNT(*) AS count
             FROM user_cart
             WHERE user = ? AND item = ?
         ');
-    $stmt->execute([$id, $item_id]);
+    $stmt->execute([$id, $itemId]);
 
     $result = $stmt->fetch();
 
     return $result['count'] > 0;
   }
 
-  static function getCartItem(PDO $db, int $id, int $item_id): array
+  static function getCartItem(PDO $db, int $id, int $itemId): array
   {
     $stmt = $db->prepare('
             SELECT item, user, price, shipping
             FROM user_cart
             WHERE user = ? AND item = ?
         ');
-    $stmt->execute([$id, $item_id]);
+    $stmt->execute([$id, $itemId]);
 
     $item = $stmt->fetch();
 
     return $item ? $item : [];
   }
 
-  static function addItemToCart(PDO $db, int $id, int $item_id, ?float $price): ?array
+  static function addItemToCart(PDO $db, int $id, int $itemId, ?float $price): ?array
   {
     $shipping = round($price * 0.05, 2); // TODO Create function to calculate the shipping cost;
     try {
@@ -431,7 +433,7 @@ class User
           WHERE item = ? AND user = ?
       ');
 
-      $stmt->execute([$item_id, $id]);
+      $stmt->execute([$itemId, $id]);
 
       $item = $stmt->fetchAll();
 
@@ -440,33 +442,33 @@ class User
           INSERT INTO user_cart (item, user, price, shipping)
           VALUES (?, ?, ?, ?)
         ');
-        $stmt->execute([$item_id, $id, $price, $shipping]);
+        $stmt->execute([$itemId, $id, $price, $shipping]);
       } else {
         $stmt = $db->prepare('
           UPDATE user_cart
           SET price = ?
           WHERE item = ? AND user = ?
         ');
-        $stmt->execute([$price, $item_id, $id]);
+        $stmt->execute([$price, $itemId, $id]);
       }
 
-      return User::getCartItem($db, $id, $item_id);
+      return User::getCartItem($db, $id, $itemId);
 
     } catch (PDOException $e) {
       throw $e;
     }
   }
 
-  static function removeItemFromCart(PDO $db, int $user_id, int $item_id)
+  static function removeItemFromCart(PDO $db, int $userId, int $itemId)
   {
     try {
       $stmt = $db->prepare('
             DELETE FROM user_cart
             WHERE item = ? AND user = ?
         ');
-      $stmt->execute([$item_id, $user_id]);
+      $stmt->execute([$itemId, $userId]);
     } catch (PDOException $e) {
-      throw $e; // Re-throwing the exception to be caught in the calling code
+      throw $e;
     }
   }
 
@@ -492,12 +494,12 @@ class User
           ');
     $stmt->execute([$id]);
 
-    $items_id = $stmt->fetchAll() ?: [];
+    $itemsId = $stmt->fetchAll() ?: [];
 
     $boughtItems = [];
 
-    foreach ($items_id as $item_id) {
-      $item = Item::getItem($db, $item_id['id']);
+    foreach ($itemsId as $itemId) {
+      $item = Item::getItem($db, $itemId['id']);
       $seller = User::getUser($db, $item->seller);
       $seller->password = null;
       $boughtItem = array(

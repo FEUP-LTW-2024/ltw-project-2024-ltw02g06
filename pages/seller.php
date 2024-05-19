@@ -32,7 +32,7 @@ $active = 0;
 foreach ($items as $item) {
   if ($item['item']->status == 'sold') {
     $sold++;
-    $revenue += $item['item']->sold_price;
+    $revenue += $item['item']->soldPrice;
   } else if ($item['item']->status == 'to send') {
     $toSend++;
   } else if ($item['item']->status == 'active') {
@@ -52,4 +52,5 @@ drawFooter();
   const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const userId = <?php echo json_encode($session->getId()); ?>;
 </script>
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/seller.js"></script>

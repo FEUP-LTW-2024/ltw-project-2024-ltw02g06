@@ -9,14 +9,14 @@ require_once (__DIR__ . '/../../database/message.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
     case 'GET':
         // GET request handling
-        $user_id = $session->getId();
+        $userId = $session->getId();
 
-        if ($user_id === null) {
+        if ($userId === null) {
             http_response_code(401); // Unauthorized
             echo json_encode(array("message" => "Not authenticated."));
             exit();
@@ -35,7 +35,7 @@ switch ($request_method) {
         }
 
         try {
-            $inbox = Message::getInbox($db, $user_id, $search);
+            $inbox = Message::getInbox($db, $userId, $search);
             if ($inbox) {
                 http_response_code(200); // OK
                 echo json_encode($inbox);

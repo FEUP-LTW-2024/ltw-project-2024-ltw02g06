@@ -39,4 +39,5 @@ drawFooter();
   const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const sessionId = <?php echo json_encode($id); ?>;
 </script>
+<script src="./../javascript/utils.js"></script>
 <script src="./../javascript/admin.js"></script>

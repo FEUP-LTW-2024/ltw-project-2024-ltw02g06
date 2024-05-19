@@ -82,33 +82,33 @@ const renderChat = (chatData) => {
 
   inboxChatItem.style.cursor = "pointer";
   inboxChatItem.addEventListener("click", () => {
-    window.location.href = `/pages/item.php?id=${chatData[0].item_id}
+    window.location.href = `/pages/item.php?id=${chatData[0].itemId}
     }`;
   });
 
   inboxChatMsg.style.cursor = "pointer";
   inboxChatMsg.addEventListener("click", () => {
-    window.location.href = `/pages/chat.php?item=${chatData[0].item_id}&id=${
+    window.location.href = `/pages/chat.php?item=${chatData[0].itemId}&id=${
       chatData[0].sender == userId ? chatData[0].receiver : chatData[0].sender
     }`;
   });
 
-  itemName.textContent = chatData[0].item_name;
-  itemPrice.textContent = `${chatData[0].item_price} €`;
+  itemName.textContent = chatData[0].itemName;
+  itemPrice.textContent = `${chatData[0].itemPrice} €`;
   inboxChatItem.appendChild(itemName);
   div1.appendChild(itemPrice);
   inboxChatItem.appendChild(div1);
 
   userName.textContent =
     chatData[0].receiver == userId
-      ? `${chatData[0].sender_first_name} ${chatData[0].sender_last_name}`
-      : `${chatData[0].receiver_first_name} ${chatData[0].receiver_last_name}`;
+      ? `${chatData[0].senderFirstName} ${chatData[0].senderLastName}`
+      : `${chatData[0].receiverFirstName} ${chatData[0].receiverLastName}`;
   timestamp.textContent = getTimeAgo(chatData[0].timestamp);
   div2.appendChild(userName);
   div2.appendChild(timestamp);
 
   sender.textContent =
-    chatData[0].sender == userId ? "Eu:" : `${chatData[0].sender_first_name}:`;
+    chatData[0].sender == userId ? "Eu:" : `${chatData[0].senderFirstName}:`;
   message.textContent = chatData[0].message;
   div3.appendChild(sender);
   div3.appendChild(message);
@@ -141,16 +141,4 @@ const getInbox = async () => {
     .catch((error) => {
       console.error("There was an unexpected error:", error);
     });
-};
-
-const updateParam = (param, value) => {
-  const url = new URL(window.location.href);
-  url.searchParams.set(param, value);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteParam = (param) => {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  history.pushState({}, "", url.toString());
 };

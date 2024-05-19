@@ -27,16 +27,16 @@ $db = getDatabaseConnection();
 drawHeader($session);
 
 $item = Item::getItem($db, intval($_GET['item']));
-$other_user = User::getUser($db, intval($_GET['id']));
+$otherUser = User::getUser($db, intval($_GET['id']));
 $seller = User::getUser($db, $item->seller);
 
-if (!$other_user || !$item || $item->status != 'active' || $other_user->id == $id): ?>
+if (!$otherUser || !$item || $item->status != 'active' || $otherUser->id == $id): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
   <?php
   exit();
 endif;
 
-$chat = Message::getChat($db, $item->id, $id, $other_user->id);
+$chat = Message::getChat($db, $item->id, $id, $otherUser->id);
 
 if (empty($chat) && $item->seller == $id): ?>
   <h2>Ups! Página não encontrada. Por favor, verifique o URL e tente novamente.</h2>
@@ -44,17 +44,17 @@ if (empty($chat) && $item->seller == $id): ?>
   exit();
 endif;
 
-$cart_item = User::getCartItem($db, $id, $item->id);
-drawChat($session, $chat, $other_user->id, $item, $seller);
+$cartItem = User::getCartItem($db, $id, $item->id);
+drawChat($session, $chat, $otherUser->id, $item, $seller);
 drawFooter();
 ?>
 <script>
   const csrf = <?php echo json_encode($session->getSessionToken()) ?>;
   const itemId = <?php echo json_encode($item->id); ?>;
   const userId = <?php echo json_encode($id); ?>;
-  const otherUserId = <?php echo json_encode($other_user->id); ?>;
-  const otherUserFirstName = <?php echo json_encode($other_user->first_name); ?>;
-  var cartItemPrice = <?php echo json_encode(intval($cart_item["price"]) ?? null); ?>;
+  const otherUserId = <?php echo json_encode($otherUser->id); ?>;
+  const otherUserFirstName = <?php echo json_encode($otherUser->firstName); ?>;
+  var cartItemPrice = <?php echo json_encode(intval($cartItem["price"]) ?? null); ?>;
 </script>
 <script src="./../javascript/utils.js"></script>
 <script src="./../javascript/chat.js"></script>

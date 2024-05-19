@@ -11,12 +11,6 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h3>Receita: </h3>
       <h2 id="revenue"><?= $revenue ?> €</h2>
     </div>
-    <!--
-    <div>
-      <h3>Promovidos: </h3>
-      <h2>10</h2>
-    </div>
-    -->
     <div>
       <h3>Vendidos: </h3>
       <h2 id="sold"><?= $sold ?></h2>

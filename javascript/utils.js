@@ -136,3 +136,27 @@ const isEmailAlreadyRegistered = async (email) => {
       console.error("There was an unexpected error:", error);
     });
 };
+
+const updateParam = (param, value) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set(param, value);
+  history.pushState({}, "", url.toString());
+};
+
+const deleteParam = (param) => {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(param);
+  history.pushState({}, "", url.toString());
+};
+
+const deleteAllAtributes = () => {
+  const url = new URL(window.location.href);
+  const paramsKeys = Array.from(url.searchParams.keys());
+  const filteredKeys = paramsKeys.filter((key) =>
+    key.startsWith("search[attributes]")
+  );
+  filteredKeys.forEach((key) => {
+    url.searchParams.delete(key);
+  });
+  history.pushState({}, "", url.toString());
+};

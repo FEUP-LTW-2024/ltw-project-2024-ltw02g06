@@ -109,21 +109,21 @@ class Category
                 VALUES (?, ?)');
         $stmt->execute([$attribute['name'], $attribute['type']]);
 
-        $attribute_id = $db->lastInsertId();
+        $attributeId = $db->lastInsertId();
 
         if ($attribute['type'] == 'enum') {
           foreach ($attribute['values'] as $value) {
             $stmt = $db->prepare('
                 INSERT INTO attribute_values (attribute, value)
                 VALUES (?, ?)');
-            $stmt->execute([$attribute_id, $value]);
+            $stmt->execute([$attributeId, $value]);
           }
         }
 
         $stmt = $db->prepare('
                 INSERT INTO category_attributes (category, attribute) 
                 VALUES (?, ?)');
-        $stmt->execute([$id, $attribute_id]);
+        $stmt->execute([$id, $attributeId]);
 
         $db->commit();
       } catch (PDOException $e) {

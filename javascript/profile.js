@@ -34,7 +34,7 @@ const handleSearchBar = () => {
   searchNameInput.value = currentSearchName;
   searchNameInput.addEventListener("input", () => {
     if (searchNameInput.value.trim() == "") deleteParam(`search[search]`);
-    else updateParam(`search[search]`, searchNameInput.value).trim();
+    else updateParam(`search[search]`, searchNameInput.value.trim());
     navigateToPage(1);
     searchItems();
   });
@@ -68,35 +68,6 @@ const handlePagination = async () => {
   renderItemsTotal();
   renderItems(items);
   renderNavButtons(totalPages);
-};
-
-const validatePriceInput = (inputElement) => {
-  var inputValue = inputElement.value;
-  inputValue = inputValue.replace(/[^\d.]/g, "");
-
-  var dotIndex = inputValue.indexOf(".");
-  if (dotIndex !== -1)
-    inputValue =
-      inputValue.substr(0, dotIndex + 1) +
-      inputValue.substr(dotIndex + 1).replace(/\./g, "");
-
-  inputValue = inputValue.replace(/^0+(?=\d)/, "");
-  var decimalRegex = /^\d*\.?\d{0,2}$/;
-  if (!decimalRegex.test(inputValue)) inputValue = "0";
-
-  inputElement.value = inputValue;
-};
-
-const updateParam = (param, value) => {
-  const url = new URL(window.location.href);
-  url.searchParams.set(param, value);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteParam = (param) => {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  history.pushState({}, "", url.toString());
 };
 
 const getItemsTotal = async () => {
@@ -218,8 +189,8 @@ const renderItem = (itemData) => {
   p.textContent = "Negociável";
   h4City.textContent = `${itemData.seller.city}`;
   pStateCountry.textContent = `${itemData.seller.state}, ${itemData.seller.country}`;
-  iconCart.name = itemData.in_cart ? "cart" : "cart-outline";
-  iconWishlist.name = itemData.in_wishlist ? "heart" : "heart-outline";
+  iconCart.name = itemData.inCart ? "cart" : "cart-outline";
+  iconWishlist.name = itemData.inWishlist ? "heart" : "heart-outline";
   imgDiv.appendChild(img);
   li.appendChild(imgDiv);
   div1.appendChild(div2);

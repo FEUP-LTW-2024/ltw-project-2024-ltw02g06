@@ -38,10 +38,10 @@ if ($item->status != 'active' && !($admin || $item->seller == $id || $item->buye
 endif;
 
 $seller = User::getUser($db, $item->seller);
-$seller_reviews = User::getUserReviews($db, $item->seller);
-$is_item_in_wishlist = $id ? User::isItemInWishlist($db, $id, $item->id) : false;
-$is_item_in_cart = $id ? User::isItemInCart($db, $id, $item->id) : false;
-drawItem($item, $seller, $admin, $seller_reviews, $is_item_in_wishlist, $is_item_in_cart, $session);
+$sellerReviews = User::getUserReviews($db, $item->seller);
+$isItemInWishlist = $id ? User::isItemInWishlist($db, $id, $item->id) : false;
+$isItemInCart = $id ? User::isItemInCart($db, $id, $item->id) : false;
+drawItem($item, $seller, $admin, $sellerReviews, $isItemInWishlist, $isItemInCart, $session);
 drawFooter();
 
 ?>

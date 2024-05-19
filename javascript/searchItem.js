@@ -353,30 +353,6 @@ const initializeIntInput = (inputElement, currentValue, param) => {
   });
 };
 
-const updateParam = (param, value) => {
-  const url = new URL(window.location.href);
-  url.searchParams.set(param, value);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteParam = (param) => {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteAllAtributes = () => {
-  const url = new URL(window.location.href);
-  const paramsKeys = Array.from(url.searchParams.keys());
-  const filteredKeys = paramsKeys.filter((key) =>
-    key.startsWith("search[attributes]")
-  );
-  filteredKeys.forEach((key) => {
-    url.searchParams.delete(key);
-  });
-  history.pushState({}, "", url.toString());
-};
-
 const getItemsTotal = async () => {
   return fetch(`./../api/item/index.php?${window.location.search}&total=1`, {
     method: "GET",
@@ -496,8 +472,8 @@ const renderItem = (itemData) => {
   p.textContent = "Negociável";
   h4City.textContent = `${itemData.seller.city}`;
   pStateCountry.textContent = `${itemData.seller.state}, ${itemData.seller.country}`;
-  iconCart.name = itemData.in_cart ? "cart" : "cart-outline";
-  iconWishlist.name = itemData.in_wishlist ? "heart" : "heart-outline";
+  iconCart.name = itemData.inCart ? "cart" : "cart-outline";
+  iconWishlist.name = itemData.inWishlist ? "heart" : "heart-outline";
   imgDiv.appendChild(img);
   li.appendChild(imgDiv);
   div1.appendChild(div2);

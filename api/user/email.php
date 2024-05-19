@@ -9,9 +9,9 @@ require_once (__DIR__ . '/../../database/item.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'POST':
     // POST request handling
     // Check if email is already registered
@@ -26,9 +26,9 @@ switch ($request_method) {
         echo json_encode(array("message" => "Invalid email format"));
       } else {
         // Email format is valid, check if it's registered
-        $is_registered = User::isEmailRegistered($db, $email);
+        $isRegistered = User::isEmailRegistered($db, $email);
 
-        if ($is_registered) {
+        if ($isRegistered) {
           // Email is already registered
           http_response_code(200);
           echo json_encode(array("message" => "Email is already registered"));

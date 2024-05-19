@@ -9,9 +9,9 @@ require_once (__DIR__ . '/../../database/message.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'PATCH':
     // PATCH request handling
     // Update a given message.
@@ -19,10 +19,10 @@ switch ($request_method) {
     // Get and sanitize the input data
     $postData = json_decode(file_get_contents("php://input"), true);
     $accepted = isset($postData['accepted']) ? filter_var($postData['accepted'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null;
-    $message_id = isset($postData['message_id']) ? filter_var($postData['message_id'], FILTER_VALIDATE_INT) : null;
-    $user_id = $session->getId();
+    $messageId = isset($postData['messageId']) ? filter_var($postData['messageId'], FILTER_VALIDATE_INT) : null;
+    $userId = $session->getId();
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -34,22 +34,22 @@ switch ($request_method) {
       exit();
     }
 
-    if ($message_id === null || $accepted === null) {
+    if ($messageId === null || $accepted === null) {
       http_response_code(400); // Bad Request
       echo json_encode(array("message" => "Invalid input."));
       exit();
     }
 
     try {
-      $message = Message::getMessage($db, $message_id);
+      $message = Message::getMessage($db, $messageId);
 
-      if ($message->item_seller != $user_id) {
+      if ($message->itemSeller != $userId) {
         http_response_code(401); // Unauthorized
         echo json_encode(array("message" => "Unauthorized."));
         exit();
       }
 
-      $updatedMessage = Message::updateMessage($db, $message_id, $accepted);
+      $updatedMessage = Message::updateMessage($db, $messageId, $accepted);
       if ($updatedMessage) {
         http_response_code(200); // OK
         echo json_encode($updatedMessage);

@@ -7,16 +7,16 @@ class Message
 {
 
   public int $id;
-  public int $item_id;
-  public string $item_name;
-  public float $item_price;
-  public int $item_seller;
+  public int $itemId;
+  public string $itemName;
+  public float $itemPrice;
+  public int $itemSeller;
   public int $sender;
-  public string $sender_first_name;
-  public string $sender_last_name;
+  public string $senderFirstName;
+  public string $senderLastName;
   public int $receiver;
-  public string $receiver_first_name;
-  public string $receiver_last_name;
+  public string $receiverFirstName;
+  public string $receiverLastName;
   public ?string $message;
   public DateTime $timestamp;
   public string $type;
@@ -25,16 +25,16 @@ class Message
 
   public function __construct(
     int $id,
-    int $item_id,
-    string $item_name,
-    float $item_price,
-    int $item_seller,
+    int $itemId,
+    string $itemName,
+    float $itemPrice,
+    int $itemSeller,
     int $sender,
-    string $sender_first_name,
-    string $sender_last_name,
+    string $senderFirstName,
+    string $senderLastName,
     int $receiver,
-    string $receiver_first_name,
-    string $receiver_last_name,
+    string $receiverFirstName,
+    string $receiverLastName,
     ?string $message,
     DateTime $timestamp,
     string $type,
@@ -42,16 +42,16 @@ class Message
     ?bool $accepted,
   ) {
     $this->id = $id;
-    $this->item_id = $item_id;
-    $this->item_name = $item_name;
-    $this->item_price = $item_price;
-    $this->item_seller = $item_seller;
+    $this->itemId = $itemId;
+    $this->itemName = $itemName;
+    $this->itemPrice = $itemPrice;
+    $this->itemSeller = $itemSeller;
     $this->sender = $sender;
-    $this->sender_first_name = $sender_first_name;
-    $this->sender_last_name = $sender_last_name;
+    $this->senderFirstName = $senderFirstName;
+    $this->senderLastName = $senderLastName;
     $this->receiver = $receiver;
-    $this->receiver_first_name = $receiver_first_name;
-    $this->receiver_last_name = $receiver_last_name;
+    $this->receiverFirstName = $receiverFirstName;
+    $this->receiverLastName = $receiverLastName;
     $this->message = $message;
     $this->timestamp = $timestamp;
     $this->type = $type;
@@ -59,7 +59,7 @@ class Message
     $this->accepted = $accepted;
   }
 
-  static function getInbox(PDO $db, int $user_id, ?string $search): array
+  static function getInbox(PDO $db, int $userId, ?string $search): array
   {
     $whereConditions = [];
 
@@ -75,10 +75,10 @@ class Message
           INNER JOIN user as seller_user ON item.seller = seller_user.id
           WHERE (message.sender = :user_id OR message.receiver = :user_id) ';
 
-    $whereConditions[':user_id'] = $user_id;
+    $whereConditions[':user_id'] = $userId;
 
     if ($search) {
-      $search_modified = str_replace([' ', ','], '%', $search);
+      $searchModified = str_replace([' ', ','], '%', $search);
 
       $query .= ' AND (item.name LIKE :search
                 OR item.description LIKE :search
@@ -90,7 +90,7 @@ class Message
                 OR seller_user.first_name LIKE :search
                 OR seller_user.last_name LIKE :search
                 OR (seller_user.first_name || " " || seller_user.last_name) LIKE :search)';
-      $whereConditions[':search'] = '%' . $search_modified . '%';
+      $whereConditions[':search'] = '%' . $searchModified . '%';
     }
 
     $query .= ' AND item.status = "active"
@@ -131,7 +131,7 @@ class Message
     return $messages;
   }
 
-  static function getMessage(PDO $db, int $message_id): ?Message
+  static function getMessage(PDO $db, int $messageId): ?Message
   {
 
     $query = 'SELECT message.id, message.item, item.name as item_name, item.price, item.seller, 
@@ -147,7 +147,7 @@ class Message
           WHERE message.id = ? AND item.status = "active"';
 
     $stmt = $db->prepare($query);
-    $stmt->execute([$message_id]);
+    $stmt->execute([$messageId]);
 
     $message = $stmt->fetch();
 
@@ -174,11 +174,11 @@ class Message
     );
   }
 
-  static function sendMessage(PDO $db, array $message_data): ?Message
+  static function sendMessage(PDO $db, array $messageData): ?Message
   {
-    $negotiation = isset($message_data['value']);
+    $negotiation = isset($messageData['value']);
 
-    $item = Item::getItem($db, $message_data['item_id']);
+    $item = Item::getItem($db, $messageData['itemId']);
 
     if ($item->status != 'active')
       return null;
@@ -188,31 +188,31 @@ class Message
           INSERT INTO message (item, sender, receiver, value, type, message, accepted) 
           VALUES (?, ?, ?, ?, ?, ?, ?)');
       $stmt->execute([
-        $message_data['item_id'],
-        $message_data['sender'],
-        $message_data['receiver'],
-        $message_data['value'],
+        $messageData['itemId'],
+        $messageData['sender'],
+        $messageData['receiver'],
+        $messageData['value'],
         'negotiation',
-        $message_data['message'],
-        $item->seller == $message_data['sender'] ? true : null,
+        $messageData['message'],
+        $item->seller == $messageData['sender'] ? true : null,
       ]);
     } else {
       $stmt = $db->prepare('
           INSERT INTO message (item, sender, receiver, message, accepted) 
           VALUES (?, ?, ?, ?, ?)');
       $stmt->execute([
-        $message_data['item_id'],
-        $message_data['sender'],
-        $message_data['receiver'],
-        $message_data['message'],
+        $messageData['itemId'],
+        $messageData['sender'],
+        $messageData['receiver'],
+        $messageData['message'],
         null,
       ]);
     }
 
-    $message_id = $db->lastInsertId();
+    $messageId = $db->lastInsertId();
 
 
-    return Message::getMessage($db, (int) $message_id);
+    return Message::getMessage($db, (int) $messageId);
   }
 
   static function getChat(PDO $db, int $item, int $sender, int $receiver): array
@@ -267,7 +267,7 @@ class Message
     return $messages;
   }
 
-  static function updateMessage(PDO $db, int $message_id, bool $accepted): Message
+  static function updateMessage(PDO $db, int $messageId, bool $accepted): Message
   {
     try {
       $stmt = $db->prepare('
@@ -275,9 +275,9 @@ class Message
           SET accepted = ?
           WHERE id = ?
       ');
-      $stmt->execute([$accepted, $message_id]);
+      $stmt->execute([$accepted, $messageId]);
 
-      return Message::getMessage($db, $message_id);
+      return Message::getMessage($db, $messageId);
     } catch (PDOException $e) {
       throw $e; // Re-throwing the exception to be caught in the calling code
     }

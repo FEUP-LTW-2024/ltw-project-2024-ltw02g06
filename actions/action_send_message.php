@@ -20,14 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
   }
 
-  $item_id = isset($_POST['item_id']) ? filter_var($_POST['item_id'], FILTER_VALIDATE_INT) : null;
+  $itemId = isset($_POST['itemId']) ? filter_var($_POST['itemId'], FILTER_VALIDATE_INT) : null;
   $receiver = isset($_POST['receiver']) ? filter_var($_POST['receiver'], FILTER_VALIDATE_INT) : null;
   $value = isset($_POST['value']) ? filter_var($_POST['value'], FILTER_SANITIZE_NUMBER_FLOAT) : null;
   $value = $value != "" ? $value : null;
   $message = isset($_POST['message']) ? htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8') : null;
 
-  $message_data = [
-    'item_id' => $item_id,
+  $messageData = [
+    'itemId' => $itemId,
     'sender' => $id,
     'receiver' => $receiver,
     'value' => $value,
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   ];
 
   if ($value !== null || $message !== null) {
-    Message::sendMessage($db, $message_data);
+    Message::sendMessage($db, $messageData);
   }
 }
 

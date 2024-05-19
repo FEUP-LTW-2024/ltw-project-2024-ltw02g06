@@ -53,35 +53,6 @@ const handleOrderSelector = () => {
   });
 };
 
-const validatePriceInput = (inputElement) => {
-  var inputValue = inputElement.value;
-  inputValue = inputValue.replace(/[^\d.]/g, "");
-
-  var dotIndex = inputValue.indexOf(".");
-  if (dotIndex !== -1)
-    inputValue =
-      inputValue.substr(0, dotIndex + 1) +
-      inputValue.substr(dotIndex + 1).replace(/\./g, "");
-
-  inputValue = inputValue.replace(/^0+(?=\d)/, "");
-  var decimalRegex = /^\d*\.?\d{0,2}$/;
-  if (!decimalRegex.test(inputValue)) inputValue = "0";
-
-  inputElement.value = inputValue;
-};
-
-const updateParam = (param, value) => {
-  const url = new URL(window.location.href);
-  url.searchParams.set(param, value);
-  history.pushState({}, "", url.toString());
-};
-
-const deleteParam = (param) => {
-  const url = new URL(window.location.href);
-  url.searchParams.delete(param);
-  history.pushState({}, "", url.toString());
-};
-
 const getItemsTotal = async () => {
   return fetch(
     `./../api/item/index.php?${window.location.search}&total=1&user=${userId}&status=all`,
@@ -268,13 +239,13 @@ const renderToSendItem = (itemData) => {
             </head>
             <body>
               <h2><strong>Remetente:</strong> </h2>
-              <p><strong>Nome:</strong> ${itemData["seller"].first_name} ${itemData["seller"].last_name}</p>
+              <p><strong>Nome:</strong> ${itemData["seller"].firstName} ${itemData["seller"].lastName}</p>
               <p><strong>Email:</strong> ${itemData["seller"].email}</p>
               <p><strong>Endereço:</strong> ${itemData["seller"].address}, ${itemData["seller"].city}, ${itemData["seller"].state}, ${itemData["seller"].country} - ${itemData["seller"].zipcode}</p>
               <p><strong>Artigo:</strong> #${itemData["item"].id}</p>
               
               <h2><strong>Destinatário:</strong> </h2>
-              <p><strong>Nome:</strong> ${itemData["buyer"].first_name} ${itemData["buyer"].last_name}</p>
+              <p><strong>Nome:</strong> ${itemData["buyer"].firstName} ${itemData["buyer"].lastName}</p>
               <p><strong>Email:</strong> ${itemData["buyer"].email}</p>
               <p><strong>Endereço:</strong> ${itemData["buyer"].address}, ${itemData["buyer"].city}, ${itemData["buyer"].state}, ${itemData["buyer"].country} - ${itemData["buyer"].zipcode}</p>            
             </body>
@@ -296,7 +267,7 @@ const renderToSendItem = (itemData) => {
       soldItemsList.appendChild(renderSoldItem(itemData));
       decreaseNumberToSentItems();
       increaseNumberSoldItems();
-      increaseRevenue(itemData["item"].sold_price);
+      increaseRevenue(itemData["item"].soldPrice);
       li.remove();
       renderNoItemsFound(toSendItemsList);
     } catch (error) {
@@ -305,11 +276,11 @@ const renderToSendItem = (itemData) => {
   });
 
   h3Name.textContent = itemData.item.name;
-  h3Price.textContent = `${itemData.item.sold_price} €`;
+  h3Price.textContent = `${itemData.item.soldPrice} €`;
   h3Price.innerHTML =
-    itemData.item.sold_price == itemData.item.price
-      ? `${itemData.item.sold_price} €`
-      : `${itemData.item.sold_price} € <span>${itemData.item.price}</span>`;
+    itemData.item.soldPrice == itemData.item.price
+      ? `${itemData.item.soldPrice} €`
+      : `${itemData.item.soldPrice} € <span>${itemData.item.price}</span>`;
   sendIcon.name = "send-outline";
   div1.appendChild(h3Name);
   div1.appendChild(h3Price);
@@ -336,7 +307,7 @@ const renderSoldItem = (itemData) => {
   const deleteIcon = document.createElement("ion-icon");
 
   h3Name.textContent = itemData.item.name;
-  h3Price.textContent = `${itemData.item.sold_price} €`;
+  h3Price.textContent = `${itemData.item.soldPrice} €`;
   deleteIcon.name = "trash-outline";
   div1.appendChild(h3Name);
   div1.appendChild(h3Price);

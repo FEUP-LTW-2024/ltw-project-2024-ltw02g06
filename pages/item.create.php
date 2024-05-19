@@ -25,9 +25,9 @@ $db = getDatabaseConnection();
 drawHeader($session);
 
 $user = User::getUser($db, $id);
-$user_reviews = User::getUserReviews($db, $id);
+$userReviews = User::getUserReviews($db, $id);
 $categories = Category::getAllCategories($db);
-drawCreateItem($user, $user_reviews, $categories, $session);
+drawCreateItem($user, $userReviews, $categories, $session);
 
 drawFooter();
 ?>

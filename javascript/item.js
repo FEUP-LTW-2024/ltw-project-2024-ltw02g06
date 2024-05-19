@@ -66,7 +66,7 @@ const handleWishlistBtn = (sessionId, itemId) => {
 };
 
 const removeFromWishlist = (itemId) => {
-  fetch(`./../api/user/wishlist.php?item_id=${itemId}`, {
+  fetch(`./../api/user/wishlist.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const addToWishlist = (itemId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ item_id: itemId, csrf: csrf }),
+    body: JSON.stringify({ itemId: itemId, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -131,7 +131,7 @@ const handleCartBtn = (sessionId, itemId) => {
 };
 
 const removeFromCart = (itemId) => {
-  fetch(`./../api/user/cart.php?item_id=${itemId}`, {
+  fetch(`./../api/user/cart.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const addToCart = (itemId) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ item_id: itemId, csrf: csrf }),
+    body: JSON.stringify({ itemId: itemId, csrf: csrf }),
   })
     .then((response) => {
       if (!response.ok) {

@@ -17,7 +17,7 @@ require_once (__DIR__ . '/../utils/session.php');
   <section id="inbox">
     <ol id="inbox-container">
       <?php
-      foreach ($inbox as $item_id => $chat) {
+      foreach ($inbox as $itemId => $chat) {
         drawInboxChat($id, $chat);
       }
       ?>
@@ -57,7 +57,7 @@ require_once (__DIR__ . '/../utils/session.php');
   return $timeAgo;
 } ?>
 
-<?php function drawInboxChat(int $user_id, array $chat)
+<?php function drawInboxChat(int $userId, array $chat)
 { ?>
   <?php
   $timestamp = $chat[0]->timestamp;
@@ -67,9 +67,9 @@ require_once (__DIR__ . '/../utils/session.php');
   <li>
     <div class="inbox-chat-item">
 
-      <h3><?= htmlspecialchars(trim($chat[0]->item_name)) ?></h3>
+      <h3><?= htmlspecialchars(trim($chat[0]->itemName)) ?></h3>
       <div>
-        <h3><?= $chat[0]->item_price ?> €</h3>
+        <h3><?= $chat[0]->itemPrice ?> €</h3>
       </div>
 
     </div>
@@ -77,12 +77,12 @@ require_once (__DIR__ . '/../utils/session.php');
     <div class="inbox-chat-msg">
       <div>
         <h4>
-          <?= $chat[0]->receiver == $user_id ? htmlspecialchars($chat[0]->sender_first_name . " " . $chat[0]->sender_last_name) : htmlspecialchars($chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name) ?>
+          <?= $chat[0]->receiver == $userId ? htmlspecialchars($chat[0]->senderFirstName . " " . $chat[0]->senderLastName) : htmlspecialchars($chat[0]->receiverFirstName . " " . $chat[0]->receiverLastName) ?>
         </h4>
         <span><?= $timeAgo ?></span>
       </div>
       <div>
-        <span><?= $chat[0]->sender == $user_id ? "Eu:" : htmlspecialchars($chat[0]->sender_first_name . ":") ?>
+        <span><?= $chat[0]->sender == $userId ? "Eu:" : htmlspecialchars($chat[0]->senderFirstName . ":") ?>
         </span>
         <p><?= htmlspecialchars(trim($chat[0]->message)) ?></p>
       </div>
@@ -92,7 +92,7 @@ require_once (__DIR__ . '/../utils/session.php');
 <?php } ?>
 
 
-<?php function drawChatHeader(int $user_id, Item $item, User $seller, array $chat)
+<?php function drawChatHeader(int $userId, Item $item, User $seller, array $chat)
 { ?>
 
   <header id="chat-header">
@@ -109,9 +109,9 @@ require_once (__DIR__ . '/../utils/session.php');
       <div>
         <h4>
           <?php if (empty($chat)): ?>
-            <?= htmlspecialchars($seller->first_name . " " . $seller->last_name) ?>
+            <?= htmlspecialchars($seller->firstName . " " . $seller->lastName) ?>
           <?php else: ?>
-            <?= $chat[0]->receiver == $user_id ? htmlspecialchars($chat[0]->sender_first_name . " " . $chat[0]->sender_last_name) : htmlspecialchars($chat[0]->receiver_first_name . " " . $chat[0]->receiver_last_name); ?>
+            <?= $chat[0]->receiver == $userId ? htmlspecialchars($chat[0]->senderFirstName . " " . $chat[0]->senderLastName) : htmlspecialchars($chat[0]->receiverFirstName . " " . $chat[0]->receiverLastName); ?>
           <?php endif; ?>
         </h4>
       </div>
@@ -120,7 +120,7 @@ require_once (__DIR__ . '/../utils/session.php');
   </header>
 <?php } ?>
 
-<?php function drawChat(Session $session, array $chat, int $other_user, Item $item, User $seller)
+<?php function drawChat(Session $session, array $chat, int $otherUser, Item $item, User $seller)
 { ?>
 
   <?php
@@ -130,7 +130,7 @@ require_once (__DIR__ . '/../utils/session.php');
   <section id="chat">
     <?php drawChatHeader($id, $item, $seller, $chat); ?>
     <?php if (empty($chat)): ?>
-      <h2 id="start-chat">Inicie a coversa com <?= htmlspecialchars(trim($seller->first_name)) ?>.</h2>
+      <h2 id="start-chat">Inicie a coversa com <?= htmlspecialchars(trim($seller->firstName)) ?>.</h2>
     <?php endif; ?>
     <ol id="chat-messages">
     </ol>
@@ -138,22 +138,22 @@ require_once (__DIR__ . '/../utils/session.php');
     <form action="../actions/action_send_message.php" method="post">
       <input type="text" name="value" placeholder="Propor novo preço">
       <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
-      <input type="hidden" name="item_id" value=<?= $item->id ?>>
-      <input type="hidden" name="receiver" value=<?= $other_user ?>>
+      <input type="hidden" name="itemId" value=<?= $item->id ?>>
+      <input type="hidden" name="receiver" value=<?= $otherUser ?>>
       <input type="text" name="message" placeholder="Mensagem">
       <button>Enviar <ion-icon name="send"></ion-icon></button>
     </form>
   </section>
 <?php } ?>
 
-<?php function drawChatMessage(int $user_id, Message $message)
+<?php function drawChatMessage(int $userId, Message $message)
 { ?>
   <?php
   $timeAgo = getTimeAgo($message->timestamp);
   ?>
 
   <?php if ($message->type == 'negotiation'): ?>
-    <li class=<?= $message->receiver == $user_id ? "received-proposition" : "sent-proposition" ?>
+    <li class=<?= $message->receiver == $userId ? "received-proposition" : "sent-proposition" ?>
       data-message-id=<?= $message->id ?>>
       <div class="proposition-value">
         <h3>Proposta: <?= $message->value ?> €</h3>
@@ -163,12 +163,12 @@ require_once (__DIR__ . '/../utils/session.php');
         <?= htmlspecialchars(trim($message->message)) ?>
       </p>
       <div class="proposition-btns">
-        <?php if ($message->sender == $user_id): ?>
+        <?php if ($message->sender == $userId): ?>
 
           <?php if ($message->accepted === null): ?>
             <h5>Por decidir</h5>
           <?php elseif ($message->accepted): ?>
-            <?php if ($message->item_seller === $user_id): ?>
+            <?php if ($message->itemSeller === $userId): ?>
               <h5>Aceite</h5>
             <?php else: ?>
               <button class="add-to-cart-proposition-btn">Adicionar ao carrinho<ion-icon name="cart-outline"></ion-icon></button>
@@ -177,7 +177,7 @@ require_once (__DIR__ . '/../utils/session.php');
             <h5>Rejeitado</h5>
           <?php endif; ?>
 
-        <?php elseif ($message->receiver == $user_id): ?>
+        <?php elseif ($message->receiver == $userId): ?>
 
           <?php if ($message->accepted === null): ?>
             <button class="reject-proposition-btn">Rejeitar<ion-icon name="close"></ion-icon></button>
@@ -192,7 +192,7 @@ require_once (__DIR__ . '/../utils/session.php');
       </div>
     </li>
   <?php else: ?>
-    <li class=<?= $message->receiver == $user_id ? "received-message" : "sent-message" ?>>
+    <li class=<?= $message->receiver == $userId ? "received-message" : "sent-message" ?>>
       <div>
         <p>
           <?= htmlspecialchars(trim($message->message)) ?>

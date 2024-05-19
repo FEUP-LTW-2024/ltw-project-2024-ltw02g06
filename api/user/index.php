@@ -9,9 +9,9 @@ require_once (__DIR__ . '/../../database/item.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'GET':
     // GET request handling
     $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
@@ -111,17 +111,17 @@ switch ($request_method) {
     // PATCH request handling
     // Update a given user
     $userData = filter_var_array(json_decode(file_get_contents('php://input'), true), FILTER_SANITIZE_STRING);
-    $user_id = $session->getId();
-    $user = User::getUser($db, $user_id);
+    $userId = $session->getId();
+    $user = User::getUser($db, $userId);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
     }
 
     if (
-      ($user_id != filter_var($userData['id'], FILTER_VALIDATE_INT) && !$user->admin) ||
+      ($userId != filter_var($userData['id'], FILTER_VALIDATE_INT) && !$user->admin) ||
       $session->getSessionToken() !== filter_var($userData['csrf'], FILTER_SANITIZE_STRING)
     ) {
       http_response_code(401); // Unauthorized
@@ -170,10 +170,10 @@ switch ($request_method) {
     // DELETE request handling
     // Delete a user.
     $toDeleteUserId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
-    $user_id = $session->getId();
-    $user = User::getUser($db, $user_id);
+    $userId = $session->getId();
+    $user = User::getUser($db, $userId);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -186,7 +186,7 @@ switch ($request_method) {
     }
 
     if (
-      ($user_id != $toDeleteUserId && !$user->admin) ||
+      ($userId != $toDeleteUserId && !$user->admin) ||
       $session->getSessionToken() !== filter_var($_POST['csrf'], FILTER_SANITIZE_STRING)
     ) {
       http_response_code(401); // Unauthorized

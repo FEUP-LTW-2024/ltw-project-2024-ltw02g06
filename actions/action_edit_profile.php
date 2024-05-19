@@ -21,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
   }
 
-  $first_name = filter_var($_POST['first_name'], FILTER_SANITIZE_STRING);
-  $last_name = filter_var($_POST['last_name'], FILTER_SANITIZE_STRING);
+  $firstName = filter_var($_POST['firstName'], FILTER_SANITIZE_STRING);
+  $lastName = filter_var($_POST['lastName'], FILTER_SANITIZE_STRING);
   $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-  $new_image_path = filter_var($_POST['new_image_path'], FILTER_SANITIZE_STRING);
+  $newImagePath = filter_var($_POST['newImagePath'], FILTER_SANITIZE_STRING);
   $address = filter_var($_POST['address'], FILTER_SANITIZE_STRING);
   $zipcode = filter_var($_POST['zipcode'], FILTER_SANITIZE_STRING);
   $city = filter_var($_POST['city'], FILTER_SANITIZE_STRING);
@@ -32,8 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $country = filter_var($_POST['country'], FILTER_SANITIZE_STRING);
 
   if (
-    empty($first_name) ||
-    empty($last_name) ||
+    empty($firstName) ||
+    empty($lastName) ||
     empty($email) ||
     empty($address) ||
     empty($zipcode) ||
@@ -45,12 +45,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit();
   }
 
-  $user_data = [
+  $userData = [
     'id' => $id,
-    'first_name' => $first_name,
-    'last_name' => $last_name,
+    'firstName' => $firstName,
+    'lastName' => $lastName,
     'email' => $email,
-    'new_image' => $new_image_path,
+    'newImage' => $newImagePath,
     'address' => $address,
     'zipcode' => $zipcode,
     'city' => $city,
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     'country' => $country,
   ];
 
-  User::updateUser($db, $user_data);
+  User::updateUser($db, $userData);
 }
 
 if (isset($_GET['redirect'])) {

@@ -8,11 +8,11 @@ require_once (__DIR__ . '/../utils/session.php');
 require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 ?>
 
-<?php function drawItem(Item $item, User $seller, bool $admin, array $seller_reviews, bool $is_item_in_wishlist, bool $is_item_in_cart, Session $session)
+<?php function drawItem(Item $item, User $seller, bool $admin, array $sellerReviews, bool $isItemInWishlist, bool $isItemInCart, Session $session)
 { ?>
 
   <?php
-  $is_seller = $session->getId() == $seller->id;
+  $isSeller = $session->getId() == $seller->id;
   ?>
 
   <article id="item">
@@ -62,11 +62,11 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
     <div id="item-info">
       <div>
         <p class="small-font-size">Publicado
-          <?= $item->creation_date->format('d/m/Y'); ?>
+          <?= $item->creationDate->format('d/m/Y'); ?>
         </p>
-        <?php if (!$is_seller && $item->status == 'active'): ?>
-          <button id="whishlist-btn" data-is-item-in-wishlist=<?= $is_item_in_wishlist ? "1" : "0" ?>><ion-icon
-              name=<?= $is_item_in_wishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
+        <?php if (!$isSeller && $item->status == 'active'): ?>
+          <button id="whishlist-btn" data-is-item-in-wishlist=<?= $isItemInWishlist ? "1" : "0" ?>><ion-icon
+              name=<?= $isItemInWishlist ? "heart" : "heart-outline" ?>></ion-icon></button>
         <?php endif; ?>
       </div>
       <?php if (trim($item->name) === ""): ?>
@@ -76,10 +76,10 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
         </h3>
       <?php endif; ?>
       <h2 id="item-price"><?= $item->price ?> €</h2>
-      <?php if (!$is_seller): ?>
+      <?php if (!$isSeller): ?>
         <?php if ($item->status == 'active'): ?>
-          <button id="add-to-cart-btn" data-is-item-in-cart=<?= $is_item_in_cart ? "1" : "0" ?>>
-            <?= $is_item_in_cart ? "Remover do carrinho" : "Adicionar ao carrinho" ?>
+          <button id="add-to-cart-btn" data-is-item-in-cart=<?= $isItemInCart ? "1" : "0" ?>>
+            <?= $isItemInCart ? "Remover do carrinho" : "Adicionar ao carrinho" ?>
           </button>
           <button id="negotiate-btn">Propor outro preço</button>
           <button id="send-message-btn">Enviar mensagem</button>
@@ -115,7 +115,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h4 id="seller-name"><?= htmlspecialchars(trim($seller->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
-            <?= $seller->registration_date->format('d/m/Y'); ?>
+            <?= $seller->registrationDate->format('d/m/Y'); ?>
           </p>
         </div>
       </a>
@@ -128,13 +128,13 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </article>
 <?php } ?>
 
-<?php function drawEditItem(Item $item, User $user, array $user_reviews, array $categories, Session $session)
+<?php function drawEditItem(Item $item, User $user, array $userReviews, array $categories, Session $session)
 { ?>
   <form id="edit-item"
     action="../actions/action_edit_item.php<?= isset($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '?redirect=' . urlencode('/pages/item.php?id=' . $item->id) ?>"
     method="post">
     <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
-    <input type="hidden" name="item_id" value=<?= $item->id ?>>
+    <input type="hidden" name="itemId" value=<?= $item->id ?>>
     <div id="edit-item-buttons">
       <button id="edit-item-cancel-btn" type="button">Cancelar<ion-icon name="close"></ion-icon></button>
       <button id="edit-item-submit-btn" type="submit">Confirmar<ion-icon name="checkmark" submit></ion-icon></button>
@@ -164,7 +164,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h2>
         Descrição
       </h2>
-      <textarea id="edit-item-description" name="item_description" rows="10"
+      <textarea id="edit-item-description" name="itemDescription" rows="10"
         placeholder="Descrição do anúncio"><?= htmlspecialchars(trim($item->description)) ?></textarea>
       <ol id="edit-item-category-list">
         <li>
@@ -202,12 +202,12 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
 
     <div id="edit-item-info">
       <p class="small-font-size">Publicado
-        <?= $item->creation_date->format('d/m/Y'); ?>
+        <?= $item->creationDate->format('d/m/Y'); ?>
       </p>
-      <input type="text" name="item_name" id="edit-item-name" placeholder="Nome do anúncio"
+      <input type="text" name="itemName" id="edit-item-name" placeholder="Nome do anúncio"
         value=<?= htmlspecialchars(trim($item->name)) ?>>
       <span>
-        <input type="text" name="item_price" id="edit-item-price" placeholder="Preço" value=<?= $item->price ?>>
+        <input type="text" name="itemPrice" id="edit-item-price" placeholder="Preço" value=<?= $item->price ?>>
         €
       </span>
       <button id="add-to-cart-btn" class="deactivated-btn" type="button">Adicionar ao carrinho</button>
@@ -234,7 +234,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h4 id="seller-name"><?= htmlspecialchars(trim($user->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
-            <?= $user->registration_date->format('d/m/Y'); ?>
+            <?= $user->registrationDate->format('d/m/Y'); ?>
           </p>
         </div>
       </div>
@@ -243,7 +243,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
   </form>
 <?php } ?>
 
-<?php function drawCreateItem(User $user, array $user_reviews, array $categories, Session $session)
+<?php function drawCreateItem(User $user, array $userReviews, array $categories, Session $session)
 { ?>
   <form id="edit-item" action="../actions/action_create_item.php" method="post">
     <input type="hidden" name="csrf" value="<?= $session->getSessionToken() ?>">
@@ -270,8 +270,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <h2>
         Descrição
       </h2>
-      <textarea id="edit-item-description" name="item_description" rows="10"
-        placeholder="Descrição do anúncio"></textarea>
+      <textarea id="edit-item-description" name="itemDescription" rows="10" placeholder="Descrição do anúncio"></textarea>
       <ol id="edit-item-category-list">
         <li>
           <label for="category">Categoria</label>
@@ -288,9 +287,9 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
       <p class="small-font-size">Publicado
         <?= date('d/m/Y'); ?>
       </p>
-      <input type="text" name="item_name" id="edit-item-name" placeholder="Nome do anúncio">
+      <input type="text" name="itemName" id="edit-item-name" placeholder="Nome do anúncio">
       <span>
-        <input type="text" name="item_price" id="edit-item-price" placeholder="Preço">
+        <input type="text" name="itemPrice" id="edit-item-price" placeholder="Preço">
         €
       </span>
       <button id="add-to-cart-btn" class="deactivated-btn" type="button">Adicionar ao carrinho</button>
@@ -317,7 +316,7 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <h4 id="seller-name"><?= htmlspecialchars(trim($user->name())) ?></h4>
           <p class="small-font-size">
             No eKo desde
-            <?= $user->registration_date->format('d/m/Y'); ?>
+            <?= $user->registrationDate->format('d/m/Y'); ?>
           </p>
         </div>
       </div>
@@ -338,8 +337,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
           <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
           <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
-          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
-          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
+          <option value="createdAt:desc" <?= $order === 'createdAt:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="createdAt:asc" <?= $order === 'createdAt:asc' ? 'selected' : ''; ?>>Mais antigo</option>
         </select>
       </div>
     </header>
@@ -364,8 +363,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
           <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
           <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
-          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
-          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
+          <option value="createdAt:desc" <?= $order === 'createdAt:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="createdAt:asc" <?= $order === 'createdAt:asc' ? 'selected' : ''; ?>>Mais antigo</option>
         </select>
       </div>
     </header>
@@ -478,8 +477,8 @@ require_once (__DIR__ . '/../templates/search-bar.tpl.php');
           <option value="relevance:desc" <?= $order === 'relevance:desc' ? 'selected' : ''; ?>>Anúncios recomendados</option>
           <option value="price:asc" <?= $order === 'price:asc' ? 'selected' : ''; ?>>Mais barato</option>
           <option value="price:desc" <?= $order === 'price:desc' ? 'selected' : ''; ?>>Mais caro</option>
-          <option value="created_at:desc" <?= $order === 'created_at:desc' ? 'selected' : ''; ?>>Mais recente</option>
-          <option value="created_at:asc" <?= $order === 'created_at:asc' ? 'selected' : ''; ?>>Mais antigo</option>
+          <option value="createdAt:desc" <?= $order === 'createdAt:desc' ? 'selected' : ''; ?>>Mais recente</option>
+          <option value="createdAt:asc" <?= $order === 'createdAt:asc' ? 'selected' : ''; ?>>Mais antigo</option>
         </select>
       </div>
     </header>

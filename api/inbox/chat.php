@@ -9,14 +9,14 @@ require_once (__DIR__ . '/../../database/message.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'GET':
     // GET request handling
-    $user_id = $session->getId();
+    $userId = $session->getId();
 
-    if ($user_id === null) {
+    if ($userId === null) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -29,11 +29,11 @@ switch ($request_method) {
     }
 
     // Extract and sanitize parameters from the URL
-    $item_id = isset($_GET['item']) ? filter_var($_GET['item'], FILTER_VALIDATE_INT) : null;
-    $other_user = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
+    $itemId = isset($_GET['item']) ? filter_var($_GET['item'], FILTER_VALIDATE_INT) : null;
+    $otherUser = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
 
     try {
-      $chat = Message::getChat($db, $item_id, $user_id, $other_user);
+      $chat = Message::getChat($db, $itemId, $userId, $otherUser);
       if ($chat) {
         http_response_code(200); // OK
         echo json_encode($chat);

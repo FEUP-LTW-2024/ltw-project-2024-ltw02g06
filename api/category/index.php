@@ -10,9 +10,9 @@ require_once (__DIR__ . '/../../database/user.class.php');
 
 $db = getDatabaseConnection();
 
-$request_method = $_SERVER['REQUEST_METHOD'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-switch ($request_method) {
+switch ($requestMethod) {
   case 'GET':
     // GET request handling
     $id = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
@@ -42,10 +42,10 @@ switch ($request_method) {
     $postData = json_decode(file_get_contents('php://input'), true);
     $postData = filter_var_array($postData, FILTER_SANITIZE_STRING);
 
-    $user_id = $session->getId();
-    $user = User::getUser($db, $user_id);
+    $userId = $session->getId();
+    $user = User::getUser($db, $userId);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -77,10 +77,10 @@ switch ($request_method) {
     $postData = json_decode(file_get_contents('php://input'), true);
     $postData = filter_var_array($postData, FILTER_SANITIZE_STRING);
 
-    $user_id = $session->getId();
-    $user = User::getUser($db, $user_id);
+    $userId = $session->getId();
+    $user = User::getUser($db, $userId);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();
@@ -92,19 +92,19 @@ switch ($request_method) {
       exit();
     }
 
-    $category_data = [
+    $categoryData = [
       'id' => isset($postData['id']) ? filter_var($postData['id'], FILTER_SANITIZE_NUMBER_INT) : null,
       'attributes' => $postData['attribute'] ?? [],
     ];
 
-    if ($category_data['id'] === null) {
+    if ($categoryData['id'] === null) {
       http_response_code(400); // Bad Request
       echo json_encode(array("message" => "Invalid category ID."));
       exit();
     }
 
     try {
-      Category::updateCategory($db, $category_data);
+      Category::updateCategory($db, $categoryData);
       http_response_code(200); // OK
       echo json_encode(array("message" => "Category updated successfully."));
     } catch (PDOException $e) {
@@ -117,10 +117,10 @@ switch ($request_method) {
     // Delete a given category
     $postData = json_decode(file_get_contents("php://input"), true);
     $categoryId = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_VALIDATE_INT) : null;
-    $user_id = $session->getId();
-    $user = User::getUser($db, $user_id);
+    $userId = $session->getId();
+    $user = User::getUser($db, $userId);
 
-    if (!$user_id) {
+    if (!$userId) {
       http_response_code(401); // Unauthorized
       echo json_encode(array("message" => "Not authenticated."));
       exit();

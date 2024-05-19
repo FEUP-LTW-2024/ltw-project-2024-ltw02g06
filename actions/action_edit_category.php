@@ -29,12 +29,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     header('Location: ' . $_SERVER['HTTP_REFERER']);
   }
 
-  $category_data = [
+  $categoryData = [
     'id' => filter_var($_POST['category'], FILTER_SANITIZE_NUMBER_INT) ?? null,
     'attributes' => $_POST['attribute'] ?? [],
   ];
 
-  Category::updateCategory($db, $category_data);
+  Category::updateCategory($db, $categoryData);
 }
 
 if (isset($_GET['redirect'])) {

@@ -76,7 +76,7 @@ const updateTotalPrices = (itemPrice, itemShipping) => {
 };
 
 const removeFromCart = async (itemId) => {
-  return fetch(`./../api/user/cart.php?item_id=${itemId}`, {
+  return fetch(`./../api/user/cart.php?itemId=${itemId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
