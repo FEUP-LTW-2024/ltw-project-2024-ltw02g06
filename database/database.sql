@@ -33,6 +33,9 @@ CREATE TABLE category (
   name TEXT
 );
 
+INSERT INTO category (name)
+VALUES ('Outro');
+
 CREATE TABLE attribute (
   id INTEGER PRIMARY KEY,
   name TEXT,
