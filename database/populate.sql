@@ -1,9 +1,10 @@
 PRAGMA foreign_keys = ON;
 
 INSERT INTO user (first_name, last_name, email, password, address, city, state, country, zipcode, admin) 
-VALUES ('Luís', 'Figo', 'luis@gmail.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'R. Dr. Roberto Frias', 'Porto', 'Porto', 'Portugal', '4200-465', 1),
+VALUES ('Luís', 'Figo', 'luis@gmail.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'R. Dr. Roberto Frias', 'Porto', 'Porto', 'Portugal', '4200-465', 0),
        ('Fábio', 'Coentrão', 'fabio@gmail.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'R. Dom Sancho I', 'Vila do Conde', 'Porto', 'Portugal', '4480-876', 0),
-       ('Cristiano', 'Aveiro', 'cr7@gmail.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Al Halilah', 'Tuwaiq', 'Riyadh', 'Arábia Saudita', '14922', 1);
+       ('Cristiano', 'Aveiro', 'cr7@gmail.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Al Halilah', 'Tuwaiq', 'Riyadh', 'Arábia Saudita', '14922', 0),
+       ('Admin', 'Admin', 'admin@admin.com', '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.', 'Avenida Concha Espina', 'Madrid', 'Madrid', 'Espanha', '28036', 1);
 
 -- password is '1'; '$2y$12$uUhfauycAteP0FIvc5ynRuLVODN3UHb0iKm/T7ABdl7/.Td5o0Hw.' is the hash code of '1'
 

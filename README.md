@@ -108,3 +108,15 @@ We also implemented the following additional requirements (you can add more):
 - **Real-Time Messaging System**
 
 - **Categories have attributes**
+
+## ADDITIONAL INFO
+
+- **Admin**
+
+  - Email: **admin@admin.com**
+  - Password: **1**
+
+- **Normal user**:
+
+  - Email: **luis@gmail.com**
+  - Password: **1**
