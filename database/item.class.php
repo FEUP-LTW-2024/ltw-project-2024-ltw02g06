@@ -305,7 +305,7 @@ class Item
                   WHERE id = ?');
         $stmt->execute([$existingImage['id']]);
 
-        $imagePath = dirname(__FILE__) . '/../' . $image['path'];
+        $imagePath = dirname(__FILE__) . '/../' . $existingImage['path'];
         if (file_exists($imagePath))
           unlink($imagePath);
       }
