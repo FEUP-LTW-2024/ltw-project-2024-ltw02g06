@@ -2,7 +2,7 @@
 
 Website that facilitates the buying and selling of pre-loved items developed in HTML/CSS, PHP, JS and SQLite for the **Web Languages and Technologies (LTW)** course unit **@FEUP**
 
-Project grade: **? / 20**
+Project grade: **18.7 / 20**
 
 ### This project was developed by:
 
